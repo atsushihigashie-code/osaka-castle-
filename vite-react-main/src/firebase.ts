@@ -3,12 +3,12 @@ import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "kabuki-captions.firebaseapp.com",
-  databaseURL: "https://kabuki-captions-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "kabuki-captions",
-  storageBucket: "kabuki-captions.appspot.com",
-  messagingSenderId: "228747197880",
-  appId: "1:228747197880:web:ebe63ff0e2183539b3e34d",
+  authDomain: "osaka-castle-tour.firebaseapp.com",
+  databaseURL: "https://osaka-castle-tour-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "osaka-castle-tour",
+  storageBucket: "osaka-castle-tour.firebasestorage.app",
+  messagingSenderId: "82330141589",
+  appId: "1:82330141589:web:945254147c2c27f042ac9c"
 };
 
 const app = initializeApp(firebaseConfig);
