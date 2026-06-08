@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+JP:wght@400;700&display=swap');
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -16,7 +14,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(ellipse at center, #1a0f00 0%, #0a0a0f 70%);
+  background: #1a0f00;
   cursor: pointer;
   gap: 16px;
   padding: 24px;
@@ -88,11 +86,91 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: radial-gradient(ellipse at top, #1a0f00 0%, #0a0a0f 60%);
+  background: #1a0f00;
 }
 .ctrl-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border​​​​​​​​​​​​​​​​
+  border-bottom: 1px solid #2a2010;
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  color: #d4a843;
+  letter-spacing: 2px;
+}
+.ctrl-role {
+  font-size: 11px;
+  padding: 3px 10px;
+  border: 1px solid #444;
+  border-radius: 20px;
+  color: #888;
+}
+.ctrl-preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  position: relative;
+}
+.ctrl-img {
+  max-width: 100%;
+  max-height: 45vh;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #3a2a10;
+}
+.ctrl-num {
+  position: absolute;
+  bottom: 20px;
+  right: 24px;
+  font-size: 12px;
+  color: #664;
+}
+.ctrl-controls {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid #2a2010;
+  background: rgba(0,0,0,0.5);
+}
+.btn-play {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-family: 'Noto Serif JP', serif;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-play.off { background: #d4a843; color: #0a0a0f; }
+.btn-play.on { background: #3a1010; color: #e05050; border: 1px solid #e05050; }
+.nav-row { display: flex; align-items: center; gap: 10px; }
+.btn-nav {
+  flex: 1;
+  padding: 14px;
+  background: #1a1408;
+  border: 1px solid #3a2a10;
+  border-radius: 8px;
+  color: #f0e6d0;
+  font-size: 16px;
+  font-family: 'Noto Serif JP', serif;
+  cursor: pointer;
+}
+.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-idx { min-width: 60px; text-align: center; font-size: 13px; color: #888; }
+.btn-reset {
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #666;
+  font-size: 13px;
+  font-family: 'Noto Serif JP', serif;
+  cursor: pointer;
+  letter-spacing: 2px;
+}
