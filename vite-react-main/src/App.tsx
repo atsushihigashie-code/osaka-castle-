@@ -116,13 +116,20 @@ export default function App() {
             <div className="ctrl-num">{safeIdx + 1} / {PANELS.length}</div>
           </div>
           <div className="ctrl-controls">
-            <button className={`btn-play ${playEnabled ? "on" : "off"}`} onClick={playEnabled ? onStop : onStart}>
+            <button
+              className={`btn-play ${playEnabled ? "on" : "off"}`}
+              onClick={playEnabled ? onStop : onStart}
+            >
               {playEnabled ? "■ STOP" : "▶ START"}
             </button>
             <div className="nav-row">
-              <button className="btn-nav" onClick={() => move(safeIdx - 1)} disabled={safeIdx === 0}>◀ Prev</button>
+              <button className="btn-nav" onClick={() => move(safeIdx - 1)} disabled={safeIdx === 0}>
+                ◀ Prev
+              </button>
               <div className="nav-idx">{safeIdx + 1} / {PANELS.length}</div>
-              <button className="btn-nav" onClick={() => move(safeIdx + 1)} disabled={safeIdx === max}>Next ▶</button>
+              <button className="btn-nav" onClick={() => move(safeIdx + 1)} disabled={safeIdx === max}>
+                Next ▶
+              </button>
             </div>
             <button className="btn-reset" onClick={() => move(0)}>↺ Reset</button>
           </div>
