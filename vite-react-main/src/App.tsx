@@ -3,11 +3,18 @@ import { onValue, ref, set } from "firebase/database";
 import { db } from "./firebase";
 import "./App.css";
 
-type Cue = {
-  speaker: string;
-  text: string;
-  audio?: string;
-};
+const PANELS = [
+  { image: "/大阪城ツアー総合_1.jpg",  audio: "/大阪城ツアー１.mp3" },
+  { image: "/大阪城ツアー総合_2.jpg",  audio: "/大阪城ツアー２.mp3" },
+  { image: "/大阪城ツアー総合_3.jpg",  audio: "/大阪城ツアー３.mp3" },
+  { image: "/大阪城ツアー総合_4.jpg",  audio: "/大阪城ツアー４.mp3" },
+  { image: "/大阪城ツアー総合_5.jpg",  audio: "/大阪城ツアー５.mp3" },
+  { image: "/大阪城ツアー総合_6.jpg",  audio: "/大阪城ツアー６.mp3" },
+  { image: "/大阪城ツアー総合_7.jpg",  audio: "/大阪城ツアー７.mp3" },
+  { image: "/大阪城ツアー総合_8.jpg",  audio: "/大阪城ツアー８.mp3" },
+  { image: "/大阪城ツアー総合_9.jpg",  audio: "/大阪城ツアー９.mp3" },
+  { image: "/大阪城ツアー総合_10.jpg", audio: "/大阪城ツアー１０.mp3" },
+];
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
@@ -19,10 +26,13 @@ export default function App() {
   const isController = role === "controller";
 
   const [idx, setIdx] = useState<number>(0);
-  const [cues, setCues] = useState<Cue[]>([]);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [playEnabled, setPlayEnabled] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const max = PANELS.length - 1;
+  const safeIdx = clamp(idx, 0, max);
+  const current = PANELS[safeIdx];
 
   useEffect(() => {
     const r = ref(db, "/shared/idx");
@@ -41,25 +51,6 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  useEffect(() => {
-    const r = ref(db, "/cues");
-    const unsub = onValue(r, (snap) => {
-      const v = snap.val();
-      if (!v) { setCues([]); return; }
-      const list: Cue[] = Object.keys(v).sort().map((k) => ({
-        speaker: String(v[k]?.speaker ?? ""),
-        text: String(v[k]?.text ?? ""),
-        audio: String(v[k]?.audio ?? ""),
-      })).filter((x) => x.speaker || x.text || x.audio);
-      setCues(list);
-    });
-    return () => unsub();
-  }, []);
-
-  const max = Math.max(0, cues.length - 1);
-  const safeIdx = clamp(idx, 0, max);
-  const current = cues[safeIdx] ?? null;
-
   const move = (nextIdx: number) => {
     set(ref(db, "/shared/idx"), clamp(nextIdx, 0, max));
   };
@@ -77,24 +68,23 @@ export default function App() {
 
   useEffect(() => {
     if (!soundEnabled || !playEnabled) return;
-    const url = current?.audio?.trim();
-    if (!url) return;
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
-    const a = new Audio(url);
+    const a = new Audio(current.audio);
     a.preload = "auto";
     audioRef.current = a;
     a.play().catch(() => {});
     return () => { try { a.pause(); a.currentTime = 0; } catch {} };
-  }, [safeIdx, soundEnabled, playEnabled, current?.audio]);
+  }, [safeIdx, soundEnabled, playEnabled, current.audio]);
 
   if (!soundEnabled) {
     return (
       <div className="tap-screen" onClick={() => setSoundEnabled(true)}>
         <div className="tap-castle">🏯</div>
         <div className="tap-title">Osaka Castle Tour</div>
+        <div className="tap-subtitle">1615 The Summer Siege of Osaka</div>
         <div className="tap-btn">Tap to Start</div>
         <div className="tap-sub">※ iPhone / Safari の仕様です</div>
       </div>
@@ -103,59 +93,39 @@ export default function App() {
 
   return (
     <div className={`app ${isController ? "is-controller" : "is-viewer"}`}>
-      <div className="header">
-        <span className="header-icon">🏯</span>
-        <span className="header-title">Osaka Castle Tour</span>
-        <span className="header-role">{isController ? "GUIDE" : "GUEST"}</span>
-      </div>
-
-      <div className="card-area">
-        {current ? (
-          <div className={`card ${playEnabled ? "active" : "paused"}`}>
-            <div className="card-num">{safeIdx + 1} / {cues.length}</div>
-            <div className="card-speaker">{current.speaker}</div>
-            <div className="card-text">{current.text}</div>
-            {current.audio && playEnabled && (
-              <div className="card-audio-indicator">♪ Playing</div>
-            )}
+      {!isController && (
+        <div className="viewer-wrap">
+          <img className="panel-img" src={current.image} alt={`Panel ${safeIdx + 1}`} />
+          <div className="viewer-num">{safeIdx + 1} / {PANELS.length}</div>
+          <div className="viewer-status-bar">
+            {playEnabled
+              ? <span className="status-live">● LIVE</span>
+              : <span className="status-wait">⏸ Waiting for guide...</span>
+            }
           </div>
-        ) : (
-          <div className="card empty">
-            <div className="card-text">Loading...</div>
-          </div>
-        )}
-      </div>
-
-      {isController && (
-        <div className="controls">
-          <div className="play-controls">
-            <button
-              className={`btn-play ${playEnabled ? "on" : "off"}`}
-              onClick={playEnabled ? onStop : onStart}
-            >
-              {playEnabled ? "■ STOP" : "▶ START"}
-            </button>
-          </div>
-          <div className="nav-controls">
-            <button className="btn-nav" onClick={() => move(safeIdx - 1)} disabled={safeIdx === 0}>
-              ◀ Prev
-            </button>
-            <div className="nav-idx">{safeIdx + 1} / {cues.length}</div>
-            <button className="btn-nav" onClick={() => move(safeIdx + 1)} disabled={safeIdx === max}>
-              Next ▶
-            </button>
-          </div>
-          <button className="btn-reset" onClick={() => move(0)}>↺ Reset</button>
         </div>
       )}
-
-      {!isController && (
-        <div className="viewer-status">
-          {playEnabled ? (
-            <span className="status-live">● LIVE</span>
-          ) : (
-            <span className="status-wait">⏸ Waiting for guide...</span>
-          )}
+      {isController && (
+        <div className="controller-wrap">
+          <div className="ctrl-header">
+            <span>🏯 Osaka Castle Tour</span>
+            <span className="ctrl-role">GUIDE</span>
+          </div>
+          <div className="ctrl-preview">
+            <img className="ctrl-img" src={current.image} alt={`Panel ${safeIdx + 1}`} />
+            <div className="ctrl-num">{safeIdx + 1} / {PANELS.length}</div>
+          </div>
+          <div className="ctrl-controls">
+            <button className={`btn-play ${playEnabled ? "on" : "off"}`} onClick={playEnabled ? onStop : onStart}>
+              {playEnabled ? "■ STOP" : "▶ START"}
+            </button>
+            <div className="nav-row">
+              <button className="btn-nav" onClick={() => move(safeIdx - 1)} disabled={safeIdx === 0}>◀ Prev</button>
+              <div className="nav-idx">{safeIdx + 1} / {PANELS.length}</div>
+              <button className="btn-nav" onClick={() => move(safeIdx + 1)} disabled={safeIdx === max}>Next ▶</button>
+            </div>
+            <button className="btn-reset" onClick={() => move(0)}>↺ Reset</button>
+          </div>
         </div>
       )}
     </div>
