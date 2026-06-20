@@ -55,12 +55,19 @@
   /* ── SLIDE SCREEN ────────────────────────── */
   .slide-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; display: none; }
   .slide-screen.active { display: block; }
-  .slide-img-wrap { position: absolute; top: 0; left: 0; right: 0; bottom: 160px; overflow: hidden; }
+  .slide-img-wrap { position: absolute; top: 0; left: 0; right: 0; bottom: 160px; overflow: hidden; transition: bottom 0.3s ease; }
   .slide-img-wrap img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; background: var(--dark); }
   .slide-img-wrap .no-img { width: 100%; height: 100%; background: linear-gradient(135deg, var(--navy), var(--dark)); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
   .slide-img-wrap::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 38%; background: linear-gradient(transparent, var(--dark)); pointer-events: none; }
 
-  .slide-info-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 18px 16px; background: var(--dark); max-height: 45vh; overflow-y: auto; }
+  .slide-info-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 18px 16px; background: var(--dark); max-height: 45vh; overflow-y: auto; transition: transform 0.3s ease, opacity 0.3s ease; transform: translateY(0); opacity: 1; }
+
+  /* Hidden state — info bar slides down out of view, image expands to fill */
+  .slide-screen.info-hidden .slide-img-wrap { bottom: 0; }
+  .slide-screen.info-hidden .slide-info-bar { transform: translateY(100%); opacity: 0; pointer-events: none; }
+
+  .tap-hint { position: absolute; top: 14px; right: 14px; font-family: 'Cinzel', serif; font-size: 0.55rem; color: rgba(245,240,232,0.5); letter-spacing: 0.1em; background: rgba(13,15,30,0.5); padding: 5px 10px; border-radius: 12px; pointer-events: none; transition: opacity 0.3s ease; z-index: 5; }
+  .slide-screen.info-hidden .tap-hint { opacity: 0; }
 
   /* Landscape mode: shrink image area, compact info bar */
   @media (orientation: landscape) and (max-height: 500px) {
@@ -184,9 +191,15 @@ function buildSlides() {
     const div = document.createElement('div');
     div.className = 'screen slide-screen';
     div.id = 'screen-' + s.id;
+    div.onclick = (e) => {
+      // Don't toggle if user tapped the audio status row (let that handle play/pause)
+      if (e.target.closest('.audio-status')) return;
+      div.classList.toggle('info-hidden');
+    };
     const dots = SLIDES.map((_, di) => `<div class="dot-item${di===i?' on':''}"></div>`).join('');
     div.innerHTML = `
       <div class="slide-img-wrap">
+        <div class="tap-hint">TAP TO HIDE INFO</div>
         ${s.image
           ? `<img src="${s.image}" alt="${s.title}" loading="lazy">`
           : `<div class="no-img">🏯</div>`}
