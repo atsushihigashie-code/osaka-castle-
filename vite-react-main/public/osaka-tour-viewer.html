@@ -56,11 +56,23 @@
   .slide-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; display: none; }
   .slide-screen.active { display: block; }
   .slide-img-wrap { position: absolute; top: 0; left: 0; right: 0; bottom: 160px; overflow: hidden; }
-  .slide-img-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+  .slide-img-wrap img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; background: var(--dark); }
   .slide-img-wrap .no-img { width: 100%; height: 100%; background: linear-gradient(135deg, var(--navy), var(--dark)); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
   .slide-img-wrap::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 38%; background: linear-gradient(transparent, var(--dark)); pointer-events: none; }
 
-  .slide-info-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 18px 16px; background: var(--dark); }
+  .slide-info-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 18px 16px; background: var(--dark); max-height: 45vh; overflow-y: auto; }
+
+  /* Landscape mode: shrink image area, compact info bar */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .slide-img-wrap { bottom: 90px; }
+    .slide-info-bar { padding: 6px 14px 8px; max-height: 35vh; }
+    .stitle { font-size: 0.85rem; margin-bottom: 2px; }
+    .ssub { font-size: 0.65rem; }
+    .snum { font-size: 0.5rem; margin-bottom: 2px; }
+    .audio-status { margin-top: 5px; padding-top: 5px; }
+    .prog-bar { margin-top: 5px; }
+    .dots { margin-top: 4px; }
+  }
   .snum { font-family: 'Cinzel', serif; font-size: 0.58rem; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8; }
   .stitle { font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 700; color: var(--cream); line-height: 1.3; margin-bottom: 5px; }
   .ssub { font-size: 0.82rem; color: #aaa; font-style: italic; }
