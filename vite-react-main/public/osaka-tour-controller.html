@@ -16,6 +16,12 @@
   header h1 { font-family: 'Cinzel', serif; font-size: 1.3rem; color: var(--gold); letter-spacing: 0.15em; }
   header p { font-size: 0.8rem; color: #888; margin-top: 5px; }
 
+  /* ── Tour Switcher ─────────────────────────── */
+  .tour-switcher { display: flex; gap: 8px; margin-bottom: 20px; background: rgba(26,31,60,0.5); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; padding: 5px; }
+  .tour-tab { flex: 1; padding: 10px 8px; border-radius: 6px; border: none; background: transparent; color: #888; font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; line-height: 1.4; }
+  .tour-tab.active { background: var(--crimson); color: var(--cream); }
+  .tour-tab:not(.active):hover { color: var(--gold); background: rgba(201,168,76,0.08); }
+
   .status-bar {
     background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.3);
     border-radius: 6px; padding: 10px 16px; margin-bottom: 20px;
@@ -80,6 +86,8 @@
   <p>Handler Controller · 1615 The Summer Siege</p>
 </header>
 
+<div class="tour-switcher" id="tourSwitcher"></div>
+
 <div class="status-bar">
   <div><span class="dot" id="dot"></span><span class="lbl">Firebase: </span><span class="val" id="fbStatus">Connecting…</span></div>
   <div><span class="lbl">Slide: </span><span class="val" id="curLabel">—</span></div>
@@ -117,7 +125,7 @@ import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebase
 
 // ── Firebase Config (osaka-castle-tour) ──────────────────────
 const firebaseConfig = {
-  apiKey: "AIzaSyExample_REPLACE_WITH_YOURS",
+  apiKey: "AIzaSyCnzUg5_UkJmhfQQuoJ7mbNMli5lBsFWKw",
   authDomain: "osaka-castle-tour.firebaseapp.com",
   databaseURL: "https://osaka-castle-tour-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "osaka-castle-tour",
@@ -130,41 +138,87 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const tourRef = ref(db, 'siege_tour');
 
-// ── Slide Data ────────────────────────────────────────────────
-const SLIDES = [
-  { id:'characters', num:'✦', title:'Commanders of 1615',          subtitle:'Character Introduction',                audio:null },
-  { id:'slide-1',   num:'1',  title:'1615: The Summer Siege',       subtitle:'Title · Opening',                      audio:'大阪城ツアー１.mp3' },
-  { id:'slide-2',   num:'2',  title:'The Board is Set',             subtitle:'Tokugawa vs Toyotomi',                 audio:'大阪城ツアー２.mp3' },
-  { id:'slide-3',   num:'3',  title:'Opposing Philosophies',        subtitle:'Hidetada vs Ono Harunaga',             audio:'大阪城ツアー３.mp3' },
-  { id:'slide-4',   num:'4',  title:"Shogun's Bloodline",           subtitle:'The Tokugawa family at war',           audio:'大阪城ツアー４.mp3' },
-  { id:'slide-5',   num:'5',  title:'The Generation of 1600',       subtitle:'The Youth in War',                     audio:'大阪城ツアー５.mp3' },
-  { id:'slide-6',   num:'6',  title:'Cost of the Vanguard',         subtitle:'Honda Tadamasa · Ogasawara',           audio:'大阪城ツアー６.mp3' },
-  { id:'slide-7',   num:'7',  title:'Pillars of Resistance',        subtitle:'Mori Katsunaga',                       audio:'大阪城ツアー７.mp3' },
-  { id:'slide-8',   num:'8',  title:'Factions Within the Fortress', subtitle:'Ono Harunaga · Ono Harufusa',          audio:'大阪城ツアー８.mp3' },
-  { id:'slide-9',   num:'9',  title:'The Climax at Tennoji',        subtitle:"Sanada Yukimura's Final Charge",       audio:'大阪城ツアー９.mp3' },
-  { id:'slide-10',  num:'10', title:'The Tokugawa Legacy',          subtitle:'260 Years · The Meiji Era 1868',       audio:'大阪城ツアー１０.mp3' },
-];
+// ── Tour Definitions ──────────────────────────────────────────
+// NOTE: This SLIDES data is duplicated in osaka-tour-viewer.html.
+// If you edit slides here, mirror the same edit there.
+const TOURS = {
+  character_tour: {
+    label: 'Character\nTour',
+    slides: [
+      { id:'characters', num:'✦', title:'Commanders of 1615',          subtitle:'Character Introduction',                audio:null },
+      { id:'slide-1',   num:'1',  title:'1615: The Summer Siege',       subtitle:'Title · Opening',                      audio:'audio-01.mp3.mp3' },
+      { id:'slide-2',   num:'2',  title:'The Board is Set',             subtitle:'Tokugawa vs Toyotomi',                 audio:'audio-02.mp3.mp3' },
+      { id:'slide-3',   num:'3',  title:'Opposing Philosophies',        subtitle:'Hidetada vs Ono Harunaga',             audio:'audio-03.mp3.mp3' },
+      { id:'slide-4',   num:'4',  title:"Shogun's Bloodline",           subtitle:'The Tokugawa family at war',           audio:'audio-04.mp3.mp3' },
+      { id:'slide-5',   num:'5',  title:'The Generation of 1600',       subtitle:'The Youth in War',                     audio:'audio-05.mp3.mp3' },
+      { id:'slide-6',   num:'6',  title:'Cost of the Vanguard',         subtitle:'Honda Tadamasa · Ogasawara',           audio:'audio-06.mp3.mp3' },
+      { id:'slide-7',   num:'7',  title:'Pillars of Resistance',        subtitle:'Mori Katsunaga',                       audio:'audio-07.mp3.mp3' },
+      { id:'slide-8',   num:'8',  title:'Factions Within the Fortress', subtitle:'Ono Harunaga · Ono Harufusa',          audio:'audio-08.mp3.mp3' },
+      { id:'slide-9',   num:'9',  title:'The Climax at Tennoji',        subtitle:"Sanada Yukimura's Final Charge",       audio:'audio-09.mp3.mp3' },
+      { id:'slide-10',  num:'10', title:'The Tokugawa Legacy',          subtitle:'260 Years · The Meiji Era 1868',       audio:'audio-10.mp3.mp3' },
+    ]
+  },
+  siege_narrative: {
+    label: 'Siege\nNarrative',
+    slides: [
+      { id:'n-characters', num:'✦', title:'Heroes of the Narrative',       subtitle:'Featured Commanders',                  audio:null },
+      { id:'n-1', num:'1', title:'Prelude to a Renewed War',                subtitle:'Winter Truce Broken',                  audio:'siege-01.mp3' },
+      { id:'n-2', num:'2', title:'The Battle of Kashii',                    subtitle:'Harufusa & Naoyuki vs. Nagaakira',     audio:'siege-02.mp3' },
+      { id:'n-3', num:'3', title:'Domyoji — The Last Stand',                subtitle:'Goto Mototsugu',                       audio:'siege-03.mp3' },
+      { id:'n-4', num:'4', title:'Domyoji — The Retreat',                   subtitle:"Sanada Daisuke's First Battle",        audio:'siege-04.mp3' },
+      { id:'n-5', num:'5', title:'The Battle of Yao-Wakae',                 subtitle:'Kimura Shigenari · Chosokabe',         audio:'siege-05.mp3' },
+      { id:'n-6', num:'6', title:'Tennoji-Okayama — The Formation',         subtitle:'Eve of the Final Battle',              audio:'siege-06.mp3' },
+      { id:'n-7', num:'7', title:"Yukimura's Charge",                       subtitle:"Strike on Ieyasu's Headquarters",      audio:'siege-07.mp3' },
+      { id:'n-8', num:'8', title:'The Fall of Osaka Castle',                subtitle:'Lady Yodo · Hideyori',                 audio:'siege-08.mp3' },
+      { id:'n-9', num:'9', title:'Epilogue — The Age of Peace',             subtitle:'260 Years to the Meiji Era',           audio:'siege-09.mp3' },
+    ]
+  }
+};
 
 // ── State ──────────────────────────────────────────────────────
-let currentIndex = 0;
+let currentTourId = 'character_tour';
+let tourIndex = { character_tour: 0, siege_narrative: 0 };
+
+function curSlides() { return TOURS[currentTourId].slides; }
+function currentIndex() { return tourIndex[currentTourId]; }
 
 function pushState(extra = {}) {
-  const slide = SLIDES[currentIndex];
+  const slide = curSlides()[currentIndex()];
   set(tourRef, {
-    slideIndex: currentIndex,
+    tourId: currentTourId,
+    slideIndex: currentIndex(),
     slideId: slide.id,
     updatedAt: Date.now(),
     ...extra
   });
 }
 
-// ── Render ────────────────────────────────────────────────────
+// ── Render: Tour Switcher ──────────────────────────────────────
+function renderTourSwitcher() {
+  const wrap = document.getElementById('tourSwitcher');
+  wrap.innerHTML = '';
+  Object.keys(TOURS).forEach(tid => {
+    const btn = document.createElement('button');
+    btn.className = 'tour-tab' + (tid === currentTourId ? ' active' : '');
+    btn.style.whiteSpace = 'pre-line';
+    btn.textContent = TOURS[tid].label;
+    btn.onclick = () => {
+      currentTourId = tid;
+      pushState();
+      updateUI();
+      showNotif('⇄ Switched to ' + TOURS[tid].label.replace('\n', ' '));
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+// ── Render: Slides ──────────────────────────────────────────────
 function renderSlides() {
   const grid = document.getElementById('slidesGrid');
   grid.innerHTML = '';
-  SLIDES.forEach((s, i) => {
+  curSlides().forEach((s, i) => {
     const btn = document.createElement('button');
-    btn.className = 'slide-btn' + (i === currentIndex ? ' active' : '');
+    btn.className = 'slide-btn' + (i === currentIndex() ? ' active' : '');
     btn.innerHTML = `
       <div class="slide-num">${s.num}</div>
       <div class="slide-info">
@@ -179,7 +233,8 @@ function renderSlides() {
 }
 
 function updateUI() {
-  const slide = SLIDES[currentIndex];
+  renderTourSwitcher();
+  const slide = curSlides()[currentIndex()];
   document.getElementById('curLabel').textContent = `${slide.num} — ${slide.title}`;
   const npBox = document.getElementById('npBox');
   if (slide.audio) {
@@ -192,21 +247,23 @@ function updateUI() {
 }
 
 // ── Navigation ────────────────────────────────────────────────
-window.navigate = function(dir) { goTo(currentIndex + dir); };
+window.navigate = function(dir) { goTo(currentIndex() + dir); };
 window.replayAudio = function() { pushState({ replay: Date.now() }); showNotif('↺ Replaying audio'); };
 
 function goTo(i) {
-  currentIndex = Math.max(0, Math.min(i, SLIDES.length - 1));
+  const slides = curSlides();
+  tourIndex[currentTourId] = Math.max(0, Math.min(i, slides.length - 1));
   pushState();
   updateUI();
-  showNotif('→ ' + SLIDES[currentIndex].title);
+  showNotif('→ ' + slides[currentIndex()].title);
 }
 
 // ── Firebase listen (for UI sync) ─────────────────────────────
 onValue(tourRef, (snap) => {
   const data = snap.val();
   if (data && data.slideIndex !== undefined) {
-    currentIndex = data.slideIndex;
+    currentTourId = data.tourId || 'character_tour';
+    tourIndex[currentTourId] = data.slideIndex;
     updateUI();
   }
   document.getElementById('dot').className = 'dot live';
@@ -233,7 +290,6 @@ function showNotif(msg) {
 }
 
 // ── Init ──────────────────────────────────────────────────────
-renderSlides();
 updateUI();
 </script>
 </body>

@@ -28,8 +28,8 @@
   .er31 { margin-top: 30px; font-family: 'Cinzel', serif; font-size: 0.6rem; color: #333; letter-spacing: 0.25em; }
 
   /* ── CHARACTERS ──────────────────────────── */
-  #screen-characters { background: var(--dark); padding: 28px 18px 50px; display: none; }
-  #screen-characters.active { display: block; }
+  .chars-screen { background: var(--dark); padding: 28px 18px 50px; display: none; }
+  .chars-screen.active { display: block; }
   .chars-hd { text-align: center; margin-bottom: 28px; }
   .eyebrow { font-family: 'Cinzel', serif; font-size: 0.62rem; color: var(--gold); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 9px; }
   .chars-hd h1 { font-family: 'Cinzel', serif; font-size: 1.5rem; color: var(--cream); font-weight: 900; line-height: 1.2; }
@@ -44,9 +44,9 @@
   .char-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.18); border-radius: 9px; padding: 13px; margin-bottom: 9px; display: flex; gap: 11px; align-items: flex-start; }
   .char-card.tok { border-left: 3px solid #7AA0D4; }
   .char-card.toy { border-left: 3px solid #E07070; }
-  .char-icon { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid rgba(201,168,76,0.25); }
-  .char-icon.tok { background: rgba(26,31,60,0.8); }
-  .char-icon.toy { background: rgba(139,26,26,0.4); }
+  .char-icon { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid rgba(201,168,76,0.25); overflow: hidden; background-size: cover; background-position: center; }
+  .char-icon.tok { background-color: rgba(26,31,60,0.8); }
+  .char-icon.toy { background-color: rgba(139,26,26,0.4); }
   .char-info { flex: 1; }
   .char-name { font-family: 'Cinzel', serif; font-size: 0.82rem; color: var(--gold); margin-bottom: 3px; }
   .char-role { font-size: 0.73rem; color: #aaa; line-height: 1.4; }
@@ -99,9 +99,12 @@
   .prog-bar { height: 2px; background: rgba(201,168,76,0.13); margin-top: 12px; }
   .prog-bar-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.4s linear; }
 
-  .dots { display: flex; gap: 5px; justify-content: center; margin-top: 9px; }
+  .dots { display: flex; gap: 5px; justify-content: center; margin-top: 9px; flex-wrap: wrap; }
   .dot-item { width: 5px; height: 5px; border-radius: 50%; background: rgba(201,168,76,0.18); transition: all 0.3s; }
   .dot-item.on { background: var(--gold); width: 13px; border-radius: 3px; }
+
+  /* ── Tour badge (small, top-left, always visible during slides) ─ */
+  .tour-badge { position: absolute; top: 14px; left: 14px; font-family: 'Cinzel', serif; font-size: 0.52rem; color: rgba(245,240,232,0.55); letter-spacing: 0.15em; background: rgba(13,15,30,0.5); padding: 5px 10px; border-radius: 12px; pointer-events: none; z-index: 5; text-transform: uppercase; }
 
   audio { display: none; }
 </style>
@@ -117,34 +120,8 @@
     <div class="er31">EAST RIVER 31</div>
   </div>
 
-  <!-- CHARACTERS -->
-  <div class="screen" id="screen-characters">
-    <div class="chars-hd">
-      <div class="eyebrow">1615 · Summer War of Osaka</div>
-      <h1>Commanders of <span>1615</span></h1>
-      <div class="gold-rule"></div>
-      <p>The leaders who shaped the final battle</p>
-    </div>
-
-    <div class="faction-ttl tok">⚔ Tokugawa Forces (East)</div>
-    <div class="char-card tok"><div class="char-icon tok">⚙</div><div class="char-info"><div class="char-name">Tokugawa Ieyasu</div><div class="char-role">Supreme Commander · Founder of Edo Shogunate</div><div class="char-fate">Fate: Died Apr 17, 1616 — the year after the siege</div></div></div>
-    <div class="char-card tok"><div class="char-icon tok">🛡</div><div class="char-info"><div class="char-name">Tokugawa Hidetada</div><div class="char-role">Overall Commander (Rear Guard) · 2nd Shogun</div><div class="char-fate">Fate: Established the Tokugawa regime</div></div></div>
-    <div class="char-card tok"><div class="char-icon tok">⚔</div><div class="char-info"><div class="char-name">Matsudaira Tadanao</div><div class="char-role">Age 20 · Greatest Contributor at Tennoji</div><div class="char-fate">Fate: Exiled in 1623</div></div></div>
-    <div class="char-card tok"><div class="char-icon tok">🔱</div><div class="char-info"><div class="char-name">Ii Naotaka</div><div class="char-role">Age 25 · Inheritor of the Red Brigade (Akazonae)</div><div class="char-fate">Fate: Held the front line, saving the Shogun</div></div></div>
-    <div class="char-card tok"><div class="char-icon tok">🌙</div><div class="char-info"><div class="char-name">Honda Tadamasa</div><div class="char-role">Age 33 · Son of Honda Tadakatsu · Battle of Wakae</div><div class="char-fate">Fate: Killed in action</div></div></div>
-    <div class="char-card tok"><div class="char-icon tok">🗡</div><div class="char-info"><div class="char-name">Ogasawara Hideyoshi</div><div class="char-role">Age 46 · Lord of Matsumoto Domain</div><div class="char-fate">Fate: Killed in action alongside his son</div></div></div>
-
-    <div class="faction-ttl toy" style="margin-top:8px">🔥 Toyotomi Forces (West)</div>
-    <div class="char-card toy"><div class="char-icon toy">🌸</div><div class="char-info"><div class="char-name">Sanada Yukimura</div><div class="char-role">Japan's greatest warrior · Broke through Shogunate lines 3 times</div><div class="char-fate">Fate: Killed at Tennoji — died a legend</div></div></div>
-    <div class="char-card toy"><div class="char-icon toy">🌺</div><div class="char-info"><div class="char-name">Ono Harunaga</div><div class="char-role">The Moderate · Central Command · Peacemaker</div><div class="char-fate">Fate: Committed suicide with Hideyori</div></div></div>
-    <div class="char-card toy"><div class="char-icon toy">🗡</div><div class="char-info"><div class="char-name">Ono Harufusa</div><div class="char-role">The Hardliner · Younger brother of Harunaga</div><div class="char-fate">Fate: Escaped — ultimate fate unknown</div></div></div>
-    <div class="char-card toy"><div class="char-icon toy">⚡</div><div class="char-info"><div class="char-name">Mori Katsunaga</div><div class="char-role">Pillar of Toyotomi · Tennoji Front</div><div class="char-fate">Fate: Fought valiantly, then committed suicide</div></div></div>
-    <div class="char-card toy"><div class="char-icon toy">🌸</div><div class="char-info"><div class="char-name">Sanada Daisuke</div><div class="char-role">Age ~13 · Eldest son of Yukimura · Stayed in castle</div><div class="char-fate">Fate: Committed suicide alongside Hideyori</div></div></div>
-    <div style="height:30px"></div>
-  </div>
-
-  <!-- SLIDE SCREENS (built by JS) -->
-  <div id="slide-screens"></div>
+  <!-- SCREENS (built by JS, both tours) -->
+  <div id="all-screens"></div>
 </div>
 
 <audio id="player" preload="none"></audio>
@@ -168,66 +145,140 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const tourRef = ref(db, 'siege_tour');
 
-// ── Slide Data ────────────────────────────────────────────────
-const SLIDES = [
-  { id:'characters', num:'✦', title:'Commanders of 1615',          subtitle:'Character Introduction',           audio:null,                    image:null },
-  { id:'slide-1',   num:'1',  title:'1615: The Summer Siege',       subtitle:'The final clash for the realm',    audio:'大阪城ツアー１.mp3',    image:'大阪城ツアー総合_1.jpg' },
-  { id:'slide-2',   num:'2',  title:'The Board is Set',             subtitle:'Tokugawa vs Toyotomi',             audio:'大阪城ツアー２.mp3',    image:'大阪城ツアー総合_2.jpg' },
-  { id:'slide-3',   num:'3',  title:'Opposing Philosophies',        subtitle:'Hidetada vs Ono Harunaga',         audio:'大阪城ツアー３.mp3',    image:'大阪城ツアー総合_3.jpg' },
-  { id:'slide-4',   num:'4',  title:"Shogun's Bloodline",           subtitle:'The Tokugawa family at war',       audio:'大阪城ツアー４.mp3',    image:'大阪城ツアー総合_4.jpg' },
-  { id:'slide-5',   num:'5',  title:'The Generation of 1600',       subtitle:'The Youth in War',                 audio:'大阪城ツアー５.mp3',    image:'大阪城ツアー総合_5.jpg' },
-  { id:'slide-6',   num:'6',  title:'Cost of the Vanguard',         subtitle:'Honda Tadamasa · Ogasawara',       audio:'大阪城ツアー６.mp3',    image:'大阪城ツアー総合_6.jpg' },
-  { id:'slide-7',   num:'7',  title:'Pillars of Resistance',        subtitle:'Mori Katsunaga',                   audio:'大阪城ツアー７.mp3',    image:'大阪城ツアー総合_7.jpg' },
-  { id:'slide-8',   num:'8',  title:'Factions Within the Fortress', subtitle:'Ono Harunaga · Ono Harufusa',      audio:'大阪城ツアー８.mp3',    image:'大阪城ツアー総合_8.jpg' },
-  { id:'slide-9',   num:'9',  title:'The Climax at Tennoji',        subtitle:"Sanada Yukimura's Final Charge",   audio:'大阪城ツアー９.mp3',    image:'大阪城ツアー総合_9.jpg' },
-  { id:'slide-10',  num:'10', title:'The Tokugawa Legacy',          subtitle:'260 Years · The Meiji Era 1868',   audio:'大阪城ツアー１０.mp3',  image:'大阪城ツアー総合_10.jpg' },
-];
+// ── Tour Definitions ──────────────────────────────────────────
+// NOTE: This SLIDES data is duplicated in osaka-tour-controller.html.
+// If you edit slides here, mirror the same edit there.
+const TOURS = {
+  character_tour: {
+    label: 'Character Tour',
+    hasCharScreen: true,
+    slides: [
+      { id:'characters', num:'✦', title:'Commanders of 1615',          subtitle:'Character Introduction',           audio:null,                    image:null },
+      { id:'slide-1',   num:'1',  title:'1615: The Summer Siege',       subtitle:'The final clash for the realm',    audio:'audio-01.mp3.mp3',    image:'大阪城ツアー総合_1.jpg' },
+      { id:'slide-2',   num:'2',  title:'The Board is Set',             subtitle:'Tokugawa vs Toyotomi',             audio:'audio-02.mp3.mp3',    image:'大阪城ツアー総合_2.jpg' },
+      { id:'slide-3',   num:'3',  title:'Opposing Philosophies',        subtitle:'Hidetada vs Ono Harunaga',         audio:'audio-03.mp3.mp3',    image:'大阪城ツアー総合_3.jpg' },
+      { id:'slide-4',   num:'4',  title:"Shogun's Bloodline",           subtitle:'The Tokugawa family at war',       audio:'audio-04.mp3.mp3',    image:'大阪城ツアー総合_4.jpg' },
+      { id:'slide-5',   num:'5',  title:'The Generation of 1600',       subtitle:'The Youth in War',                 audio:'audio-05.mp3.mp3',    image:'大阪城ツアー総合_5.jpg' },
+      { id:'slide-6',   num:'6',  title:'Cost of the Vanguard',         subtitle:'Honda Tadamasa · Ogasawara',       audio:'audio-06.mp3.mp3',    image:'大阪城ツアー総合_6.jpg' },
+      { id:'slide-7',   num:'7',  title:'Pillars of Resistance',        subtitle:'Mori Katsunaga',                   audio:'audio-07.mp3.mp3',    image:'大阪城ツアー総合_7.jpg' },
+      { id:'slide-8',   num:'8',  title:'Factions Within the Fortress', subtitle:'Ono Harunaga · Ono Harufusa',      audio:'audio-08.mp3.mp3',    image:'大阪城ツアー総合_8.jpg' },
+      { id:'slide-9',   num:'9',  title:'The Climax at Tennoji',        subtitle:"Sanada Yukimura's Final Charge",   audio:'audio-09.mp3.mp3',    image:'大阪城ツアー総合_9.jpg' },
+      { id:'slide-10',  num:'10', title:'The Tokugawa Legacy',          subtitle:'260 Years · The Meiji Era 1868',   audio:'audio-10.mp3.mp3',  image:'大阪城ツアー総合_10.jpg' },
+    ]
+  },
+  siege_narrative: {
+    label: 'Siege Narrative',
+    hasCharScreen: true,
+    slides: [
+      { id:'n-characters', num:'✦', title:'Heroes of the Narrative', subtitle:'Featured Commanders', audio:null, image:null },
+      { id:'n-1', num:'1', title:'Prelude to a Renewed War',         subtitle:'Winter Truce Broken',              audio:'siege-01.mp3', image:'narrative-1.jpg' },
+      { id:'n-2', num:'2', title:'The Battle of Kashii',             subtitle:'Harufusa & Naoyuki vs. Nagaakira', audio:'siege-02.mp3', image:'narrative-2.jpg' },
+      { id:'n-3', num:'3', title:'Domyoji — The Last Stand',         subtitle:'Goto Mototsugu',                   audio:'siege-03.mp3', image:'narrative-3.jpg' },
+      { id:'n-4', num:'4', title:'Domyoji — The Retreat',            subtitle:"Sanada Daisuke's First Battle",    audio:'siege-04.mp3', image:'narrative-4.jpg' },
+      { id:'n-5', num:'5', title:'The Battle of Yao-Wakae',          subtitle:'Kimura Shigenari · Chosokabe',     audio:'siege-05.mp3', image:'narrative-5.jpg' },
+      { id:'n-6', num:'6', title:'Tennoji-Okayama — The Formation',  subtitle:'Eve of the Final Battle',          audio:'siege-06.mp3', image:'narrative-6.jpg' },
+      { id:'n-7', num:'7', title:"Yukimura's Charge",                subtitle:"Strike on Ieyasu's Headquarters",  audio:'siege-07.mp3', image:'narrative-7.jpg' },
+      { id:'n-8', num:'8', title:'The Fall of Osaka Castle',         subtitle:'Lady Yodo · Hideyori',             audio:'siege-08.mp3', image:'narrative-8.jpg' },
+      { id:'n-9', num:'9', title:'Epilogue — The Age of Peace',      subtitle:'260 Years to the Meiji Era',       audio:'siege-09.mp3', image:'narrative-9.jpg' },
+    ]
+  }
+};
 
-// ── Build slide DOM ───────────────────────────────────────────
-function buildSlides() {
-  const container = document.getElementById('slide-screens');
-  SLIDES.forEach((s, i) => {
-    if (s.id === 'characters') return;
-    const div = document.createElement('div');
-    div.className = 'screen slide-screen';
-    div.id = 'screen-' + s.id;
-    if (s.id === 'slide-2') {
+// Character roster for the "characters" intro screens
+const CHAR_TOUR_HTML = `
+  <div class="chars-hd">
+    <div class="eyebrow">1615 · Summer War of Osaka</div>
+    <h1>Commanders of <span>1615</span></h1>
+    <div class="gold-rule"></div>
+    <p>The leaders who shaped the final battle</p>
+  </div>
+  <div class="faction-ttl tok">⚔ Tokugawa Forces (East)</div>
+  <div class="char-card tok"><div class="char-icon tok">⚙</div><div class="char-info"><div class="char-name">Tokugawa Ieyasu</div><div class="char-role">Supreme Commander · Founder of Edo Shogunate</div><div class="char-fate">Fate: Died Apr 17, 1616 — the year after the siege</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">🛡</div><div class="char-info"><div class="char-name">Tokugawa Hidetada</div><div class="char-role">Overall Commander (Rear Guard) · 2nd Shogun</div><div class="char-fate">Fate: Established the Tokugawa regime</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">⚔</div><div class="char-info"><div class="char-name">Matsudaira Tadanao</div><div class="char-role">Age 20 · Greatest Contributor at Tennoji</div><div class="char-fate">Fate: Exiled in 1623</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">🔱</div><div class="char-info"><div class="char-name">Ii Naotaka</div><div class="char-role">Age 25 · Inheritor of the Red Brigade (Akazonae)</div><div class="char-fate">Fate: Held the front line, saving the Shogun</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">🌙</div><div class="char-info"><div class="char-name">Honda Tadamasa</div><div class="char-role">Age 33 · Son of Honda Tadakatsu · Battle of Wakae</div><div class="char-fate">Fate: Killed in action</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">🗡</div><div class="char-info"><div class="char-name">Ogasawara Hideyoshi</div><div class="char-role">Age 46 · Lord of Matsumoto Domain</div><div class="char-fate">Fate: Killed in action alongside his son</div></div></div>
+  <div class="faction-ttl toy" style="margin-top:8px">🔥 Toyotomi Forces (West)</div>
+  <div class="char-card toy"><div class="char-icon toy">🌸</div><div class="char-info"><div class="char-name">Sanada Yukimura</div><div class="char-role">Japan's greatest warrior · Broke through Shogunate lines 3 times</div><div class="char-fate">Fate: Killed at Tennoji — died a legend</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy">🌺</div><div class="char-info"><div class="char-name">Ono Harunaga</div><div class="char-role">The Moderate · Central Command · Peacemaker</div><div class="char-fate">Fate: Committed suicide with Hideyori</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy">🗡</div><div class="char-info"><div class="char-name">Ono Harufusa</div><div class="char-role">The Hardliner · Younger brother of Harunaga</div><div class="char-fate">Fate: Escaped — ultimate fate unknown</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy">⚡</div><div class="char-info"><div class="char-name">Mori Katsunaga</div><div class="char-role">Pillar of Toyotomi · Tennoji Front</div><div class="char-fate">Fate: Fought valiantly, then committed suicide</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy">🌸</div><div class="char-info"><div class="char-name">Sanada Daisuke</div><div class="char-role">Age ~13 · Eldest son of Yukimura · Stayed in castle</div><div class="char-fate">Fate: Committed suicide alongside Hideyori</div></div></div>
+  <div style="height:30px"></div>
+`;
+
+const NARRATIVE_CHAR_HTML = `
+  <div class="chars-hd">
+    <div class="eyebrow">The Summer Siege of Osaka · 1615</div>
+    <h1>Heroes of the <span>Narrative</span></h1>
+    <div class="gold-rule"></div>
+    <p>Four lives at the heart of the story</p>
+  </div>
+  <div class="char-card toy"><div class="char-icon toy" style="background-image:url('mototsugu.jpg')"></div><div class="char-info"><div class="char-name">Goto Mototsugu</div><div class="char-role">Held Domyoji alone against the Tokugawa vanguard, buying time with his life</div><div class="char-fate">Fate: Killed in action, 1615</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy" style="background-image:url('yukimura.jpeg')"></div><div class="char-info"><div class="char-name">Sanada Yukimura (Nobushige)</div><div class="char-role">Led the final charge that nearly reached Ieyasu himself</div><div class="char-fate">Fate: Killed at Tennoji — remembered as "Japan's greatest warrior"</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy" style="background-image:url('daisuke.jpg')"></div><div class="char-info"><div class="char-name">Sanada Daisuke (Yukimasa)</div><div class="char-role">Yukimura's son, fighting his first and only battle at his father's side</div><div class="char-fate">Fate: Survived Domyoji's retreat; later died at the castle's fall</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy" style="background-image:url('shigenari.jpg')"></div><div class="char-info"><div class="char-name">Kimura Shigenari</div><div class="char-role">Rode to Wakae already resigned to his own death</div><div class="char-fate">Fate: Killed in action; admired by friend and foe alike</div></div></div>
+  <div style="height:30px"></div>
+`;
+
+// ── Build slide DOM for all tours ──────────────────────────────
+function buildScreens() {
+  const container = document.getElementById('all-screens');
+
+  Object.keys(TOURS).forEach(tourId => {
+    const tour = TOURS[tourId];
+
+    tour.slides.forEach((s, i) => {
+      const isCharScreen = s.audio === null && s.image === null;
+      const div = document.createElement('div');
+      const screenId = tourId + '__' + s.id;
+      div.id = 'screen-' + screenId;
+
+      if (isCharScreen) {
+        div.className = 'screen chars-screen';
+        div.innerHTML = (tourId === 'siege_narrative') ? NARRATIVE_CHAR_HTML : CHAR_TOUR_HTML;
+        container.appendChild(div);
+        return;
+      }
+
+      div.className = 'screen slide-screen';
       div.onclick = (e) => {
-        // Don't toggle if user tapped the audio status row (let that handle play/pause)
         if (e.target.closest('.audio-status')) return;
         div.classList.toggle('info-hidden');
       };
-    }
-    const dots = SLIDES.map((_, di) => `<div class="dot-item${di===i?' on':''}"></div>`).join('');
-    div.innerHTML = `
-      <div class="slide-img-wrap">
-        ${s.id === 'slide-2' ? '<div class="tap-hint">TAP TO HIDE INFO</div>' : ''}
-        ${s.image
-          ? `<img src="${s.image}" alt="${s.title}" loading="lazy">`
-          : `<div class="no-img">🏯</div>`}
-      </div>
-      <div class="slide-info-bar">
-        <div class="snum">Slide ${s.num} of 10</div>
-        <div class="stitle">${s.title}</div>
-        <div class="ssub">${s.subtitle}</div>
-        ${s.audio ? `
-        <div class="audio-status" id="audstatus-${s.id}">
-          <div class="wave paused" id="wave-${s.id}">
-            <span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <span class="audio-txt" id="audtxt-${s.id}">Audio ready — tap to play</span>
-        </div>` : ''}
-        <div class="prog-bar"><div class="prog-bar-fill" id="prog-${s.id}"></div></div>
-        <div class="dots">${dots}</div>
-      </div>
-    `;
-    container.appendChild(div);
+      const dots = tour.slides.map((_, di) => `<div class="dot-item${di===i?' on':''}"></div>`).join('');
+      div.innerHTML = `
+        <div class="slide-img-wrap">
+          <div class="tour-badge">${tour.label}</div>
+          <div class="tap-hint">TAP TO HIDE INFO</div>
+          ${s.image
+            ? `<img src="${s.image}" alt="${s.title}" loading="lazy">`
+            : `<div class="no-img">🏯</div>`}
+        </div>
+        <div class="slide-info-bar">
+          <div class="snum">Slide ${s.num} of ${tour.slides.length - 1}</div>
+          <div class="stitle">${s.title}</div>
+          <div class="ssub">${s.subtitle}</div>
+          ${s.audio ? `
+          <div class="audio-status" id="audstatus-${screenId}">
+            <div class="wave paused" id="wave-${screenId}">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <span class="audio-txt" id="audtxt-${screenId}">Audio ready — tap to play</span>
+          </div>` : ''}
+          <div class="prog-bar"><div class="prog-bar-fill" id="prog-${screenId}"></div></div>
+          <div class="dots">${dots}</div>
+        </div>
+      `;
+      container.appendChild(div);
+    });
   });
 }
 
 // ── Audio ─────────────────────────────────────────────────────
 const player = document.getElementById('player');
-let lastSlideId = null;
+let lastScreenId = null;
 let lastReplay = null;
 
 function resetAudioUI() {
@@ -236,8 +287,7 @@ function resetAudioUI() {
   document.querySelectorAll('.prog-bar-fill').forEach(el => el.style.width = '0%');
 }
 
-function playAudio(slideId) {
-  const slide = SLIDES.find(s => s.id === slideId);
+function playAudio(screenId, slide) {
   if (!slide || !slide.audio) return;
 
   player.pause();
@@ -245,12 +295,11 @@ function playAudio(slideId) {
   player.src = slide.audio;
   player.load();
 
-  const wave = document.getElementById('wave-' + slideId);
-  const txt  = document.getElementById('audtxt-' + slideId);
-  const prog = document.getElementById('prog-' + slideId);
+  const wave = document.getElementById('wave-' + screenId);
+  const txt  = document.getElementById('audtxt-' + screenId);
+  const prog = document.getElementById('prog-' + screenId);
 
-  // Tap fallback
-  const statusEl = document.getElementById('audstatus-' + slideId);
+  const statusEl = document.getElementById('audstatus-' + screenId);
   if (statusEl) {
     statusEl.onclick = () => {
       player.play().then(() => {
@@ -286,7 +335,7 @@ function playAudio(slideId) {
 let currentScreenId = null;
 
 function showScreen(screenId) {
-  if (currentScreenId === screenId) return; // 同じ画面なら何もしない
+  if (currentScreenId === screenId) return;
   currentScreenId = screenId;
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('screen-' + screenId);
@@ -294,35 +343,34 @@ function showScreen(screenId) {
 }
 
 // ── Firebase listener ─────────────────────────────────────────
-let lastData = null;
-
 onValue(tourRef, (snap) => {
   const data = snap.val();
   if (!data || data.slideIndex === undefined) return;
 
-  const slide = SLIDES[data.slideIndex];
+  const tourId = data.tourId || 'character_tour';
+  const tour = TOURS[tourId];
+  if (!tour) return;
+  const slide = tour.slides[data.slideIndex];
   if (!slide) return;
 
-  // Show correct screen
-  const screenId = slide.id === 'characters' ? 'characters' : slide.id;
+  const screenId = tourId + '__' + slide.id;
   showScreen(screenId);
 
-  // Play audio only when slideIndex or replay actually changes
-  const isNewSlide = slide.id !== lastSlideId;
-  const isReplay   = data.replay && data.replay !== lastReplay;
+  const isNewSlide = screenId !== lastScreenId;
+  const isReplay = data.replay && data.replay !== lastReplay;
 
   if (slide.audio && (isNewSlide || isReplay)) {
-    lastSlideId = slide.id;
-    lastReplay  = data.replay || null;
-    playAudio(slide.id);
+    lastScreenId = screenId;
+    lastReplay = data.replay || null;
+    playAudio(screenId, slide);
   } else if (!slide.audio && isNewSlide) {
     player.pause();
-    lastSlideId = slide.id;
+    lastScreenId = screenId;
   }
 });
 
 // ── Init ──────────────────────────────────────────────────────
-buildSlides();
+buildScreens();
 </script>
 </body>
 </html>
