@@ -191,15 +191,17 @@ function buildSlides() {
     const div = document.createElement('div');
     div.className = 'screen slide-screen';
     div.id = 'screen-' + s.id;
-    div.onclick = (e) => {
-      // Don't toggle if user tapped the audio status row (let that handle play/pause)
-      if (e.target.closest('.audio-status')) return;
-      div.classList.toggle('info-hidden');
-    };
+    if (s.id === 'slide-2') {
+      div.onclick = (e) => {
+        // Don't toggle if user tapped the audio status row (let that handle play/pause)
+        if (e.target.closest('.audio-status')) return;
+        div.classList.toggle('info-hidden');
+      };
+    }
     const dots = SLIDES.map((_, di) => `<div class="dot-item${di===i?' on':''}"></div>`).join('');
     div.innerHTML = `
       <div class="slide-img-wrap">
-        <div class="tap-hint">TAP TO HIDE INFO</div>
+        ${s.id === 'slide-2' ? '<div class="tap-hint">TAP TO HIDE INFO</div>' : ''}
         ${s.image
           ? `<img src="${s.image}" alt="${s.title}" loading="lazy">`
           : `<div class="no-img">🏯</div>`}
