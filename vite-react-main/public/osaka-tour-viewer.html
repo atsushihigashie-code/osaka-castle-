@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,11 +15,12 @@
 
   #app { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
 
-  .screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0; pointer-events: none; transition: opacity 0.6s ease; overflow-y: auto; }
-  .screen.active { opacity: 1; pointer-events: all; }
+  .screen { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; }
+  .screen.active { display: block; }
 
   /* ── WAITING ─────────────────────────────── */
-  #screen-waiting { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--dark); text-align: center; padding: 40px; }
+  #screen-waiting { display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--dark); text-align: center; padding: 40px; }
+  #screen-waiting.active { display: flex; }
   .mon { font-size: 4rem; margin-bottom: 20px; animation: pulse 2s ease-in-out infinite; }
   @keyframes pulse { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.05)} }
   .wait-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 10px; }
@@ -28,7 +28,8 @@
   .er31 { margin-top: 30px; font-family: 'Cinzel', serif; font-size: 0.6rem; color: #333; letter-spacing: 0.25em; }
 
   /* ── CHARACTERS ──────────────────────────── */
-  #screen-characters { background: var(--dark); padding: 28px 18px 50px; }
+  #screen-characters { background: var(--dark); padding: 28px 18px 50px; display: none; }
+  #screen-characters.active { display: block; }
   .chars-hd { text-align: center; margin-bottom: 28px; }
   .eyebrow { font-family: 'Cinzel', serif; font-size: 0.62rem; color: var(--gold); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 9px; }
   .chars-hd h1 { font-family: 'Cinzel', serif; font-size: 1.5rem; color: var(--cream); font-weight: 900; line-height: 1.2; }
@@ -52,13 +53,14 @@
   .char-fate { font-size: 0.68rem; color: #777; margin-top: 3px; font-style: italic; }
 
   /* ── SLIDE SCREEN ────────────────────────── */
-  .slide-screen { display: flex; flex-direction: column; overflow: hidden; }
-  .slide-img-wrap { flex: 1; position: relative; min-height: 0; overflow: hidden; }
+  .slide-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; display: none; }
+  .slide-screen.active { display: block; }
+  .slide-img-wrap { position: absolute; top: 0; left: 0; right: 0; bottom: 160px; overflow: hidden; }
   .slide-img-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
   .slide-img-wrap .no-img { width: 100%; height: 100%; background: linear-gradient(135deg, var(--navy), var(--dark)); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
   .slide-img-wrap::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 38%; background: linear-gradient(transparent, var(--dark)); pointer-events: none; }
 
-  .slide-info-bar { padding: 14px 18px 18px; background: var(--dark); flex-shrink: 0; }
+  .slide-info-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 18px 16px; background: var(--dark); }
   .snum { font-family: 'Cinzel', serif; font-size: 0.58rem; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8; }
   .stitle { font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 700; color: var(--cream); line-height: 1.3; margin-bottom: 5px; }
   .ssub { font-size: 0.82rem; color: #aaa; font-style: italic; }
@@ -134,7 +136,7 @@ import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10
 
 // ── Firebase Config ───────────────────────────────────────────
 const firebaseConfig = {
-  apiKey: "AIzaSyExample_REPLACE_WITH_YOURS",
+  apiKey: "AIzaSyCnzUg5_UkJmhfQQuoJ7mbNMli5lBsFWKw",
   authDomain: "osaka-castle-tour.firebaseapp.com",
   databaseURL: "https://osaka-castle-tour-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "osaka-castle-tour",
@@ -150,15 +152,15 @@ const tourRef = ref(db, 'siege_tour');
 // ── Slide Data ────────────────────────────────────────────────
 const SLIDES = [
   { id:'characters', num:'✦', title:'Commanders of 1615',          subtitle:'Character Introduction',           audio:null,                    image:null },
-  { id:'slide-1',   num:'1',  title:'1615: The Summer Siege',       subtitle:'The final clash for the realm',    audio:'大阪城ツアー１.mp3',    image:'PDF大阪城新しい_page-0001.jpg' },
+  { id:'slide-1',   num:'1',  title:'1615: The Summer Siege',       subtitle:'The final clash for the realm',    audio:'大阪城ツアー１.mp3',    image:'大阪城ツアー総合_1.jpg' },
   { id:'slide-2',   num:'2',  title:'The Board is Set',             subtitle:'Tokugawa vs Toyotomi',             audio:'大阪城ツアー２.mp3',    image:'大阪城ツアー総合_2.jpg' },
-  { id:'slide-3',   num:'3',  title:'Opposing Philosophies',        subtitle:'Hidetada vs Ono Harunaga',         audio:'大阪城ツアー３.mp3',    image:'PDF大阪城新しい_page-0003.jpg' },
-  { id:'slide-4',   num:'4',  title:"Shogun's Bloodline",           subtitle:'The Tokugawa family at war',       audio:'大阪城ツアー４.mp3',    image:'PDF大阪城新しい_page-0004.jpg' },
-  { id:'slide-5',   num:'5',  title:'The Generation of 1600',       subtitle:'The Youth in War',                 audio:'大阪城ツアー５.mp3',    image:'PDF大阪城新しい_page-0005.jpg' },
-  { id:'slide-6',   num:'6',  title:'Cost of the Vanguard',         subtitle:'Honda Tadamasa · Ogasawara',       audio:'大阪城ツアー６.mp3',    image:'PDF大阪城新しい_page-0006.jpg' },
-  { id:'slide-7',   num:'7',  title:'Pillars of Resistance',        subtitle:'Mori Katsunaga',                   audio:'大阪城ツアー７.mp3',    image:'PDF大阪城新しい_page-0007.jpg' },
-  { id:'slide-8',   num:'8',  title:'Factions Within the Fortress', subtitle:'Ono Harunaga · Ono Harufusa',      audio:'大阪城ツアー８.mp3',    image:'PDF大阪城新しい_page-0008.jpg' },
-  { id:'slide-9',   num:'9',  title:'The Climax at Tennoji',        subtitle:"Sanada Yukimura's Final Charge",   audio:'大阪城ツアー９.mp3',    image:'PDF大阪城新しい_page-0009.jpg' },
+  { id:'slide-3',   num:'3',  title:'Opposing Philosophies',        subtitle:'Hidetada vs Ono Harunaga',         audio:'大阪城ツアー３.mp3',    image:'大阪城ツアー総合_3.jpg' },
+  { id:'slide-4',   num:'4',  title:"Shogun's Bloodline",           subtitle:'The Tokugawa family at war',       audio:'大阪城ツアー４.mp3',    image:'大阪城ツアー総合_4.jpg' },
+  { id:'slide-5',   num:'5',  title:'The Generation of 1600',       subtitle:'The Youth in War',                 audio:'大阪城ツアー５.mp3',    image:'大阪城ツアー総合_5.jpg' },
+  { id:'slide-6',   num:'6',  title:'Cost of the Vanguard',         subtitle:'Honda Tadamasa · Ogasawara',       audio:'大阪城ツアー６.mp3',    image:'大阪城ツアー総合_6.jpg' },
+  { id:'slide-7',   num:'7',  title:'Pillars of Resistance',        subtitle:'Mori Katsunaga',                   audio:'大阪城ツアー７.mp3',    image:'大阪城ツアー総合_7.jpg' },
+  { id:'slide-8',   num:'8',  title:'Factions Within the Fortress', subtitle:'Ono Harunaga · Ono Harufusa',      audio:'大阪城ツアー８.mp3',    image:'大阪城ツアー総合_8.jpg' },
+  { id:'slide-9',   num:'9',  title:'The Climax at Tennoji',        subtitle:"Sanada Yukimura's Final Charge",   audio:'大阪城ツアー９.mp3',    image:'大阪城ツアー総合_9.jpg' },
   { id:'slide-10',  num:'10', title:'The Tokugawa Legacy',          subtitle:'260 Years · The Meiji Era 1868',   audio:'大阪城ツアー１０.mp3',  image:'大阪城ツアー総合_10.jpg' },
 ];
 
@@ -254,13 +256,19 @@ function playAudio(slideId) {
 }
 
 // ── Screen switch ─────────────────────────────────────────────
+let currentScreenId = null;
+
 function showScreen(screenId) {
+  if (currentScreenId === screenId) return; // 同じ画面なら何もしない
+  currentScreenId = screenId;
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('screen-' + screenId);
   if (el) el.classList.add('active');
 }
 
 // ── Firebase listener ─────────────────────────────────────────
+let lastData = null;
+
 onValue(tourRef, (snap) => {
   const data = snap.val();
   if (!data || data.slideIndex === undefined) return;
@@ -272,15 +280,15 @@ onValue(tourRef, (snap) => {
   const screenId = slide.id === 'characters' ? 'characters' : slide.id;
   showScreen(screenId);
 
-  // Play audio if new slide or replay triggered
-  const isNewSlide  = slide.id !== lastSlideId;
-  const isReplay    = data.replay && data.replay !== lastReplay;
+  // Play audio only when slideIndex or replay actually changes
+  const isNewSlide = slide.id !== lastSlideId;
+  const isReplay   = data.replay && data.replay !== lastReplay;
 
   if (slide.audio && (isNewSlide || isReplay)) {
     lastSlideId = slide.id;
     lastReplay  = data.replay || null;
     playAudio(slide.id);
-  } else if (!slide.audio) {
+  } else if (!slide.audio && isNewSlide) {
     player.pause();
     lastSlideId = slide.id;
   }
@@ -291,4 +299,3 @@ buildSlides();
 </script>
 </body>
 </html>
-<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8LPQcn7EmyM6A8U7gKPK4QQyFSW1" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
