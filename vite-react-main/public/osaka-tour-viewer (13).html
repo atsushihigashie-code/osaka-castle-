@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1615: The Summer Siege of Osaka</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+  :root {
+    --crimson: #8B1A1A; --navy: #1A1F3C; --gold: #C9A84C;
+    --cream: #F5F0E8; --dark: #0D0F1E;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--dark); font-family: 'EB Garamond', serif; color: var(--cream); }
+
+  #app { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+  .screen { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; }
+  .screen.active { display: block; }
+
+  /* ── WAITING ─────────────────────────────── */
+  #screen-waiting { display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--dark); text-align: center; padding: 40px; }
+  #screen-waiting.active { display: flex; }
+  .mon { font-size: 4rem; margin-bottom: 20px; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.05)} }
+  .wait-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 10px; }
+  .wait-sub { font-size: 0.85rem; color: #666; font-style: italic; }
+  .er31 { margin-top: 30px; font-family: 'Cinzel', serif; font-size: 0.6rem; color: #333; letter-spacing: 0.25em; }
+
+  /* ── CHARACTERS ──────────────────────────── */
+  .chars-screen { background: var(--dark); padding: 28px 18px 50px; display: none; }
+  .chars-screen.active { display: block; }
+  .chars-hd { text-align: center; margin-bottom: 28px; }
+  .eyebrow { font-family: 'Cinzel', serif; font-size: 0.62rem; color: var(--gold); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 9px; }
+  .chars-hd h1 { font-family: 'Cinzel', serif; font-size: 1.5rem; color: var(--cream); font-weight: 900; line-height: 1.2; }
+  .chars-hd h1 span { color: var(--gold); }
+  .gold-rule { width: 50px; height: 1px; background: var(--gold); margin: 14px auto; }
+  .chars-hd p { font-size: 0.88rem; color: #aaa; font-style: italic; }
+
+  .faction-ttl { font-family: 'Cinzel', serif; font-size: 0.67rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 7px 12px; border-radius: 4px; margin: 18px 0 12px; display: inline-block; }
+  .faction-ttl.tok { background: rgba(26,31,60,0.8); color: #7AA0D4; border: 1px solid rgba(122,160,212,0.4); }
+  .faction-ttl.toy { background: rgba(139,26,26,0.4); color: #E07070; border: 1px solid rgba(224,112,112,0.4); }
+
+  .char-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.18); border-radius: 9px; padding: 13px; margin-bottom: 9px; display: flex; gap: 11px; align-items: flex-start; }
+  .char-card.tok { border-left: 3px solid #7AA0D4; }
+  .char-card.toy { border-left: 3px solid #E07070; }
+  .char-icon { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid rgba(201,168,76,0.25); overflow: hidden; background-size: cover; background-position: center; }
+  .char-icon.tok { background-color: rgba(26,31,60,0.8); }
+  .char-icon.toy { background-color: rgba(139,26,26,0.4); }
+  .char-info { flex: 1; }
+  .char-name { font-family: 'Cinzel', serif; font-size: 0.82rem; color: var(--gold); margin-bottom: 3px; }
+  .char-role { font-size: 0.73rem; color: #aaa; line-height: 1.4; }
+  .char-fate { font-size: 0.68rem; color: #777; margin-top: 3px; font-style: italic; }
+
+  /* ── SLIDE SCREEN ────────────────────────── */
+  .slide-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; display: none; }
+  .slide-screen.active { display: block; }
+  .slide-img-wrap { position: absolute; top: 0; left: 0; right: 0; bottom: 160px; overflow: hidden; transition: bottom 0.3s ease; }
+  .img-stack { position: relative; width: 100%; height: 100%; }
+  .img-stack img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; background: var(--dark); opacity: 0; transition: opacity 1.2s ease; }
+  .img-stack img.active { opacity: 1; }
+  .slide-img-wrap .no-img { width: 100%; height: 100%; background: linear-gradient(135deg, var(--navy), var(--dark)); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+  .slide-img-wrap::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 38%; background: linear-gradient(transparent, var(--dark)); pointer-events: none; }
+
+  .slide-info-bar { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 18px 16px; background: var(--dark); max-height: 45vh; overflow-y: auto; transition: transform 0.3s ease, opacity 0.3s ease; transform: translateY(0); opacity: 1; }
+
+  /* Hidden state — info bar slides down out of view, image expands to fill */
+  .slide-screen.info-hidden .slide-img-wrap { bottom: 0; }
+  .slide-screen.info-hidden .slide-info-bar { transform: translateY(100%); opacity: 0; pointer-events: none; }
+
+  .tap-hint { position: absolute; top: 14px; right: 14px; font-family: 'Cinzel', serif; font-size: 0.55rem; color: rgba(245,240,232,0.5); letter-spacing: 0.1em; background: rgba(13,15,30,0.5); padding: 5px 10px; border-radius: 12px; pointer-events: none; transition: opacity 0.3s ease; z-index: 5; }
+  .slide-screen.info-hidden .tap-hint { opacity: 0; }
+
+  /* Landscape mode: shrink image area, compact info bar */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .slide-img-wrap { bottom: 90px; }
+    .slide-info-bar { padding: 6px 14px 8px; max-height: 35vh; }
+    .stitle { font-size: 0.85rem; margin-bottom: 2px; }
+    .ssub { font-size: 0.65rem; }
+    .snum { font-size: 0.5rem; margin-bottom: 2px; }
+    .audio-status { margin-top: 5px; padding-top: 5px; }
+    .prog-bar { margin-top: 5px; }
+    .dots { margin-top: 4px; }
+  }
+  .snum { font-family: 'Cinzel', serif; font-size: 0.58rem; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8; }
+  .stitle { font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 700; color: var(--cream); line-height: 1.3; margin-bottom: 5px; }
+  .ssub { font-size: 0.82rem; color: #aaa; font-style: italic; }
+
+  .audio-status { display: flex; align-items: center; gap: 8px; margin-top: 11px; padding-top: 11px; border-top: 1px solid rgba(201,168,76,0.13); cursor: pointer; }
+  .wave { display: flex; gap: 2px; align-items: center; height: 15px; }
+  .wave span { display: block; width: 3px; background: var(--gold); border-radius: 2px; animation: wv 0.8s ease-in-out infinite; }
+  .wave span:nth-child(1){height:5px;animation-delay:0s}
+  .wave span:nth-child(2){height:11px;animation-delay:.1s}
+  .wave span:nth-child(3){height:15px;animation-delay:.2s}
+  .wave span:nth-child(4){height:9px;animation-delay:.3s}
+  .wave span:nth-child(5){height:5px;animation-delay:.4s}
+  @keyframes wv { 0%,100%{transform:scaleY(.5);opacity:.5} 50%{transform:scaleY(1);opacity:1} }
+  .wave.paused span { animation-play-state: paused; opacity: 0.25; }
+  .audio-txt { font-family: 'Cinzel', serif; font-size: 0.63rem; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .prog-bar { height: 2px; background: rgba(201,168,76,0.13); margin-top: 12px; }
+  .prog-bar-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.4s linear; }
+
+  .dots { display: flex; gap: 5px; justify-content: center; margin-top: 9px; flex-wrap: wrap; }
+  .dot-item { width: 5px; height: 5px; border-radius: 50%; background: rgba(201,168,76,0.18); transition: all 0.3s; }
+  .dot-item.on { background: var(--gold); width: 13px; border-radius: 3px; }
+
+  /* ── Tour badge (small, top-left, always visible during slides) ─ */
+  .tour-badge { position: absolute; top: 14px; left: 14px; font-family: 'Cinzel', serif; font-size: 0.52rem; color: rgba(245,240,232,0.55); letter-spacing: 0.15em; background: rgba(13,15,30,0.5); padding: 5px 10px; border-radius: 12px; pointer-events: none; z-index: 5; text-transform: uppercase; }
+
+  audio { display: none; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- WAITING -->
+  <div class="screen active" id="screen-waiting">
+    <div class="mon">🏯</div>
+    <div class="wait-title">1615: The Summer Siege of Osaka</div>
+    <div class="wait-sub">Awaiting tour to begin…</div>
+    <div class="er31">EAST RIVER 31</div>
+  </div>
+
+  <!-- SCREENS (built by JS, both tours) -->
+  <div id="all-screens"></div>
+</div>
+
+<audio id="player" preload="none"></audio>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ── Firebase Config ───────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyCnzUg5_UkJmhfQQuoJ7mbNMli5lBsFWKw",
+  authDomain: "osaka-castle-tour.firebaseapp.com",
+  databaseURL: "https://osaka-castle-tour-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "osaka-castle-tour",
+  storageBucket: "osaka-castle-tour.firebasestorage.app",
+  messagingSenderId: "82330141589",
+  appId: "1:82330141589:web:945254147c2c27f042ac9c"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const tourRef = ref(db, 'siege_tour');
+
+// ── Tour Definitions ──────────────────────────────────────────
+// NOTE: This SLIDES data is duplicated in osaka-tour-controller.html.
+// If you edit slides here, mirror the same edit there.
+const TOURS = {
+  character_tour: {
+    label: 'Character Tour',
+    hasCharScreen: true,
+    slides: [
+      { id:'characters', num:'✦', title:'Commanders of 1615',          subtitle:'Character Introduction',           audio:null,                    image:null },
+      { id:'slide-1',   num:'1',  title:'1615: The Summer Siege',       subtitle:'The final clash for the realm',    audio:'audio-01.mp3.mp3',    image:'大阪城ツアー総合_1.jpg' },
+      { id:'slide-2',   num:'2',  title:'The Board is Set',             subtitle:'Tokugawa vs Toyotomi',             audio:'audio-02.mp3.mp3',    image:'大阪城ツアー総合_2.jpg' },
+      { id:'slide-3',   num:'3',  title:'Opposing Philosophies',        subtitle:'Hidetada vs Ono Harunaga',         audio:'audio-03.mp3.mp3',    image:'大阪城ツアー総合_3.jpg' },
+      { id:'slide-4',   num:'4',  title:"Shogun's Bloodline",           subtitle:'The Tokugawa family at war',       audio:'audio-04.mp3.mp3',    image:'大阪城ツアー総合_4.jpg' },
+      { id:'slide-5',   num:'5',  title:'The Generation of 1600',       subtitle:'The Youth in War',                 audio:'audio-05.mp3.mp3',    image:'大阪城ツアー総合_5.jpg' },
+      { id:'slide-6',   num:'6',  title:'Cost of the Vanguard',         subtitle:'Honda Tadamasa · Ogasawara',       audio:'audio-06.mp3.mp3',    image:'大阪城ツアー総合_6.jpg' },
+      { id:'slide-7',   num:'7',  title:'Pillars of Resistance',        subtitle:'Mori Katsunaga',                   audio:'audio-07.mp3.mp3',    image:'大阪城ツアー総合_7.jpg' },
+      { id:'slide-8',   num:'8',  title:'Factions Within the Fortress', subtitle:'Ono Harunaga · Ono Harufusa',      audio:'audio-08.mp3.mp3',    image:'大阪城ツアー総合_8.jpg' },
+      { id:'slide-9',   num:'9',  title:'The Climax at Tennoji',        subtitle:"Sanada Yukimura's Final Charge",   audio:'audio-09.mp3.mp3',    image:'大阪城ツアー総合_9.jpg' },
+      { id:'slide-10',  num:'10', title:'The Tokugawa Legacy',          subtitle:'260 Years · The Meiji Era 1868',   audio:'audio-10.mp3.mp3',  image:'大阪城ツアー総合_10.jpg' },
+    ]
+  },
+  siege_narrative: {
+    label: 'Siege Narrative',
+    hasCharScreen: true,
+    slides: [
+      { id:'n-characters', num:'✦', title:'Heroes of the Narrative', subtitle:'Featured Commanders', audio:null, images:null },
+      { id:'n-1', num:'1', title:'Prelude to a Renewed War',         subtitle:'Winter Truce Broken',              audio:'siege-01.mp3', images:['narrative-1.jpg','narrative-1b.jpg'] },
+      { id:'n-2', num:'2', title:'The Battle of Kashii',             subtitle:'Harufusa & Naoyuki vs. Nagaakira', audio:'siege-02.mp3', images:['narrative-2.jpg'] },
+      { id:'n-3', num:'3', title:'Domyoji — The Last Stand',         subtitle:'Goto Mototsugu',                   audio:'siege-03.mp3', images:['narrative-3.jpg','narrative-3b.jpg'] },
+      { id:'n-4', num:'4', title:'Domyoji — The Retreat',            subtitle:"Sanada Daisuke's First Battle",    audio:'siege-04.mp3', images:['narrative-4.jpg'] },
+      { id:'n-5', num:'5', title:'The Battle of Yao-Wakae',          subtitle:'Kimura Shigenari · Chosokabe',     audio:'siege-05.mp3', images:['narrative-5.jpg'] },
+      { id:'n-6', num:'6', title:'Tennoji-Okayama — The Formation',  subtitle:'Eve of the Final Battle',          audio:'siege-06.mp3', images:['narrative-6.jpg'] },
+      { id:'n-7', num:'7', title:"Yukimura's Charge",                subtitle:"Strike on Ieyasu's Headquarters",  audio:'siege-07.mp3', images:['narrative-7.jpg'] },
+      { id:'n-8', num:'8', title:'The Fall of Osaka Castle',         subtitle:'Lady Yodo · Hideyori',             audio:'siege-08.mp3', images:['narrative-8.jpg','narrative-8b.jpg'] },
+      { id:'n-9', num:'9', title:'Epilogue — The Age of Peace',      subtitle:'260 Years to the Meiji Era',       audio:'siege-09.mp3', images:['narrative-9.jpg'] },
+    ]
+  }
+};
+
+// Character roster for the "characters" intro screens
+const CHAR_TOUR_HTML = `
+  <div class="chars-hd">
+    <div class="eyebrow">1615 · Summer War of Osaka</div>
+    <h1>Commanders of <span>1615</span></h1>
+    <div class="gold-rule"></div>
+    <p>The leaders who shaped the final battle</p>
+  </div>
+  <div class="faction-ttl tok">⚔ Tokugawa Forces (East)</div>
+  <div class="char-card tok"><div class="char-icon tok">⚙</div><div class="char-info"><div class="char-name">Tokugawa Ieyasu</div><div class="char-role">Supreme Commander · Founder of Edo Shogunate</div><div class="char-fate">Fate: Died Apr 17, 1616 — the year after the siege</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">🛡</div><div class="char-info"><div class="char-name">Tokugawa Hidetada</div><div class="char-role">Overall Commander (Rear Guard) · 2nd Shogun</div><div class="char-fate">Fate: Established the Tokugawa regime</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">⚔</div><div class="char-info"><div class="char-name">Matsudaira Tadanao</div><div class="char-role">Age 20 · Greatest Contributor at Tennoji</div><div class="char-fate">Fate: Exiled in 1623</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">🔱</div><div class="char-info"><div class="char-name">Ii Naotaka</div><div class="char-role">Age 25 · Inheritor of the Red Brigade (Akazonae)</div><div class="char-fate">Fate: Held the front line, saving the Shogun</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">🌙</div><div class="char-info"><div class="char-name">Honda Tadamasa</div><div class="char-role">Age 33 · Son of Honda Tadakatsu · Battle of Wakae</div><div class="char-fate">Fate: Killed in action</div></div></div>
+  <div class="char-card tok"><div class="char-icon tok">🗡</div><div class="char-info"><div class="char-name">Ogasawara Hideyoshi</div><div class="char-role">Age 46 · Lord of Matsumoto Domain</div><div class="char-fate">Fate: Killed in action alongside his son</div></div></div>
+  <div class="faction-ttl toy" style="margin-top:8px">🔥 Toyotomi Forces (West)</div>
+  <div class="char-card toy"><div class="char-icon toy">🌸</div><div class="char-info"><div class="char-name">Sanada Yukimura</div><div class="char-role">Japan's greatest warrior · Broke through Shogunate lines 3 times</div><div class="char-fate">Fate: Killed at Tennoji — died a legend</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy">🌺</div><div class="char-info"><div class="char-name">Ono Harunaga</div><div class="char-role">The Moderate · Central Command · Peacemaker</div><div class="char-fate">Fate: Committed suicide with Hideyori</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy">🗡</div><div class="char-info"><div class="char-name">Ono Harufusa</div><div class="char-role">The Hardliner · Younger brother of Harunaga</div><div class="char-fate">Fate: Escaped — ultimate fate unknown</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy">⚡</div><div class="char-info"><div class="char-name">Mori Katsunaga</div><div class="char-role">Pillar of Toyotomi · Tennoji Front</div><div class="char-fate">Fate: Fought valiantly, then committed suicide</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy">🌸</div><div class="char-info"><div class="char-name">Sanada Daisuke</div><div class="char-role">Age ~13 · Eldest son of Yukimura · Stayed in castle</div><div class="char-fate">Fate: Committed suicide alongside Hideyori</div></div></div>
+  <div style="height:30px"></div>
+`;
+
+const NARRATIVE_CHAR_HTML = `
+  <div class="chars-hd">
+    <div class="eyebrow">The Summer Siege of Osaka · 1615</div>
+    <h1>Heroes of the <span>Narrative</span></h1>
+    <div class="gold-rule"></div>
+    <p>Four lives at the heart of the story</p>
+  </div>
+  <div class="char-card toy"><div class="char-icon toy" style="background-image:url('mototsugu.jpg')"></div><div class="char-info"><div class="char-name">Goto Mototsugu</div><div class="char-role">Held Domyoji alone against the Tokugawa vanguard, buying time with his life</div><div class="char-fate">Fate: Killed in action, 1615</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy" style="background-image:url('yukimura.jpeg')"></div><div class="char-info"><div class="char-name">Sanada Yukimura (Nobushige)</div><div class="char-role">Led the final charge that nearly reached Ieyasu himself</div><div class="char-fate">Fate: Killed at Tennoji — remembered as "Japan's greatest warrior"</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy" style="background-image:url('daisuke.jpg')"></div><div class="char-info"><div class="char-name">Sanada Daisuke (Yukimasa)</div><div class="char-role">Yukimura's son, fighting his first and only battle at his father's side</div><div class="char-fate">Fate: Survived Domyoji's retreat; later died at the castle's fall</div></div></div>
+  <div class="char-card toy"><div class="char-icon toy" style="background-image:url('shigenari.jpg')"></div><div class="char-info"><div class="char-name">Kimura Shigenari</div><div class="char-role">Rode to Wakae already resigned to his own death</div><div class="char-fate">Fate: Killed in action; admired by friend and foe alike</div></div></div>
+  <div style="height:30px"></div>
+`;
+
+// ── Build slide DOM for all tours ──────────────────────────────
+function buildScreens() {
+  const container = document.getElementById('all-screens');
+
+  Object.keys(TOURS).forEach(tourId => {
+    const tour = TOURS[tourId];
+
+    tour.slides.forEach((s, i) => {
+      const isCharScreen = s.audio === null && !s.image && !s.images;
+      const div = document.createElement('div');
+      const screenId = tourId + '__' + s.id;
+      div.id = 'screen-' + screenId;
+
+      if (isCharScreen) {
+        div.className = 'screen chars-screen';
+        div.innerHTML = (tourId === 'siege_narrative') ? NARRATIVE_CHAR_HTML : CHAR_TOUR_HTML;
+        container.appendChild(div);
+        return;
+      }
+
+      div.className = 'screen slide-screen';
+      div.onclick = (e) => {
+        if (e.target.closest('.audio-status')) return;
+        div.classList.toggle('info-hidden');
+      };
+      const dots = tour.slides.map((_, di) => `<div class="dot-item${di===i?' on':''}"></div>`).join('');
+      const imgList = s.images || (s.image ? [s.image] : []);
+      const imgsHtml = imgList.length
+        ? `<div class="img-stack" data-screen="${screenId}">` +
+          imgList.map((src, ii) => `<img src="${src}" alt="${s.title}" loading="lazy" class="${ii===0?'active':''}">`).join('') +
+          `</div>`
+        : `<div class="no-img">🏯</div>`;
+      div.innerHTML = `
+        <div class="slide-img-wrap">
+          <div class="tour-badge">${tour.label}</div>
+          <div class="tap-hint">TAP TO HIDE INFO</div>
+          ${imgsHtml}
+        </div>
+        <div class="slide-info-bar">
+          <div class="snum">Slide ${s.num} of ${tour.slides.length - 1}</div>
+          <div class="stitle">${s.title}</div>
+          <div class="ssub">${s.subtitle}</div>
+          ${s.audio ? `
+          <div class="audio-status" id="audstatus-${screenId}">
+            <div class="wave paused" id="wave-${screenId}">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <span class="audio-txt" id="audtxt-${screenId}">Audio ready — tap to play</span>
+          </div>` : ''}
+          <div class="prog-bar"><div class="prog-bar-fill" id="prog-${screenId}"></div></div>
+          <div class="dots">${dots}</div>
+        </div>
+      `;
+      container.appendChild(div);
+      if (imgList.length > 1) {
+        let idx = 0;
+        setInterval(() => {
+          const stack = div.querySelector('.img-stack');
+          if (!stack) return;
+          const imgs = stack.querySelectorAll('img');
+          imgs[idx].classList.remove('active');
+          idx = (idx + 1) % imgs.length;
+          imgs[idx].classList.add('active');
+        }, 6000);
+      }
+    });
+  });
+}
+
+// ── Audio ─────────────────────────────────────────────────────
+const player = document.getElementById('player');
+let lastScreenId = null;
+let lastReplay = null;
+
+function resetAudioUI() {
+  document.querySelectorAll('.wave').forEach(el => el.classList.add('paused'));
+  document.querySelectorAll('[id^="audtxt-"]').forEach(el => el.textContent = 'Audio ready — tap to play');
+  document.querySelectorAll('.prog-bar-fill').forEach(el => el.style.width = '0%');
+}
+
+function playAudio(screenId, slide) {
+  if (!slide || !slide.audio) return;
+
+  player.pause();
+  resetAudioUI();
+  player.src = slide.audio;
+  player.load();
+
+  const wave = document.getElementById('wave-' + screenId);
+  const txt  = document.getElementById('audtxt-' + screenId);
+  const prog = document.getElementById('prog-' + screenId);
+
+  const statusEl = document.getElementById('audstatus-' + screenId);
+  if (statusEl) {
+    statusEl.onclick = () => {
+      player.play().then(() => {
+        if (wave) wave.classList.remove('paused');
+        if (txt) txt.textContent = '♪ Playing narration…';
+      });
+    };
+  }
+
+  player.oncanplay = () => {
+    player.play().then(() => {
+      if (wave) wave.classList.remove('paused');
+      if (txt)  txt.textContent = '♪ Playing narration…';
+    }).catch(() => {
+      if (txt) txt.textContent = '▶ Tap here to play audio';
+    });
+  };
+
+  player.ontimeupdate = () => {
+    if (player.duration && prog) {
+      prog.style.width = (player.currentTime / player.duration * 100) + '%';
+    }
+  };
+
+  player.onended = () => {
+    if (wave) wave.classList.add('paused');
+    if (txt)  txt.textContent = '✓ Complete';
+    if (prog) prog.style.width = '100%';
+  };
+}
+
+// ── Screen switch ─────────────────────────────────────────────
+let currentScreenId = null;
+
+function showScreen(screenId) {
+  if (currentScreenId === screenId) return;
+  currentScreenId = screenId;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + screenId);
+  if (el) el.classList.add('active');
+}
+
+// ── Firebase listener ─────────────────────────────────────────
+onValue(tourRef, (snap) => {
+  const data = snap.val();
+  if (!data || data.slideIndex === undefined) return;
+
+  const tourId = data.tourId || 'character_tour';
+  const tour = TOURS[tourId];
+  if (!tour) return;
+  const slide = tour.slides[data.slideIndex];
+  if (!slide) return;
+
+  const screenId = tourId + '__' + slide.id;
+  showScreen(screenId);
+
+  const isNewSlide = screenId !== lastScreenId;
+  const isReplay = data.replay && data.replay !== lastReplay;
+
+  if (slide.audio && (isNewSlide || isReplay)) {
+    lastScreenId = screenId;
+    lastReplay = data.replay || null;
+    playAudio(screenId, slide);
+  } else if (!slide.audio && isNewSlide) {
+    player.pause();
+    lastScreenId = screenId;
+  }
+});
+
+// ── Init ──────────────────────────────────────────────────────
+buildScreens();
+</script>
+</body>
+</html>
