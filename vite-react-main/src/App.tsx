@@ -28,7 +28,19 @@ export default function App() {
   const [idx, setIdx] = useState<number>(0);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [playEnabled, setPlayEnabled] = useState(false);
+
+  // Reuse a single <audio> element for the whole session instead of
+  // creating a new Audio() on every slide. iOS Safari's autoplay
+  // permission is granted per-element the first time it plays as a
+  // direct result of a user gesture; a brand new Audio() created later
+  // (e.g. triggered by a Firebase update, not a tap) does not inherit
+  // that permission and gets silently blocked. Reusing the same element
+  // keeps it "unlocked" for the rest of the tour.
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  if (!audioRef.current && typeof window !== "undefined") {
+    audioRef.current = new Audio();
+    audioRef.current.preload = "auto";
+  }
 
   const max = PANELS.length - 1;
   const safeIdx = clamp(idx, 0, max);
@@ -60,28 +72,45 @@ export default function App() {
 
   useEffect(() => {
     if (playEnabled) return;
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+    const a = audioRef.current;
+    if (a) {
+      a.pause();
+      a.currentTime = 0;
     }
   }, [playEnabled]);
 
   useEffect(() => {
     if (!soundEnabled || !playEnabled) return;
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-    const a = new Audio(current.audio);
-    a.preload = "auto";
-    audioRef.current = a;
+    const a = audioRef.current;
+    if (!a) return;
+    a.pause();
+    a.src = current.audio;
+    a.currentTime = 0;
     a.play().catch(() => {});
-    return () => { try { a.pause(); a.currentTime = 0; } catch {} };
   }, [safeIdx, soundEnabled, playEnabled, current.audio]);
+
+  // Unlock the single shared <audio> element on the first tap. Playing
+  // it (even a fraction of a second, immediately paused) here — inside
+  // the click handler itself — is what grants it permission to be
+  // played programmatically later on every subsequent slide change.
+  const handleTapStart = () => {
+    const a = audioRef.current;
+    if (a) {
+      a.muted = true;
+      a.play().then(() => {
+        a.pause();
+        a.currentTime = 0;
+        a.muted = false;
+      }).catch(() => {
+        a.muted = false;
+      });
+    }
+    setSoundEnabled(true);
+  };
 
   if (!soundEnabled) {
     return (
-      <div className="tap-screen" onClick={() => setSoundEnabled(true)}>
+      <div className="tap-screen" onClick={handleTapStart}>
         <div className="tap-castle">🏯</div>
         <div className="tap-title">Osaka Castle Tour</div>
         <div className="tap-subtitle">1615 The Summer Siege of Osaka</div>
