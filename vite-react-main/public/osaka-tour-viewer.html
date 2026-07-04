@@ -109,6 +109,11 @@
   .tour-badge { position: absolute; top: 14px; left: 14px; font-family: 'Cinzel', serif; font-size: 0.52rem; color: rgba(245,240,232,0.55); letter-spacing: 0.15em; background: rgba(13,15,30,0.5); padding: 5px 10px; border-radius: 12px; pointer-events: none; z-index: 5; text-transform: uppercase; }
 
   audio { display: none; }
+
+  /* ── Audio unlock overlay ─────────────────── */
+  #unlock-overlay { position: fixed; inset: 0; z-index: 999; background: rgba(13,15,30,0.92); display: flex; align-items: center; justify-content: center; text-align: center; padding: 30px; cursor: pointer; }
+  #unlock-overlay.hidden { display: none; }
+  #unlock-overlay .unlock-txt { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold); letter-spacing: 0.08em; }
 </style>
 </head>
 <body>
@@ -124,6 +129,11 @@
 
   <!-- SCREENS (built by JS, both tours) -->
   <div id="all-screens"></div>
+</div>
+
+<!-- Tap-to-unlock overlay for mobile audio autoplay -->
+<div id="unlock-overlay">
+  <div class="unlock-txt">TAP TO BEGIN<br><span style="font-size:0.7rem;color:#888;letter-spacing:0.05em;">This enables audio narration</span></div>
 </div>
 
 <audio id="player" preload="none"></audio>
@@ -297,6 +307,41 @@ function buildScreens() {
 const player = document.getElementById('player');
 let lastScreenId = null;
 let lastReplay = null;
+
+// Unlock audio playback on mobile browsers with one initial tap.
+// Mobile browsers block audio.play() unless it happens as a direct
+// result of a user gesture. This overlay forces that first gesture,
+// then plays a muted dummy sound to "unlock" the <audio> element so
+// that later Firebase-triggered playback is allowed.
+const unlockOverlay = document.getElementById('unlock-overlay');
+let audioUnlocked = false;
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  unlockOverlay.classList.add('hidden');
+  try {
+    player.muted = true;
+    player.src = 'audio-01.mp3.mp3';
+    const p = player.play();
+    if (p && p.then) {
+      p.then(() => {
+        player.pause();
+        player.currentTime = 0;
+        player.muted = false;
+      }).catch(() => {
+        player.muted = false;
+      });
+    } else {
+      player.muted = false;
+    }
+  } catch (e) {
+    player.muted = false;
+  }
+}
+
+unlockOverlay.addEventListener('click', unlockAudio);
+unlockOverlay.addEventListener('touchstart', unlockAudio);
 
 function resetAudioUI() {
   document.querySelectorAll('.wave').forEach(el => el.classList.add('paused'));
