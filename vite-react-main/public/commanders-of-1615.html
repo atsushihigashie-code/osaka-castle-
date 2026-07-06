@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1615: The Summer Siege of Osaka — Full Documentary</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+  :root {
+    --gold: #C9A84C; --cream: #F5F0E8; --dark: #0D0F1E; --blue-accent:#7AA0D4; --red-accent:#E07070;
+  }
+  * { box-sizing: border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
+  html, body { width:100%; height:100%; overflow:hidden; background:var(--dark); font-family:'EB Garamond', serif; color:var(--cream); }
+
+  #stage { position:relative; width:100vw; height:100vh; overflow:hidden; background:#000; }
+
+  .pan-layer {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    background-repeat:no-repeat;
+    filter: brightness(0.92);
+    opacity: 0;
+    transition: background-size 3.5s ease-in-out, background-position 3.5s ease-in-out, opacity 0.9s ease-in-out;
+  }
+  .pan-layer.active { opacity: 1; z-index: 2; }
+  .pan-layer.inactive { opacity: 0; z-index: 1; }
+
+  .vignette {
+    position:absolute; inset:0; pointer-events:none; z-index:3;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%);
+  }
+
+  .topbar, .caption-wrap { position:absolute; left:0; right:0; z-index:5; }
+  .topbar { top:0; padding:18px 20px; display:flex; justify-content:space-between; align-items:center;
+    background:linear-gradient(rgba(0,0,0,0.55), transparent); }
+  .topbar .brand { font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.22em; color:var(--gold); text-transform:uppercase; }
+  .topbar .chapter-count { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.1em; color:#bbb; }
+
+  .caption-wrap { bottom:0; padding:0 22px 26px; background:linear-gradient(transparent, rgba(0,0,0,0.85) 55%); }
+  .cap-eyebrow { font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:0.22em; color:var(--gold); text-transform:uppercase; margin-bottom:6px; opacity:0; transform:translateY(8px); transition:all 0.6s ease; }
+  .cap-title { font-family:'Cinzel',serif; font-size:1.35rem; font-weight:900; line-height:1.25; color:var(--cream); opacity:0; transform:translateY(10px); transition:all 0.6s ease 0.08s; }
+  .cap-detail { font-size:0.92rem; color:#ddd; line-height:1.55; margin-top:8px; max-width:520px; opacity:0; transform:translateY(10px); transition:all 0.6s ease 0.16s; }
+  .cap-fate { font-family:'Cinzel',serif; font-size:0.66rem; letter-spacing:0.08em; margin-top:10px; opacity:0; transform:translateY(10px); transition:all 0.6s ease 0.24s; }
+  .cap-fate.tok { color: var(--blue-accent); }
+  .cap-fate.toy { color: var(--red-accent); }
+
+  .caption-wrap.show .cap-eyebrow,
+  .caption-wrap.show .cap-title,
+  .caption-wrap.show .cap-detail,
+  .caption-wrap.show .cap-fate { opacity:1; transform:translateY(0); }
+
+  .audio-indicator { display:flex; align-items:center; gap:7px; margin-top:10px; }
+  .wave { display:flex; gap:2px; align-items:center; height:14px; }
+  .wave span { display:block; width:3px; background:var(--gold); border-radius:2px; animation: wv 0.8s ease-in-out infinite; }
+  .wave span:nth-child(1){height:5px;animation-delay:0s}
+  .wave span:nth-child(2){height:11px;animation-delay:.1s}
+  .wave span:nth-child(3){height:14px;animation-delay:.2s}
+  .wave span:nth-child(4){height:9px;animation-delay:.3s}
+  .wave span:nth-child(5){height:5px;animation-delay:.4s}
+  @keyframes wv { 0%,100%{transform:scaleY(.5);opacity:.5} 50%{transform:scaleY(1);opacity:1} }
+  .wave.paused span { animation-play-state: paused; opacity:0.25; }
+  .audio-label { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.08em; color:var(--gold); text-transform:uppercase; }
+
+  .prog-track { position:absolute; bottom:0; left:0; right:0; height:3px; background:rgba(255,255,255,0.12); z-index:6; }
+  .prog-fill { height:100%; width:0%; background:var(--gold); }
+
+  .controls { position:absolute; z-index:7; bottom:16px; right:18px; display:flex; gap:10px; }
+  .ctrl-btn { width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(201,168,76,0.35);
+    color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:0.9rem; backdrop-filter:blur(4px); }
+
+  .tap-zone { position:absolute; top:0; bottom:0; width:30%; z-index:4; }
+  .tap-zone.left{left:0;} .tap-zone.right{right:0;}
+
+  #startOverlay {
+    position:absolute; inset:0; z-index:20; background:var(--dark);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:30px;
+  }
+  #startOverlay .mon{ font-size:3rem; margin-bottom:16px; }
+  #startOverlay .t1{ font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.25em; color:var(--gold); text-transform:uppercase; margin-bottom:12px;}
+  #startOverlay .t2{ font-family:'Cinzel',serif; font-size:1.3rem; font-weight:900; color:var(--cream); margin-bottom:24px; line-height:1.3;}
+  #startBtn { font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:0.14em; text-transform:uppercase; background:var(--gold); color:var(--dark); border:none; padding:13px 32px; border-radius:28px; font-weight:700; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="pan-layer" id="layerA"></div>
+  <div class="pan-layer" id="layerB"></div>
+  <div class="vignette"></div>
+
+  <div class="topbar">
+    <div class="brand">EAST RIVER 31 · 1615</div>
+    <div class="chapter-count" id="chapterCount">1 / 17</div>
+  </div>
+
+  <div class="tap-zone left" data-dir="-1"></div>
+  <div class="tap-zone right" data-dir="1"></div>
+
+  <div class="caption-wrap" id="captionWrap">
+    <div class="cap-eyebrow" id="capEyebrow"></div>
+    <div class="cap-title" id="capTitle"></div>
+    <div class="cap-detail" id="capDetail"></div>
+    <div class="cap-fate" id="capFate"></div>
+    <div class="audio-indicator" id="audioIndicator" style="display:none;">
+      <div class="wave" id="waveEl"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="audio-label" id="audioLabel">Playing narration…</div>
+    </div>
+  </div>
+
+  <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+
+  <div class="controls">
+    <div class="ctrl-btn" id="playPauseBtn">❚❚</div>
+  </div>
+
+  <div id="startOverlay">
+    <div class="mon">🏯</div>
+    <div class="t1">Full Documentary</div>
+    <div class="t2">1615: The Summer Siege of Osaka<br>Tokugawa &amp; Toyotomi</div>
+    <button id="startBtn">Play</button>
+  </div>
+</div>
+
+<script>
+const IMG1 = 'commanders-assets/siege-1.jpg';
+const IMG2 = 'commanders-assets/siege-2.jpg';
+
+// Combined shot list: Tokugawa side (siege-1.jpg) followed by Toyotomi side (siege-2.jpg)
+const SHOTS = [
+  // ── PART 1: TOKUGAWA SIDE ──
+  { img:IMG1, pos:"50% 6%",  size:"70% auto", dur:6000, audio:"commanders-assets/audio/prologue.mp3", faction:"tok",
+    eyebrow:"Prologue", title:"The Ultimate Showdown",
+    detail:"200,000 Tokugawa troops surrounded just 50,000 Toyotomi defenders — the final battle for control of Japan.", fate:"" },
+
+  { img:IMG1, pos:"68% 27%", size:"115% auto", dur:6000, audio:"commanders-assets/audio/char1.mp3", faction:"tok",
+    eyebrow:"Age 36 · Commander-in-Chief", title:"Tokugawa Hidetada",
+    detail:"Ieyasu's third son, second Shogun of the Edo Shogunate.",
+    fate:"FATE — 🏯 Survived, ruled" },
+
+  { img:IMG1, pos:"68% 38%", size:"115% auto", dur:6000, audio:"commanders-assets/audio/char2.mp3", faction:"tok",
+    eyebrow:"Age 15 · Founder, Owari Tokugawa", title:"Tokugawa Yoshinao",
+    detail:"Ieyasu's ninth son. His first battle as commander.",
+    fate:"FATE — 🏯 Survived, ruled" },
+
+  { img:IMG1, pos:"68% 47%", size:"115% auto", dur:6000, audio:"commanders-assets/audio/char3.mp3", faction:"tok",
+    eyebrow:"Age 13 · Founder, Kishu Tokugawa", title:"Tokugawa Yorinobu",
+    detail:"Ieyasu's tenth son. A symbolic leader of the Tokugawa family.",
+    fate:"FATE — 🏯 Survived, ruled" },
+
+  { img:IMG1, pos:"40% 56%", size:"140% auto", dur:6000, audio:"commanders-assets/audio/char4.mp3", faction:"tok",
+    eyebrow:"Age 23 · Ruler of Yamato Province", title:"Matsudaira Tadateru",
+    detail:"Ieyasu's sixth son — a heretical figure, later exiled for late arrival.",
+    fate:"FATE — 🎏 Demotion & exile" },
+
+  { img:IMG1, pos:"78% 56%", size:"140% auto", dur:6000, audio:"commanders-assets/audio/char5.mp3", faction:"tok",
+    eyebrow:"Age 20 · Lord of Echizen-Fukui", title:"Matsudaira Tadamasa",
+    detail:"Achieved the greatest feat at Tennoji: slaying the legendary Sanada Nobushige.",
+    fate:"FATE — 🏯 Survived, ruled" },
+
+  { img:IMG1, pos:"50% 68%", size:"110% auto", dur:6000, audio:"commanders-assets/audio/char6.mp3", faction:"tok",
+    eyebrow:"Age 32 · Adopted Grandson", title:"Matsudaira Tadaaki",
+    detail:"Trusted by Ieyasu. Appointed Lord of Osaka Domain after the war.",
+    fate:"FATE — 🏯 Survived, ruled" },
+
+  { img:IMG1, pos:"40% 76%", size:"125% auto", dur:6000, audio:"commanders-assets/audio/char7.mp3", faction:"tok",
+    eyebrow:"Age 25 · Ii's Red Demons", title:"Ii Naotaka",
+    detail:"Held the front line at Tennoji, stopping Sanada Yukimura's charge — saving the Shogun.",
+    fate:"FATE — 🏯 Survived, ruled" },
+
+  { img:IMG1, pos:"65% 84%", size:"125% auto", dur:6000, audio:"commanders-assets/audio/char8.mp3", faction:"tok",
+    eyebrow:"Age 33 · Successor of the Fierce General", title:"Honda Tadamasa",
+    detail:"One of the few major Tokugawa generals to die in battle.",
+    fate:"FATE — ⚔ Killed in action" },
+
+  { img:IMG1, pos:"45% 93%", size:"125% auto", dur:6000, audio:"commanders-assets/audio/char9.mp3", faction:"tok",
+    eyebrow:"Age 46 · Lord of Shinano Matsumoto", title:"Ogasawara Hidemasa",
+    detail:"Suffered a surprise attack; met a regrettable end alongside his eldest son.",
+    fate:"FATE — ⚔ Killed in action" },
+
+  { img:IMG1, pos:"center center", size:"contain", dur:6000, audio:null, isFull:true, faction:"tok",
+    eyebrow:"The Full Record", title:"The Tokugawa Deployment",
+    detail:"Every name, every fate, one page — the complete record of the Tokugawa side at the Summer Siege of Osaka.", fate:"" },
+
+  // ── PART 2: TOYOTOMI SIDE ──
+  { img:IMG2, pos:"22% 15%", size:"105% auto", dur:6000, audio:"commanders-assets/audio/char10.mp3", faction:"toy",
+    eyebrow:"Age 49 · Japan's Number One Warrior", title:"Sanada Yukimura (Nobushige)",
+    detail:"At Tennoji, he broke through Ieyasu's main camp three times, driving the Shogun to the brink of suicide.",
+    fate:"FATE — ⚔ Killed in action, died a legend" },
+
+  { img:IMG2, pos:"22% 27%", size:"105% auto", dur:6000, audio:"commanders-assets/audio/char11.mp3", faction:"toy",
+    eyebrow:"Age ~13 · Yukimura's Eldest Son", title:"Sanada Daisuke",
+    detail:"Committed suicide alongside Toyotomi Hideyori on the day his father fell.",
+    fate:"FATE — 🗡 Seppuku, alongside his lord" },
+
+  { img:IMG2, pos:"55% 17%", size:"95% auto", dur:6000, audio:"commanders-assets/audio/char12.mp3", faction:"toy",
+    eyebrow:"Central Command", title:"Mori Katsunaga",
+    detail:"One of the two pillars of the Toyotomi army, alongside Yukimura. Credited with killing Honda Tadamasa.",
+    fate:"FATE — 🗡 Fought valiantly, then seppuku" },
+
+  { img:IMG2, pos:"78% 11%", size:"120% auto", dur:6000, audio:"commanders-assets/audio/char13.mp3", faction:"toy",
+    eyebrow:"Yodo-dono's Close Aide · The Moderate", title:"Ono Harunaga",
+    detail:"Overall coordinator of the Toyotomi defense, favoring peace to the very end.",
+    fate:"FATE — 🗡 Seppuku, with Hideyori and Yodo-dono" },
+
+  { img:IMG2, pos:"78% 20%", size:"120% auto", dur:6000, audio:"commanders-assets/audio/char14.mp3", faction:"toy",
+    eyebrow:"Harunaga's Younger Brother · The Hardliner", title:"Ono Harufusa",
+    detail:"Commanded the offensive at Okayama. Escaped the burning castle — his fate remains unknown.",
+    fate:"FATE — 👣 Escaped, missing" },
+
+  { img:IMG2, pos:"50% 75%", size:"65% auto", dur:7000, audio:"commanders-assets/audio/epilogue.mp3", faction:"toy",
+    eyebrow:"Epilogue · The Spectrum of Fates", title:"The Fork Between Life and Death",
+    detail:"The Tokugawa Army commanded from the rear. The Toyotomi Army fought and fell at the front — the end of one era, the beginning of another.",
+    fate:"THE SUMMER SIEGE OF OSAKA, 1615" },
+
+  { img:IMG2, pos:"center center", size:"contain", dur:7000, audio:null, isFull:true, faction:"toy",
+    eyebrow:"The Full Record", title:"The Final Stand",
+    detail:"Every name, every fate, one page — the complete record of the Toyotomi defenders at the Summer Siege of Osaka.", fate:"" },
+];
+
+let idx = 0;
+let playing = false;
+let advanceTimer = null;
+let progInterval = null;
+let currentAudio = null;
+let activeLayer = 'A'; // which layer div currently shows the active image
+let currentImg = null;
+
+const layerA = document.getElementById('layerA');
+const layerB = document.getElementById('layerB');
+const captionWrap = document.getElementById('captionWrap');
+const capEyebrow = document.getElementById('capEyebrow');
+const capTitle = document.getElementById('capTitle');
+const capDetail = document.getElementById('capDetail');
+const capFate = document.getElementById('capFate');
+const progFill = document.getElementById('progFill');
+const chapterCount = document.getElementById('chapterCount');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const audioIndicator = document.getElementById('audioIndicator');
+const waveEl = document.getElementById('waveEl');
+const audioLabel = document.getElementById('audioLabel');
+
+function clearAllTimers() {
+  clearTimeout(advanceTimer);
+  clearInterval(progInterval);
+  if (currentAudio) { currentAudio.pause(); currentAudio.onended = null; currentAudio.ontimeupdate = null; }
+}
+
+function renderShot(i) {
+  const s = SHOTS[i];
+
+  // Determine which layer is active/inactive
+  const showLayer = activeLayer === 'A' ? layerA : layerB;
+  const hideLayer = activeLayer === 'A' ? layerB : layerA;
+
+  if (s.img !== currentImg) {
+    // crossfade to new image on the currently-hidden layer, then swap active
+    hideLayer.style.transition = 'none';
+    hideLayer.style.backgroundImage = `url('${s.img}')`;
+    hideLayer.style.backgroundPosition = s.pos;
+    hideLayer.style.backgroundSize = s.size;
+    // force reflow so the "none" transition takes effect before re-enabling
+    void hideLayer.offsetWidth;
+    hideLayer.style.transition = '';
+    hideLayer.classList.add('active');
+    hideLayer.classList.remove('inactive');
+    showLayer.classList.add('inactive');
+    showLayer.classList.remove('active');
+    activeLayer = (activeLayer === 'A') ? 'B' : 'A';
+    currentImg = s.img;
+  } else {
+    // same image — just pan/zoom on the already-active layer
+    showLayer.style.backgroundPosition = s.pos;
+    showLayer.style.backgroundSize = s.size;
+  }
+
+  captionWrap.classList.remove('show');
+
+  if (s.isFull) {
+    captionWrap.style.display = 'none';
+  } else {
+    captionWrap.style.display = '';
+  }
+
+  capEyebrow.textContent = s.eyebrow;
+  capTitle.textContent = s.title;
+  capDetail.textContent = s.detail;
+  capFate.textContent = s.fate;
+  capFate.className = 'cap-fate ' + (s.faction || '');
+  chapterCount.textContent = (i+1) + " / " + SHOTS.length;
+
+  requestAnimationFrame(() => { if (!s.isFull) captionWrap.classList.add('show'); });
+
+  clearAllTimers();
+  progFill.style.width = "0%";
+
+  if (s.audio) {
+    audioIndicator.style.display = 'flex';
+    waveEl.classList.remove('paused');
+    audioLabel.textContent = 'Playing narration…';
+    const a = new Audio(s.audio);
+    currentAudio = a;
+    a.ontimeupdate = () => {
+      if (a.duration) progFill.style.width = (a.currentTime/a.duration*100) + "%";
+    };
+    a.onended = () => {
+      if (playing) goTo(idx+1);
+    };
+    a.play().catch(() => {
+      audioLabel.textContent = 'Tap to play narration';
+      audioIndicator.onclick = () => { a.play(); audioLabel.textContent='Playing narration…'; };
+    });
+  } else {
+    audioIndicator.style.display = 'none';
+    const dur = s.dur;
+    const start = performance.now();
+    progInterval = setInterval(() => {
+      const elapsed = performance.now() - start;
+      progFill.style.width = Math.min(100, (elapsed/dur)*100) + "%";
+    }, 50);
+    if (playing) advanceTimer = setTimeout(() => { goTo(idx+1); }, dur);
+  }
+}
+
+function goTo(i) {
+  if (i < 0) i = 0;
+  if (i >= SHOTS.length) { pause(); return; }
+  idx = i;
+  renderShot(idx);
+}
+
+function play() {
+  playing = true;
+  playPauseBtn.textContent = "❚❚";
+  const s = SHOTS[idx];
+  if (currentAudio && currentAudio.paused && s.audio) {
+    currentAudio.play();
+  } else if (!s.audio) {
+    renderShot(idx);
+  }
+}
+function pause() {
+  playing = false;
+  playPauseBtn.textContent = "▶";
+  clearTimeout(advanceTimer);
+  clearInterval(progInterval);
+  if (currentAudio) currentAudio.pause();
+}
+
+playPauseBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (playing) pause(); else play();
+});
+
+document.querySelectorAll('.tap-zone').forEach(z => {
+  z.addEventListener('click', () => {
+    const dir = parseInt(z.dataset.dir, 10);
+    goTo(idx + dir);
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') goTo(idx+1);
+  if (e.key === 'ArrowLeft') goTo(idx-1);
+  if (e.key === ' ') { e.preventDefault(); if (playing) pause(); else play(); }
+});
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('startOverlay').style.display = 'none';
+  playing = true;
+  playPauseBtn.textContent = "❚❚";
+  renderShot(0);
+});
+</script>
+</body>
+</html>
