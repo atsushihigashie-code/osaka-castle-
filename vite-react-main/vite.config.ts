@@ -12,6 +12,7 @@ export default defineConfig({
         gate: resolve(__dirname, 'gate.html'),
         success: resolve(__dirname, 'success.html'),
         osakaTourViewer: resolve(__dirname, 'osaka-tour-viewer.html'),
+        tokusho: resolve(__dirname, 'tokusho.html'),
       },
     },
   },
