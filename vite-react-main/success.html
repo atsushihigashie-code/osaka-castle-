@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Access Code — Osaka Castle One Coin Tour</title>
+<title>Your Access Code – Osaka Castle One Coin Tour</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
@@ -64,6 +64,7 @@
     padding: 22px;
     margin-bottom: 18px;
   }
+
   .code {
     font-family: 'Shippori Mincho', serif;
     font-size: 34px;
@@ -71,6 +72,7 @@
     letter-spacing: 0.12em;
     color: var(--vermilion);
   }
+
   .code-label {
     font-size: 11px;
     color: var(--stone);
@@ -150,8 +152,8 @@
             '<div class="code-label">Your Access Code</div>' +
           '</div>' +
           '<p class="expiry">Valid for <b>' + hours + ' hours</b>. Enter this code when you reach either starting point.</p>' +
-          '<a class="btn" href="https://YOUR-DOMAIN/gate.html?route=a">Start Route A (JR Station)</a>' +
-          '<a class="btn alt" href="https://YOUR-DOMAIN/gate.html?route=b">Start Route B (Tanimachi)</a>';
+          '<a class="btn" href="https://osaka-castle.vercel.app/gate.html?route=a">Start Route A (JR Station)</a>' +
+          '<a class="btn alt" href="https://osaka-castle.vercel.app/gate.html?route=b">Start Route B (Tanimachi)</a>';
       })
       .catch(() => {
         statusEl.textContent = 'Something went wrong';
