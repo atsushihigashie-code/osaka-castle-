@@ -195,7 +195,7 @@
       msg.textContent = 'Unlocked! Taking you to the tour…';
       msg.className = 'msg ok';
 
-      const destination = route === 'b' ? '../route-b/b1.html' : '../route-a/welcome.html';
+      const destination = `osaka-tour-viewer.html?route=${route}`;
       setTimeout(() => { window.location.href = destination; }, 700);
 
     } catch (err) {
