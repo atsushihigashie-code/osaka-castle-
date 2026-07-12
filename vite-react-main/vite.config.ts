@@ -13,6 +13,7 @@ export default defineConfig({
         success: resolve(__dirname, 'success.html'),
         osakaTourViewer: resolve(__dirname, 'osaka-tour-viewer.html'),
         tokusho: resolve(__dirname, 'tokusho.html'),
+        purchase: resolve(__dirname, 'purchase/index.html'),
       },
     },
   },
