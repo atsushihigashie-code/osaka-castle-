@@ -1,4 +1,6 @@
 {
-  "cleanUrls": false,
-  "trailingSlash": false
+  "rewrites": [
+    { "source": "/gate.html", "destination": "/gate.html" },
+    { "source": "/success.html", "destination": "/success.html" }
+  ]
 }
