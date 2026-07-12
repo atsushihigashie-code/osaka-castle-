@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purchase — Osaka Castle One Coin Tour</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+  :root {
+    --ink: #1c1a17;
+    --paper: #f2ede3;
+    --stone: #8a8378;
+    --gold: #a8823a;
+    --deep-green: #2f3b2f;
+    --rule: #d8d0bf;
+    --vermilion: #b5452c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 0 0 40px;
+  }
+
+  .frame {
+    max-width: 480px;
+    width: 100%;
+    background: #ffffff;
+    min-height: 100vh;
+  }
+
+  .hero-photo {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .brand-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .brand {
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+  }
+  .price-badge {
+    background: var(--vermilion);
+    color: #fff;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+  }
+
+  .section { padding: 28px 24px 6px; }
+  .eyebrow {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 21px;
+    margin-bottom: 10px;
+  }
+  .lead {
+    font-size: 13.5px;
+    color: #4a4438;
+  }
+
+  .notice-box {
+    margin: 22px 24px 0;
+    background: #fff9ec;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .notice-box .eyebrow { color: var(--gold); }
+  .notice-box h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15.5px;
+    margin-bottom: 10px;
+  }
+  .notice-list { list-style: none; }
+  .notice-list li {
+    font-size: 12.5px;
+    color: #4a4438;
+    padding: 6px 0 6px 16px;
+    position: relative;
+  }
+  .notice-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+  .notice-list li.warn {
+    color: var(--vermilion);
+    font-weight: 700;
+  }
+  .notice-list li.warn::before { color: var(--vermilion); }
+
+  .legal-note {
+    margin: 20px 24px 0;
+    font-size: 11.5px;
+    color: var(--stone);
+    padding: 14px 16px;
+    border-left: 2px solid var(--rule);
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 10px; margin: 26px 24px; color: var(--stone);
+  }
+  .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+  .divider span { font-family: 'Shippori Mincho', serif; font-size: 11px; letter-spacing: 0.1em; }
+
+  .cta-section { padding: 10px 24px 46px; text-align: center; }
+  .cta-price {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    color: var(--stone);
+    margin-bottom: 14px;
+  }
+  .cta-price b { color: var(--vermilion); font-size: 22px; }
+
+  .cta-btn {
+    display: block;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15.5px;
+    color: #fff;
+    background: var(--vermilion);
+    text-decoration: none;
+    padding: 17px;
+    border-radius: 30px;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(181,69,44,0.25);
+  }
+  .cta-btn::after { content: " →"; }
+
+  .agree-note {
+    margin-top: 14px;
+    font-size: 11px;
+    color: var(--stone);
+    line-height: 1.6;
+  }
+
+  footer {
+    padding: 20px 24px 40px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--stone);
+    border-top: 1px solid var(--rule);
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <img class="hero-photo" src="osaka-castle.jpg" alt="Osaka Castle">
+
+  <div class="brand-row">
+    <div class="brand">East River 31</div>
+    <div class="price-badge">¥500 One Coin Tour</div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">Before You Pay</div>
+    <h1>A Few Things to Know</h1>
+    <p class="lead">This is a self-guided audio tour of Osaka Castle, delivered entirely through your smartphone browser. Please read the notes below before purchasing.</p>
+  </div>
+
+  <div class="notice-box">
+    <div class="eyebrow">Please Note</div>
+    <h3>Access &amp; Timing</h3>
+    <ul class="notice-list">
+      <li class="warn">Only purchase when you're ready to start. Your access code becomes active the moment you buy it, and expires 24 hours after purchase. Please don't buy in advance — buy right before you begin walking.</li>
+      <li>You'll receive a 6-character access code immediately after payment. Enter it at the start of either route to unlock the tour.</li>
+      <li>This tour requires an internet connection and headphones are recommended for the audio narration.</li>
+      <li>This is an independent, privately produced tour and is not affiliated with, endorsed by, or operated by Osaka Castle, Osaka Castle Park, or any government body.</li>
+    </ul>
+  </div>
+
+  <div class="legal-note">
+    This is digital content. Once your access code is issued, refunds are not available except in the case of a technical fault on our end. See our <a href="/tokusho.html">Legal Notice</a> for full details.
+  </div>
+
+  <div class="divider"><span>Ready?</span></div>
+
+  <div class="cta-section">
+    <div class="cta-price">One coin. <b>¥500.</b> Valid for 24 hours.</div>
+    <a class="cta-btn" href="https://buy.stripe.com/eVqbJ06RV72bcAE5s1cAo00">Purchase &amp; Begin</a>
+    <div class="agree-note">By purchasing, you confirm you have read and understood the notices above — including the 24-hour access window.</div>
+  </div>
+
+  <footer>
+    East River 31 LLC (合同会社イーストリバー31) — an independent, privately produced tour. Not affiliated with, endorsed by, or operated by Osaka Castle, Osaka Castle Park, or any government body.
+  </footer>
+
+</div>
+</body>
+</html>
