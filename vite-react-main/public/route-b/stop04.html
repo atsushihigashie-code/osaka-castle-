@@ -273,17 +273,19 @@
     </div>
   </div>
 
+
+  
   <div class="audio-section">
     <div class="audio-card">
       <div class="audio-top">
         <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
         <div class="audio-meta">
-          <div class="label">Narration — Stop B4</div>
-          <div class="sub" id="audioStatus">Tap to play · ~39 sec</div>
+          <div class="label">Narration — Hokoku Shrine</div>
+          <div class="sub" id="audioStatus">Tap to play · ~37 sec</div>
         </div>
       </div>
       <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:39</span></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:37</span></div>
     </div>
   </div>
 
@@ -312,7 +314,10 @@
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/b2.mp3" type="audio/mpeg"></audio>
+
+
+
+<audio id="player" preload="metadata"><source src="../shared-audio/hokoku.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -331,6 +336,5 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
-
 </body>
 </html>
