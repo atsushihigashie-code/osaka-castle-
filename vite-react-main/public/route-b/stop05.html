@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osaka Castle One Coin Tour — The Tako-ishi Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+  :root {
+    --ink: #1c1a17;
+    --paper: #f2ede3;
+    --stone: #8a8378;
+    --gold: #a8823a;
+    --deep-green: #2f3b2f;
+    --rule: #d8d0bf;
+    --card-bg: #ffffff;
+    --vermilion: #b5452c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .frame {
+    max-width: 460px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--paper);
+    position: relative;
+  }
+
+  header {
+    padding: 22px 24px 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .brand-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .brand {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--stone);
+    text-transform: uppercase;
+  }
+
+  .stop-badge {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--paper);
+    background: var(--vermilion);
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .route-label {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .subtitle {
+    font-size: 12.5px;
+    color: var(--stone);
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  .map-section { padding: 20px 24px 4px; }
+
+  .map-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .map-visual {
+    height: 110px;
+    background:
+      repeating-linear-gradient(135deg, rgba(47,59,47,0.06) 0px, rgba(47,59,47,0.06) 2px, transparent 2px, transparent 14px),
+      linear-gradient(135deg, #dde3d5 0%, #c3d4d8 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .map-pin {
+    width: 16px;
+    height: 16px;
+    background: var(--vermilion);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 0 0 6px rgba(181,69,44,0.15);
+  }
+
+  .map-footer {
+    padding: 13px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .map-meta { font-size: 12px; color: var(--stone); }
+  .map-meta strong { display: block; color: var(--ink); font-size: 13px; font-weight: 500; }
+
+  .map-btn {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: #fff;
+    background: var(--deep-green);
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: 20px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .map-btn::after { content: "→"; }
+
+  .audio-section { padding: 22px 24px 6px; }
+
+  .audio-card {
+    background: var(--deep-green);
+    color: var(--paper);
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  .audio-top { display: flex; align-items: center; gap: 14px; }
+
+  .play-btn {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--paper); color: var(--deep-green);
+    border: none; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0; cursor: pointer;
+  }
+  .play-btn:active { transform: scale(0.96); }
+
+  .audio-meta { flex: 1; min-width: 0; }
+  .audio-meta .label { font-family: 'Shippori Mincho', serif; font-size: 13px; letter-spacing: 0.03em; }
+  .audio-meta .sub { font-size: 11.5px; opacity: 0.7; margin-top: 2px; }
+
+  .prog-track {
+    height: 3px; background: rgba(242,237,227,0.2); border-radius: 2px;
+    margin-top: 16px; overflow: hidden; cursor: pointer;
+  }
+  .prog-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.1s linear; }
+
+  .time-row {
+    display: flex; justify-content: space-between; font-size: 10.5px;
+    opacity: 0.65; margin-top: 6px; letter-spacing: 0.02em;
+  }
+
+  .narrative { padding: 26px 24px 8px; font-size: 15px; color: #2b2925; }
+  .narrative p { margin-bottom: 14px; }
+  .narrative p:last-child { margin-bottom: 0; }
+  .narrative strong { font-family: 'Shippori Mincho', serif; }
+
+  .photo-spot {
+    margin: 20px 24px 0;
+    background: #fffdf8;
+    border: 1px dashed var(--gold);
+    border-radius: 6px;
+    padding: 14px 16px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .photo-spot-icon { font-size: 18px; line-height: 1.4; }
+  .photo-spot-text { font-size: 13px; }
+  .photo-spot-text strong { display: block; font-size: 13.5px; margin-bottom: 2px; font-family: 'Shippori Mincho', serif; }
+
+  .video-card {
+    margin: 20px 24px 0;
+    background: #14140f;
+    color: var(--paper);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .video-card .eyebrow {
+    font-family: 'Shippori Mincho', serif; font-size: 10.5px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+  }
+  .video-links { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .video-link {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(242,237,227,0.08); border: 1px solid rgba(242,237,227,0.2);
+    border-radius: 6px; padding: 12px 14px; text-decoration: none; color: var(--paper);
+    font-size: 13px;
+  }
+  .video-link span.arr { color: var(--gold); }
+
+  .quiz-block {
+    margin: 18px 24px 0;
+    background: #fffdf8;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .quiz-q { font-family: 'Shippori Mincho', serif; font-size: 13.5px; margin-bottom: 8px; }
+  .quiz-a { font-size: 13px; color: var(--stone); margin-bottom: 4px; }
+  .quiz-ans { font-size: 12.5px; color: var(--vermilion); margin-top: 6px; }
+  .quiz-block + .quiz-block { margin-top: 14px; }
+
+  .nav-row {
+    padding: 30px 24px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-btn {
+    font-family: 'Shippori Mincho', serif; font-size: 12.5px; letter-spacing: 0.05em;
+    color: var(--stone); text-decoration: none;
+    border: 1px solid var(--rule); padding: 10px 18px; border-radius: 20px;
+  }
+  .nav-btn.next { background: var(--gold); color: #fff; border-color: var(--gold); }
+  .nav-btn.disabled { opacity: 0.35; pointer-events: none; }
+
+  .dots { display: flex; gap: 5px; flex-wrap: wrap; max-width: 140px; justify-content: center; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rule); }
+  .dot.on { background: var(--gold); width: 16px; border-radius: 3px; }
+
+  audio { display: none; }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <header>
+    <div class="brand-row">
+      <div class="brand">East River 31 · One Coin Tour</div>
+      <div class="stop-badge">B · 5 of 11</div>
+    </div>
+    <div class="route-label">Route B · Tanimachi 4-chome Station</div>
+    <h1>The Tako-ishi Quiz</h1>
+    <div class="subtitle">蛸石クイズ — 桜門枕形</div>
+  </header>
+
+  <div class="map-section">
+    <div class="map-card">
+      <div class="map-visual"><div class="map-pin"></div></div>
+      <div class="map-footer">
+        <div class="map-meta"><strong>A short walk</strong>toward Sakuramon Gate</div>
+        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.685432,135.525822&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="audio-section">
+    <div class="audio-card">
+      <div class="audio-top">
+        <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
+        <div class="audio-meta">
+          <div class="label">Narration — Tako-ishi Quiz</div>
+          <div class="sub" id="audioStatus">Tap to play · ~74 sec</div>
+        </div>
+      </div>
+      <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">1:14</span></div>
+    </div>
+  </div>
+
+  <div class="narrative">
+    <p>Passing through Sakuramon Gate, you'll come face to face with a single, massive slab of stone. This is Tako-ishi — the "Octopus Stone" — the single largest stone in the entire castle. Let's test your knowledge with a quick quiz.</p>
+    <p>Its name comes from a faint, octopus-shaped stain on the lower left corner — a natural mark left by oxidized iron in the rock. See if you can spot it.</p>
+  </div>
+
+  <div class="quiz-block">
+    <div class="quiz-q">Q1. How much does it weigh?</div>
+    <div class="quiz-a">A) ~10 tons&nbsp;&nbsp;B) ~50 tons&nbsp;&nbsp;C) ~130 tons</div>
+    <div class="quiz-ans">✓ C — roughly the weight of 90 passenger cars.</div>
+  </div>
+  <div class="quiz-block">
+    <div class="quiz-q">Q2. Where did it come from?</div>
+    <div class="quiz-a">A) A nearby Osaka mountain&nbsp;&nbsp;B) An island in the Seto Inland Sea&nbsp;&nbsp;C) Mainland China</div>
+    <div class="quiz-ans">✓ B — shipped from Inujima Island, off the coast of Okayama.</div>
+  </div>
+  <div class="quiz-block">
+    <div class="quiz-q">Q3. How was it transported?</div>
+    <div class="quiz-a">A) Modern cranes&nbsp;&nbsp;B) Wooden sledges & giant rafts&nbsp;&nbsp;C) Pulled by elephants</div>
+    <div class="quiz-ans">✓ B — wooden "shura" sledges, then rafted across the sea. The stones that sank became the Zannen-ishi you'll see shortly.</div>
+  </div>
+
+  <div class="nav-row">
+    <a class="nav-btn" href="stop04.html">← Back</a>
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot on"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <a class="nav-btn next" href="stop06.html">Next →</a>
+  </div>
+
+</div>
+
+<audio id="player" preload="metadata"><source src="../shared-audio/a1.mp3" type="audio/mpeg"></audio>
+<script>
+const audio = document.getElementById('player');
+const playBtn = document.getElementById('playBtn');
+const progTrack = document.getElementById('progTrack');
+const progFill = document.getElementById('progFill');
+const timeCurrent = document.getElementById('timeCurrent');
+const timeTotal = document.getElementById('timeTotal');
+const audioStatus = document.getElementById('audioStatus');
+function fmt(s) { if (!isFinite(s)) return '0:00'; const m = Math.floor(s/60); const sec = Math.floor(s%60).toString().padStart(2,'0'); return `${m}:${sec}`; }
+audio.addEventListener('loadedmetadata', () => { timeTotal.textContent = fmt(audio.duration); });
+playBtn.addEventListener('click', () => {
+  if (audio.paused) { audio.play(); playBtn.textContent = '❚❚'; audioStatus.textContent = 'Playing narration…'; }
+  else { audio.pause(); playBtn.textContent = '▶'; audioStatus.textContent = 'Paused — tap to resume'; }
+});
+audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.style.width = (audio.currentTime/audio.duration*100)+'%'; timeCurrent.textContent = fmt(audio.currentTime); } });
+audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
+progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
+</script>
+
+</body>
+</html>
