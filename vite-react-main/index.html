@@ -1,19 +1,378 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osaka Castle One Coin Tour — East River 31</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
-    <!-- ★ 追加 -->
-    <meta name="theme-color" content="#000000" />
+  :root {
+    --ink: #1c1a17;
+    --paper: #f2ede3;
+    --stone: #8a8378;
+    --gold: #a8823a;
+    --deep-green: #2f3b2f;
+    --rule: #d8d0bf;
+    --card-bg: #ffffff;
+    --vermilion: #b5452c;
+    --dark: #14140f;
+  }
 
-    <title>Vite + React + TS</title>
-  </head>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
 
-  <!-- ★ ここが最重要 -->
-  <body style="margin:0; background:#000;">
-    <div id="root"></div>
-    <script type="module" src="src/main.tsx"></script>
-  </body>
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .frame {
+    max-width: 460px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--paper);
+  }
+
+  /* ── HERO ─────────────────────────────── */
+  .hero {
+    position: relative;
+    min-height: 72vh;
+    background-image:
+      linear-gradient(180deg, rgba(20,20,15,0.35) 0%, rgba(20,20,15,0.55) 55%, rgba(20,20,15,0.92) 100%),
+      url('route-a/images/hero-screen.jpg');
+    background-size: cover;
+    background-position: center 30%;
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px 26px 32px;
+    overflow: hidden;
+  }
+
+  .hero-top {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .brand {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(242,237,227,0.6);
+  }
+
+  .price-badge {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--dark);
+    background: var(--gold);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  .hero-mid {
+    position: relative;
+    z-index: 2;
+    margin-top: 36px;
+  }
+
+  .kanji-mark {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  .hero h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.8), 0 1px 4px rgba(0,0,0,0.9);
+  }
+  .hero h1 span {
+    display: block;
+    color: var(--paper);
+    font-size: 19px;
+    font-weight: 700;
+    margin-top: 12px;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.9);
+  }
+
+  .hero-sub {
+    margin-top: 16px;
+    font-size: 13.5px;
+    color: rgba(242,237,227,0.8);
+    max-width: 320px;
+    font-style: italic;
+  }
+
+  .hero-bottom {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 18px;
+    margin-top: 28px;
+  }
+
+  .stat {
+    border-left: 1px solid rgba(242,237,227,0.25);
+    padding-left: 10px;
+  }
+  .stat b {
+    display: block;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 16px;
+    color: var(--paper);
+  }
+  .stat span {
+    font-size: 9.5px;
+    color: rgba(242,237,227,0.55);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTIONS ─────────────────────────── */
+  .section { padding: 32px 26px 6px; }
+
+  .eyebrow {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+    margin-bottom: 8px;
+  }
+
+  .section h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    line-height: 1.35;
+  }
+
+  .section p {
+    font-size: 14px;
+    color: #2b2925;
+    margin-bottom: 12px;
+  }
+  .section p .hl { color: var(--vermilion); font-weight: 500; }
+
+  .divider {
+    display: flex; align-items: center; gap: 10px; margin: 30px 26px; color: var(--stone);
+  }
+  .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+  .divider span { font-family: 'Shippori Mincho', serif; font-size: 11px; letter-spacing: 0.1em; }
+
+  /* ── ROUTE CARDS ──────────────────────── */
+  .routes { padding: 0 26px; display: flex; flex-direction: column; gap: 14px; }
+
+  .route-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .route-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: var(--vermilion);
+  }
+  .route-card.alt::before { background: var(--deep-green); }
+
+  .route-tag {
+    display: inline-block;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+    background: rgba(181,69,44,0.08);
+    padding: 3px 9px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+  .route-card.alt .route-tag { color: var(--deep-green); background: rgba(47,59,47,0.08); }
+
+  .route-card h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 17px;
+    margin-bottom: 6px;
+  }
+  .route-card .station-jp {
+    font-size: 12px;
+    color: var(--stone);
+    margin-bottom: 10px;
+  }
+  .route-card p {
+    font-size: 13px;
+    color: #4a4438;
+  }
+  .route-meta {
+    display: flex;
+    gap: 14px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    font-size: 11.5px;
+    color: var(--stone);
+  }
+  .route-meta b { color: var(--ink); font-weight: 600; }
+
+  .routes-note {
+    padding: 14px 26px 0;
+    font-size: 12px;
+    color: var(--stone);
+    text-align: center;
+  }
+
+  /* ── INCLUDED ─────────────────────────── */
+  .check-list { list-style: none; margin-top: 4px; }
+  .check-list li {
+    display: flex; gap: 10px; padding: 8px 0; font-size: 13.5px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .check-list li:last-child { border-bottom: none; }
+  .check-list li::before { content: "✓"; color: var(--deep-green); font-weight: 700; flex-shrink: 0; }
+
+  /* ── CTA ──────────────────────────────── */
+  .cta-section { padding: 34px 26px 50px; text-align: center; }
+  .cta-price {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    color: var(--stone);
+    margin-bottom: 14px;
+  }
+  .cta-price b { color: var(--vermilion); font-size: 22px; }
+
+  .cta-btn {
+    display: block;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15.5px;
+    letter-spacing: 0.04em;
+    color: #fff;
+    background: var(--vermilion);
+    text-decoration: none;
+    padding: 17px;
+    border-radius: 30px;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(181,69,44,0.25);
+  }
+  .cta-btn::after { content: " →"; }
+
+  .cta-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--stone);
+  }
+
+  footer {
+    padding: 20px 26px 40px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--stone);
+    border-top: 1px solid var(--rule);
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <div class="hero">
+    <div class="hero-top">
+      <div class="brand">East River 31</div>
+      <div class="price-badge">¥500 One Coin Tour</div>
+    </div>
+
+    <div class="hero-mid">
+      <div class="kanji-mark">大阪城</div>
+      <h1>Osaka Castle<span>A Self-Guided Journey Through Japan's Age of Warlords</span></h1>
+      <p class="hero-sub">One coin. One castle. A story of ambition, siege, and rebirth — told at your own pace, in English, from your own phone.</p>
+    </div>
+
+    <div class="hero-bottom">
+      <div class="stat"><b>13</b><span>Stops</span></div>
+      <div class="stat"><b>~3 hrs</b><span>At Your Pace</span></div>
+      <div class="stat"><b>24 hrs</b><span>Access Window</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">Before You Begin</div>
+    <h2>Two Castles, One Ground</h2>
+    <p>What you're about to walk through isn't one castle's story — it's <span class="hl">two</span>. Hideyoshi's original castle was burned in 1615 and buried; the Tokugawa built an entirely different castle directly on top of it. Every wall you'll see sits on that hidden layer.</p>
+  </div>
+
+  <div class="divider"><span>Choose Your Starting Point</span></div>
+
+  <div class="routes">
+    <div class="route-card">
+      <div class="route-tag">Route A</div>
+      <h3>JR Osaka Castle Park Station</h3>
+      <div class="station-jp">JR大阪城公園駅</div>
+      <p>Start from the JR loop line side. A quiet approach through the park, past the moats, toward the keep.</p>
+      <div class="route-meta">
+        <span><b>~10 min</b> to Stop 1</span>
+        <span><b>7</b> stops + bonus</span>
+      </div>
+    </div>
+
+    <div class="route-card alt">
+      <div class="route-tag">Route B</div>
+      <h3>Tanimachi 4-chome Station</h3>
+      <div class="station-jp">谷町四丁目駅（Osaka Metro）9番出口</div>
+      <p>Start from the subway side. Exit 9 puts you straight on the path toward the moat and the Ote-mon Gate.</p>
+      <div class="route-meta">
+        <span><b>~6 min</b> to the moat</span>
+        <span><b>9</b> stops</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="routes-note">One purchase unlocks both routes — start from whichever station is closer to you.</div>
+
+  <div class="section" style="padding-top: 40px;">
+    <div class="eyebrow">What's Included</div>
+    <ul class="check-list">
+      <li>13 narrated stops with turn-by-turn Google Maps links</li>
+      <li>~20 minutes of English audio narration, stop by stop</li>
+      <li>Two mini-documentary videos on the 1615 Summer Siege</li>
+      <li>A Tako-ishi trivia quiz and 4 recommended photo spots</li>
+      <li>Access to both starting routes above, from one purchase</li>
+    </ul>
+  </div>
+
+  <div class="cta-section">
+    <div class="cta-price">One coin. <b>¥500.</b> Valid for 24 hours.</div>
+    <a class="cta-btn" href="purchase/index.html">Get Started</a>
+    <!-- Direct Stripe link for reference: https://buy.stripe.com/eVqbJ06RV72bcAE5s1cAo00 -->
+    <div class="cta-note">You'll review a few important notes before you pay.</div>
+  </div>
+
+  <footer>
+    East River 31 LLC (合同会社イーストリバー31) — an independent, privately produced tour. Not affiliated with, endorsed by, or operated by Osaka Castle, Osaka Castle Park, or any government body.
+  </footer>
+
+</div>
+</body>
 </html>
