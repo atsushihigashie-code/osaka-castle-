@@ -273,10 +273,24 @@
     </div>
   </div>
 
+  
+  <div class="audio-section">
+    <div class="audio-card">
+      <div class="audio-top">
+        <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
+        <div class="audio-meta">
+          <div class="label">Narration — Video Guide</div>
+          <div class="sub" id="audioStatus">Tap to play · ~34 sec</div>
+        </div>
+      </div>
+      <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:34</span></div>
+    </div>
+  </div>
+
   <div class="video-card">
     <div class="eyebrow">Watch Before You Enter · No Wi-Fi Inside</div>
     <div class="video-links">
-      <a class="video-link" href="https://osaka-castle.vercel.app/osaka-tour-viewer-standalone.html" target="_blank" rel="noopener">1615: The Summer Siege — 10 Chapters <span class="arr">▶</span></a>
       <a class="video-link" href="https://osaka-castle.vercel.app/commanders-of-1615.html" target="_blank" rel="noopener">Commanders of 1615 — Documentary <span class="arr">▶</span></a>
     </div>
   </div>
@@ -307,6 +321,7 @@
   </div>
 
 </div>
+
 
 
 <audio id="player" preload="metadata"><source src="../shared-audio/b2.mp3" type="audio/mpeg"></audio>
