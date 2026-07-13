@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osaka Castle One Coin Tour — Video Viewing Point</title>
+<title>Osaka Castle One Coin Tour</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
   :root {
     --ink: #1c1a17;
@@ -16,6 +16,7 @@
     --rule: #d8d0bf;
     --card-bg: #ffffff;
     --vermilion: #b5452c;
+    --dark: #14140f;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,7 +28,6 @@
     font-family: 'Noto Sans JP', sans-serif;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
   }
 
   .frame {
@@ -35,282 +35,402 @@
     margin: 0 auto;
     min-height: 100vh;
     background: var(--paper);
-    position: relative;
   }
 
-  header {
-    padding: 22px 24px 16px;
+  /* ── HERO ─────────────────────────────── */
+  .hero {
+    position: relative;
+    min-height: 78vh;
+    background-image:
+      linear-gradient(180deg, rgba(20,20,15,0.35) 0%, rgba(20,20,15,0.55) 55%, rgba(20,20,15,0.92) 100%),
+      url('images/hero-screen.jpg');
+    background-size: cover;
+    background-position: center 30%;
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px 26px 32px;
+    overflow: hidden;
+  }
+
+  .timeline {
+    padding: 4px 26px 8px;
+  }
+  .tl-item {
+    display: flex;
+    gap: 16px;
+    padding: 11px 0;
     border-bottom: 1px solid var(--rule);
   }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-year {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--vermilion);
+    flex-shrink: 0;
+    width: 48px;
+  }
+  .tl-text {
+    font-size: 13.5px;
+    color: #2b2925;
+    padding-top: 1px;
+  }
 
-  .brand-row {
+  /* ── SIGNATURE: BURIED CASTLE ─────────── */
+  .signature {
+    margin: 30px 24px 0;
+    background: var(--dark);
+    color: var(--paper);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .signature-img-wrap {
+    position: relative;
+    background: #fff;
+  }
+  .signature-img-wrap img {
+    width: 100%;
+    display: block;
+  }
+  .signature-body {
+    padding: 20px 22px 24px;
+  }
+  .signature-eyebrow {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .signature h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.35;
+    color: var(--paper);
+  }
+  .signature p {
+    font-size: 13.5px;
+    color: rgba(242,237,227,0.8);
+  }
+
+  .hero-top {
+    position: relative;
+    z-index: 2;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
+    align-items: flex-start;
   }
 
   .brand {
     font-family: 'Shippori Mincho', serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    color: var(--stone);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(242,237,227,0.6);
+  }
+
+  .price-badge {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--dark);
+    background: var(--gold);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  .hero-mid {
+    position: relative;
+    z-index: 2;
+    margin-top: 40px;
+  }
+
+  .kanji-mark {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  .hero h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.8), 0 1px 4px rgba(0,0,0,0.9);
+  }
+  .hero h1 span {
+    display: block;
+    color: var(--paper);
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 12px;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.9);
+  }
+
+  .hero-sub {
+    margin-top: 18px;
+    font-size: 14px;
+    color: rgba(242,237,227,0.75);
+    max-width: 320px;
+    font-style: italic;
+  }
+
+  .hero-bottom {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 18px;
+    margin-top: 30px;
+  }
+
+  .stat {
+    border-left: 1px solid rgba(242,237,227,0.25);
+    padding-left: 10px;
+  }
+  .stat b {
+    display: block;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 17px;
+    color: var(--paper);
+  }
+  .stat span {
+    font-size: 10px;
+    color: rgba(242,237,227,0.55);
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
-  .stop-badge {
+  /* ── HISTORY ──────────────────────────── */
+  .history {
+    padding: 34px 26px 8px;
+  }
+
+  .eyebrow {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--vermilion);
+    margin-bottom: 8px;
+  }
+
+  .history h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+
+  .history p {
+    font-size: 14.5px;
+    color: #2b2925;
+    margin-bottom: 14px;
+  }
+
+  .history p .hl {
+    color: var(--vermilion);
+    font-weight: 500;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 26px 0;
+    color: var(--stone);
+  }
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+  .divider span {
     font-family: 'Shippori Mincho', serif;
     font-size: 11px;
     letter-spacing: 0.1em;
-    color: var(--paper);
-    background: var(--vermilion);
-    padding: 4px 10px;
-    border-radius: 20px;
-    white-space: nowrap;
   }
 
-  .route-label {
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
+  /* ── WHAT YOU'LL SEE ──────────────────── */
+  .preview {
+    padding: 0 26px 8px;
   }
 
-  h1 {
+  .preview-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .preview-item:last-child { border-bottom: none; }
+
+  .preview-num {
     font-family: 'Shippori Mincho', serif;
-    font-size: 25px;
-    font-weight: 700;
-    line-height: 1.3;
+    font-size: 13px;
+    color: var(--gold);
+    flex-shrink: 0;
+    width: 22px;
   }
 
-  .subtitle {
+  .preview-text strong {
+    display: block;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14.5px;
+    margin-bottom: 3px;
+  }
+  .preview-text span {
     font-size: 12.5px;
     color: var(--stone);
-    font-style: italic;
-    margin-top: 4px;
   }
 
-  .map-section { padding: 20px 24px 4px; }
-
-  .map-card {
-    background: var(--card-bg);
-    border: 1px solid var(--rule);
-    border-radius: 6px;
-    overflow: hidden;
+  /* ── CTA ──────────────────────────────── */
+  .cta-section {
+    padding: 34px 26px 50px;
+    text-align: center;
   }
 
-  .map-visual {
-    height: 110px;
-    background:
-      repeating-linear-gradient(135deg, rgba(47,59,47,0.06) 0px, rgba(47,59,47,0.06) 2px, transparent 2px, transparent 14px),
-      linear-gradient(135deg, #dde3d5 0%, #c3d4d8 100%);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .map-pin {
-    width: 16px;
-    height: 16px;
-    background: var(--vermilion);
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    box-shadow: 0 0 0 6px rgba(181,69,44,0.15);
-  }
-
-  .map-footer {
-    padding: 13px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .map-meta { font-size: 12px; color: var(--stone); }
-  .map-meta strong { display: block; color: var(--ink); font-size: 13px; font-weight: 500; }
-
-  .map-btn {
+  .cta-btn {
+    display: block;
     font-family: 'Shippori Mincho', serif;
-    font-size: 12.5px;
+    font-size: 15.5px;
     letter-spacing: 0.04em;
     color: #fff;
-    background: var(--deep-green);
+    background: var(--vermilion);
     text-decoration: none;
-    padding: 9px 16px;
-    border-radius: 20px;
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    flex-shrink: 0;
+    padding: 17px;
+    border-radius: 30px;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(181,69,44,0.25);
   }
-  .map-btn::after { content: "→"; }
+  .cta-btn::after { content: " →"; }
 
-  .audio-section { padding: 22px 24px 6px; }
-
-  .audio-card {
-    background: var(--deep-green);
-    color: var(--paper);
-    border-radius: 8px;
-    padding: 18px;
+  .cta-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--stone);
   }
-
-  .audio-top { display: flex; align-items: center; gap: 14px; }
-
-  .play-btn {
-    width: 46px; height: 46px; border-radius: 50%;
-    background: var(--paper); color: var(--deep-green);
-    border: none; display: flex; align-items: center; justify-content: center;
-    font-size: 16px; flex-shrink: 0; cursor: pointer;
-  }
-  .play-btn:active { transform: scale(0.96); }
-
-  .audio-meta { flex: 1; min-width: 0; }
-  .audio-meta .label { font-family: 'Shippori Mincho', serif; font-size: 13px; letter-spacing: 0.03em; }
-  .audio-meta .sub { font-size: 11.5px; opacity: 0.7; margin-top: 2px; }
-
-  .prog-track {
-    height: 3px; background: rgba(242,237,227,0.2); border-radius: 2px;
-    margin-top: 16px; overflow: hidden; cursor: pointer;
-  }
-  .prog-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.1s linear; }
-
-  .time-row {
-    display: flex; justify-content: space-between; font-size: 10.5px;
-    opacity: 0.65; margin-top: 6px; letter-spacing: 0.02em;
-  }
-
-  .narrative { padding: 26px 24px 8px; font-size: 15px; color: #2b2925; }
-  .narrative p { margin-bottom: 14px; }
-  .narrative p:last-child { margin-bottom: 0; }
-  .narrative strong { font-family: 'Shippori Mincho', serif; }
-
-  .photo-spot {
-    margin: 20px 24px 0;
-    background: #fffdf8;
-    border: 1px dashed var(--gold);
-    border-radius: 6px;
-    padding: 14px 16px;
-    display: flex; gap: 10px; align-items: flex-start;
-  }
-  .photo-spot-icon { font-size: 18px; line-height: 1.4; }
-  .photo-spot-text { font-size: 13px; }
-  .photo-spot-text strong { display: block; font-size: 13.5px; margin-bottom: 2px; font-family: 'Shippori Mincho', serif; }
-
-  .video-card {
-    margin: 20px 24px 0;
-    background: #14140f;
-    color: var(--paper);
-    border-radius: 8px;
-    padding: 18px;
-  }
-  .video-card .eyebrow {
-    font-family: 'Shippori Mincho', serif; font-size: 10.5px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
-  }
-  .video-links { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-  .video-link {
-    display: flex; justify-content: space-between; align-items: center;
-    background: rgba(242,237,227,0.08); border: 1px solid rgba(242,237,227,0.2);
-    border-radius: 6px; padding: 12px 14px; text-decoration: none; color: var(--paper);
-    font-size: 13px;
-  }
-  .video-link span.arr { color: var(--gold); }
-
-  .quiz-block {
-    margin: 18px 24px 0;
-    background: #fffdf8;
-    border: 1px solid var(--rule);
-    border-radius: 6px;
-    padding: 16px;
-  }
-  .quiz-q { font-family: 'Shippori Mincho', serif; font-size: 13.5px; margin-bottom: 8px; }
-  .quiz-a { font-size: 13px; color: var(--stone); margin-bottom: 4px; }
-  .quiz-ans { font-size: 12.5px; color: var(--vermilion); margin-top: 6px; }
-  .quiz-block + .quiz-block { margin-top: 14px; }
-
-  .nav-row {
-    padding: 30px 24px 40px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .nav-btn {
-    font-family: 'Shippori Mincho', serif; font-size: 12.5px; letter-spacing: 0.05em;
-    color: var(--stone); text-decoration: none;
-    border: 1px solid var(--rule); padding: 10px 18px; border-radius: 20px;
-  }
-  .nav-btn.next { background: var(--gold); color: #fff; border-color: var(--gold); }
-  .nav-btn.disabled { opacity: 0.35; pointer-events: none; }
-
-  .dots { display: flex; gap: 5px; flex-wrap: wrap; max-width: 140px; justify-content: center; }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rule); }
-  .dot.on { background: var(--gold); width: 16px; border-radius: 3px; }
-
-  audio { display: none; }
 </style>
 </head>
 <body>
 <div class="frame">
 
-  <header>
-    <div class="brand-row">
-      <div class="brand">East River 31 · One Coin Tour</div>
-      <div class="stop-badge">A · 7 of 13</div>
+  <div class="hero">
+    <div class="hero-top">
+      <div class="brand">East River 31</div>
+      <div class="price-badge">¥500 One Coin Tour</div>
     </div>
-    <div class="route-label">Route A · JR Osaka Castle Park Station</div>
-    <h1>Video Viewing Point</h1>
-    <div class="subtitle">ビデオ視聴ポイント — before you enter</div>
-  </header>
 
-  <div class="map-section">
-    <div class="map-card">
-      <div class="map-visual"><div class="map-pin"></div></div>
-      <div class="map-footer">
-        <div class="map-meta"><strong>Right by the entrance</strong>to the castle keep</div>
-        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.687743,135.525847&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
+    <div class="hero-mid">
+      <div class="kanji-mark">大阪城</div>
+      <h1>Osaka Castle<span>A Self-Guided Journey Through Japan's Age of Warlords</span></h1>
+      <p class="hero-sub">One coin. One castle. A story of ambition, siege, and rebirth — told at your own pace.</p>
+    </div>
+
+    <div class="hero-bottom">
+      <div class="stat"><b>1583</b><span>Built</span></div>
+      <div class="stat"><b>1615</b><span>Burned</span></div>
+      <div class="stat"><b>1997</b><span>Restored</span></div>
+    </div>
+  </div>
+
+  <div class="history">
+    <div class="eyebrow">Before You Begin</div>
+    <h2>Two Castles, One Ground</h2>
+
+    <p>What you're about to walk through isn't one castle's story — it's <span class="hl">two</span>. And the second one was built directly on top of the ashes of the first.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-year">1500</div><div class="tl-text">Ishiyama Hongan-ji, a fortified temple, is established on this ground.</div></div>
+    <div class="tl-item"><div class="tl-year">1580</div><div class="tl-text">Oda Nobunaga wins the Battle of Ishiyama, clearing the site.</div></div>
+    <div class="tl-item"><div class="tl-year">1583</div><div class="tl-text"><span class="hl">Toyotomi Hideyoshi</span> begins building his castle on the ruins of the temple.</div></div>
+    <div class="tl-item"><div class="tl-year">1615</div><div class="tl-text">The Toyotomi castle falls in the Summer Siege of Osaka — burned to the ground.</div></div>
+    <div class="tl-item"><div class="tl-year">1620</div><div class="tl-text">The <span class="hl">Tokugawa Shogunate</span> spends 10 years building an entirely new castle — a different shape, a different era.</div></div>
+    <div class="tl-item"><div class="tl-year">1665</div><div class="tl-text">Lightning burns down the Tokugawa keep. Only its stone base survives.</div></div>
+    <div class="tl-item"><div class="tl-year">1945</div><div class="tl-text">WWII air raids badly damage the surviving turrets and keep base.</div></div>
+    <div class="tl-item"><div class="tl-year">1997</div><div class="tl-text">A full restoration is completed — the castle you'll walk through today.</div></div>
+  </div>
+
+  <div class="signature" style="margin-top: 24px;">
+    <div class="signature-img-wrap">
+      <img src="images/two-clans.jpg" alt="Portraits of the Toyotomi and Tokugawa clans alongside an illustration of the Summer Siege of Osaka">
+    </div>
+    <div class="signature-body">
+      <div class="signature-eyebrow">Two Clans, One Battlefield</div>
+      <h3>The last battle of the Sengoku period</h3>
+      <p>On one side, the Toyotomi — Hideyoshi's widow Yodo-dono and his son Hideyori, defending everything their family had built. On the other, the Tokugawa clan, determined to end them for good. In the summer of 1615, that conflict reached this exact ground — and when the smoke cleared, an entire era of Japanese history had ended with it.</p>
+    </div>
+  </div>
+
+  <div class="signature">
+    <div class="signature-img-wrap">
+      <img src="images/buried-castle.jpg" alt="Cross-section diagram showing the Toyotomi-era castle buried beneath the Tokugawa-era castle">
+    </div>
+    <div class="signature-body">
+      <div class="signature-eyebrow">The Castle Beneath the Castle</div>
+      <h3>Hideyoshi's castle never left. It's still down there.</h3>
+      <p>After the siege, the Tokugawa didn't just rebuild — they buried Hideyoshi's entire castle under a fresh layer of earth, several meters deep, and raised their own castle on top of it. Every stone wall you'll see today sits on that hidden layer. Somewhere beneath your feet, the original Osaka Castle is still there.</p>
+    </div>
+  </div>
+
+  <div class="history" style="padding-top: 30px;">
+    <div class="divider"><span>What's Ahead</span></div>
+  </div>
+
+  <div class="preview">
+    <div class="preview-item">
+      <div class="preview-num">01</div>
+      <div class="preview-text">
+        <strong>The Moats & Walls</strong>
+        <span>Engineering built for both war and earthquakes</span>
+      </div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-num">02</div>
+      <div class="preview-text">
+        <strong>Where a Family Fell</strong>
+        <span>The final hours of the Toyotomi line</span>
+      </div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-num">03</div>
+      <div class="preview-text">
+        <strong>The Stone of Regret</strong>
+        <span>A 108-ton monument to a daimyo's pride</span>
+      </div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-num">04</div>
+      <div class="preview-text">
+        <strong>A Garden of Four Elements</strong>
+        <span>Water, stone, island, and light</span>
+      </div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-num">05</div>
+      <div class="preview-text">
+        <strong>Commanders of 1615</strong>
+        <span>Two mini-documentaries — watch before you enter</span>
       </div>
     </div>
   </div>
 
-
-  <div class="video-card">
-    <div class="eyebrow">Watch Before You Enter · No Wi-Fi Inside</div>
-    <div class="video-links">
-      <a class="video-link" href="https://osaka-castle.vercel.app/osaka-tour-viewer-standalone.html" target="_blank" rel="noopener">1615: The Summer Siege — 10 Chapters <span class="arr">▶</span></a>
-      <a class="video-link" href="https://osaka-castle.vercel.app/commanders-of-1615.html" target="_blank" rel="noopener">Commanders of 1615 — Documentary <span class="arr">▶</span></a>
-    </div>
-  </div>
-  <div class="narrative">
-    <p>Before you go inside, take a few minutes here to watch two short documentary videos on your phone. They cover the Summer Siege of Osaka in 1615 — the battle that decided the fate of this very castle, and of Japan itself.</p>
-    <p>There's no Wi-Fi inside the keep, so this is the moment to load them. Once you've finished, head on in — you'll recognize several of the names and faces once you're walking through the exhibits inside.</p>
-  </div>
-
-
-
-  <div class="nav-row">
-    <a class="nav-btn " href="a4-5.html">← Back</a>
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot on"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-    <a class="nav-btn next" href="a5-5.html">Next →</a>
+  <div class="cta-section">
+    <a class="cta-btn" href="stop01.html">Begin the Tour</a>
+    <div class="cta-note">Stop 1 of 13 · The First Moat · ~10 min from the station</div>
   </div>
 
 </div>
-
-
-
 </body>
 </html>
