@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osaka Castle One Coin Tour — Where Hideyori and Yodo-dono Fell — Tour Finale</title>
+<title>Osaka Castle One Coin Tour — Where Hideyori and Yodo-dono Fell</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
@@ -287,13 +287,16 @@
     </div>
   </div>
 
+
   <div class="narrative">
     <p>In this quiet corner, the final memory of the Summer Siege of Osaka — 1615 — is written into the ground. Toyotomi Hideyori, son and heir of Hideyoshi, and his mother Yodo-dono, were cornered here by Tokugawa forces. They took their own lives on this spot.</p>
     <p>We began this tour at the gate that carried his family's name into legend, and Hideyoshi's own shrine. We end it here — where that story, and this castle's original age, came to a close.</p>
   </div>
 
+
+
   <div class="nav-row">
-    <a class="nav-btn" href="stop10.html">← Back</a>
+    <a class="nav-btn " href="stop10.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -306,13 +309,14 @@
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot on"></div>
+
     </div>
     <a class="nav-btn next" href="../route-a/welcome.html">Finish ✓</a>
   </div>
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a2.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/a3.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -331,6 +335,7 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
 
 </body>
 </html>

@@ -287,14 +287,17 @@
     </div>
   </div>
 
+
   <div class="narrative">
     <p>Look closely at the thick, black-lacquered doors. They're studded with countless metal rivets. This isn't decoration — it's real battlefield engineering, designed to protect the doors from arrows and gunfire.</p>
     <p>This gate isn't part of Hideyoshi's original castle. After the Toyotomi family fell in the Summer Siege of 1615, the entire castle was rebuilt from the ground up by the Tokugawa Shogunate. This gate dates from that Tokugawa reconstruction.</p>
     <p>Once you pass through, you'll enter a square space where the path suddenly turns at a right angle — a structure called a masugata, designed to slow an attacker's advance. Let's pass through this massive gate. From here, we'll trace the story of Osaka Castle — in reverse.</p>
   </div>
 
+
+
   <div class="nav-row">
-    <a class="nav-btn" href="stop02.html">← Back</a>
+    <a class="nav-btn " href="stop02.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -307,13 +310,14 @@
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
+
     </div>
     <a class="nav-btn next" href="stop04.html">Next →</a>
   </div>
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a3.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/b2.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -332,6 +336,7 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
 
 </body>
 </html>

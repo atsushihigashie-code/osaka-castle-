@@ -287,6 +287,7 @@
     </div>
   </div>
 
+
   <div class="narrative">
     <p>Every traditional Japanese garden is built around four essential elements. Look around you — you'll find them all right here.</p>
     <p><strong>Water.</strong> The pond in front of you represents the flow of life, and of time itself.</p>
@@ -295,14 +296,14 @@
     <p><strong>And finally, ornamental features</strong> — a lantern, a bridge, sometimes a small waterfall. Look at that large stone lantern, glowing at the heart of this miniature universe.</p>
     <p>Put together, these four elements turn a small garden into a complete world — a real landscape, and an imagined paradise, at the same time.</p>
   </div>
-
   <div class="photo-spot">
     <div class="photo-spot-icon">📷</div>
     <div class="photo-spot-text"><strong>Photo Spot</strong>This is today's best photo opportunity — take your time here.</div>
   </div>
 
+
   <div class="nav-row">
-    <a class="nav-btn" href="stop06.html">← Back</a>
+    <a class="nav-btn " href="stop06.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -315,13 +316,14 @@
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
+
     </div>
     <a class="nav-btn next" href="stop08.html">Next →</a>
   </div>
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/b1.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/a6.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -340,6 +342,7 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
 
 </body>
 </html>

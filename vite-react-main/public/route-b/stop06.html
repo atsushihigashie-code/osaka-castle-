@@ -287,13 +287,16 @@
     </div>
   </div>
 
+
   <div class="narrative">
     <p>This European-looking building might seem out of place — and it is, in a way. It was actually built in the early 20th century as the headquarters of the Imperial Japanese Army, right at the same time the castle keep itself was rebuilt.</p>
     <p>Today, it's been reborn as a shopping and dining spot, home to a souvenir shop and even a ninja figure museum. Take a moment to browse before continuing on.</p>
   </div>
 
+
+
   <div class="nav-row">
-    <a class="nav-btn" href="stop05.html">← Back</a>
+    <a class="nav-btn " href="stop05.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -306,13 +309,14 @@
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
+
     </div>
     <a class="nav-btn next" href="stop07.html">Next →</a>
   </div>
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a5.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/miraiza.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -331,6 +335,7 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
 
 </body>
 </html>

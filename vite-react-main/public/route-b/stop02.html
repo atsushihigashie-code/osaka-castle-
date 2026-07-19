@@ -287,18 +287,19 @@
     </div>
   </div>
 
+
   <div class="narrative">
     <p>Ahead of you, a wide moat stretches out — and beyond it, an enormous gate. Notice the distance you're standing from the wall. Back in the 1570s, this was roughly the effective range of a matchlock musket — a deliberate buffer zone, built directly into the landscape, so defenders could strike attackers before they ever reached the wall.</p>
     <p>Now look at the stone wall's shape. It curves, gently, rather than running in a straight line. This is Japanese engineering solving a Japanese problem: earthquakes. A curved wall distributes the shock of an earthquake and resists collapse, where a straight wall would come down all at once.</p>
   </div>
-
   <div class="photo-spot">
     <div class="photo-spot-icon">📷</div>
     <div class="photo-spot-text"><strong>Photo Spot</strong>Frame the gate and the moat together — this is one of the most dramatic first impressions of the entire castle.</div>
   </div>
 
+
   <div class="nav-row">
-    <a class="nav-btn" href="stop01.html">← Back</a>
+    <a class="nav-btn " href="stop01.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot on"></div>
@@ -311,13 +312,14 @@
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
+
     </div>
     <a class="nav-btn next" href="stop03.html">Next →</a>
   </div>
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/miraiza.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/b1.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -336,6 +338,7 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
 
 </body>
 </html>

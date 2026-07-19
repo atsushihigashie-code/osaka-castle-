@@ -260,7 +260,7 @@
     </div>
     <div class="route-label">Route B · Tanimachi 4-chome Station</div>
     <h1>The Tako-ishi Quiz</h1>
-    <div class="subtitle">蛸石クイズ — 桜門枕形</div>
+    <div class="subtitle">蛸石クイズ — 桜門枡形</div>
   </header>
 
   <div class="map-section">
@@ -279,13 +279,14 @@
         <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
         <div class="audio-meta">
           <div class="label">Narration — Tako-ishi Quiz</div>
-          <div class="sub" id="audioStatus">Tap to play · ~74 sec</div>
+          <div class="sub" id="audioStatus">Tap to play · ~87 sec</div>
         </div>
       </div>
       <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">1:14</span></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">1:27</span></div>
     </div>
   </div>
+
 
   <div class="narrative">
     <p>Passing through Sakuramon Gate, you'll come face to face with a single, massive slab of stone. This is Tako-ishi — the "Octopus Stone" — the single largest stone in the entire castle. Let's test your knowledge with a quick quiz.</p>
@@ -309,7 +310,7 @@
   </div>
 
   <div class="nav-row">
-    <a class="nav-btn" href="stop04.html">← Back</a>
+    <a class="nav-btn " href="stop04.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -322,13 +323,14 @@
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
+
     </div>
     <a class="nav-btn next" href="stop06.html">Next →</a>
   </div>
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a1.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/abonus.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -347,6 +349,7 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
 
 </body>
 </html>

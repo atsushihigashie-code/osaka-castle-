@@ -273,29 +273,30 @@
     </div>
   </div>
 
-
-  
   <div class="audio-section">
     <div class="audio-card">
       <div class="audio-top">
         <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
         <div class="audio-meta">
-          <div class="label">Narration — Hokoku Shrine</div>
-          <div class="sub" id="audioStatus">Tap to play · ~37 sec</div>
+          <div class="label">Narration — Stop B4</div>
+          <div class="sub" id="audioStatus">Tap to play · ~39 sec</div>
         </div>
       </div>
       <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:37</span></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:39</span></div>
     </div>
   </div>
+
 
   <div class="narrative">
     <p>Japan has a distinct cultural tradition: honoring things found in nature, and people who achieved great things, by remembering them for generations. Enshrined here is Toyotomi Hideyoshi, the man who built this castle. Born a farmer's son, he rose to become the most powerful man in Japan — a story that remains beloved across the country today.</p>
     <p>As we continue this tour, you'll see the very places where his family's story came to its end. This is where we begin — with the man himself.</p>
   </div>
 
+
+
   <div class="nav-row">
-    <a class="nav-btn" href="stop03.html">← Back</a>
+    <a class="nav-btn " href="stop03.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -308,16 +309,14 @@
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
+
     </div>
     <a class="nav-btn next" href="stop05.html">Next →</a>
   </div>
 
 </div>
 
-
-
-
-<audio id="player" preload="metadata"><source src="../shared-audio/hokoku.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/a7.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -336,5 +335,7 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
+
 </body>
 </html>

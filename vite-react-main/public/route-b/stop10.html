@@ -287,18 +287,19 @@
     </div>
   </div>
 
+
   <div class="narrative">
     <p>Look at the massive stone in front of you. This is called Zannen-ishi — the "Stone of Regret." When the Tokugawa Shogunate rebuilt Osaka Castle, it ordered daimyo lords from across the country to quarry and transport enormous stones. To prove their strength and loyalty, each lord carved his own family crest into the stone he provided — a signature carved in rock.</p>
     <p>But this particular stone was never actually used in the wall. All that effort, all that pride — ending in nothing. Hence the name: the Stone of Regret.</p>
   </div>
-
   <div class="photo-spot">
     <div class="photo-spot-icon">📷</div>
     <div class="photo-spot-text"><strong>Photo Spot</strong>Look closely at the surface — you may be able to find the crest carved by whichever lord transported it.</div>
   </div>
 
+
   <div class="nav-row">
-    <a class="nav-btn" href="stop09.html">← Back</a>
+    <a class="nav-btn " href="stop09.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -311,13 +312,14 @@
       <div class="dot"></div>
       <div class="dot on"></div>
       <div class="dot"></div>
+
     </div>
     <a class="nav-btn next" href="stop11.html">Next →</a>
   </div>
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a7.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/a4.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -336,6 +338,7 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
 
 </body>
 </html>
