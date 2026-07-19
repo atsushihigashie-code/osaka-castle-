@@ -32,8 +32,4 @@ html, body, #root {
   .tour-image-layer.active {
     transform: scale(1.0) !important;
   }
-  .grid-thumb {
-    background-size: contain !important;
-    background-color: var(--ink);
-  }
 }
