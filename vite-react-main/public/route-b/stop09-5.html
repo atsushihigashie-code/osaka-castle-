@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osaka Castle One Coin Tour — Zannen-ishi: The Stone of Regret</title>
+<title>Osaka Castle One Coin Tour — Video Viewing Point</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
@@ -256,88 +256,33 @@
   <header>
     <div class="brand-row">
       <div class="brand">East River 31 · One Coin Tour</div>
-      <div class="stop-badge">B · 10 of 11</div>
+      <div class="stop-badge">B · Bonus</div>
     </div>
     <div class="route-label">Route B · Tanimachi 4-chome Station</div>
-    <h1>Zannen-ishi: The Stone of Regret</h1>
-    <div class="subtitle">残念石</div>
+    <h1>Entering the Tenshukaku</h1>
+    <div class="subtitle">天守閣入場案内 — floor-by-floor guide</div>
   </header>
 
-  <div class="map-section">
-    <div class="map-card">
-      <div class="map-visual"><div class="map-pin"></div></div>
-      <div class="map-footer">
-        <div class="map-meta"><strong>Near the keep</strong>entrance</div>
-        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.688191,135.526458&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
-      </div>
-    </div>
+  <div class="narrative" style="padding-top: 20px;">
+    <p>If you'd like to go inside the castle keep, a separate museum admission ticket (¥600, adult) is required — available at the ticket counter on 1F.</p>
+    <p>There's no Wi-Fi once you're inside, so save this floor guide now. It covers all eight floors, from the entrance up to the observation deck.</p>
   </div>
 
-  <div class="audio-section">
-    <div class="audio-card">
-      <div class="audio-top">
-        <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
-        <div class="audio-meta">
-          <div class="label">Narration — Stop B8</div>
-          <div class="sub" id="audioStatus">Tap to play · ~53 sec</div>
-        </div>
-      </div>
-      <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:53</span></div>
-    </div>
+  <div class="floor-guide-image">
+    <img src="images/tenshukaku-floor-guide.jpg" alt="Osaka Castle Tenshukaku floor-by-floor guide, 1F to 8F" style="width:100%; border-radius: 12px; margin: 16px 0; display: block;">
   </div>
-
 
   <div class="narrative">
-    <p>Look at the massive stone in front of you. This is called Zannen-ishi — the "Stone of Regret." When the Tokugawa Shogunate rebuilt Osaka Castle, it ordered daimyo lords from across the country to quarry and transport enormous stones. To prove their strength and loyalty, each lord carved his own family crest into the stone he provided — a signature carved in rock.</p>
-    <p>But this particular stone was never actually used in the wall. All that effort, all that pride — ending in nothing. Hence the name: the Stone of Regret.</p>
+    <p>Once you're ready, head to the entrance — show your ticket or QR code, and enjoy the museum. This guide will still be here if you want to check it again once you're inside.</p>
   </div>
-  <div class="photo-spot">
-    <div class="photo-spot-icon">📷</div>
-    <div class="photo-spot-text"><strong>Photo Spot</strong>Look closely at the surface — you may be able to find the crest carved by whichever lord transported it.</div>
-  </div>
-
 
   <div class="nav-row">
-    <a class="nav-btn " href="stop09-5.html">← Back</a>
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot on"></div>
-      <div class="dot"></div>
-
-    </div>
-    <a class="nav-btn next" href="stop11.html">Next →</a>
+    <a class="nav-btn" href="stop09.html">← Back</a>
+    <div class="dots"></div>
+    <a class="nav-btn next" href="stop10.html">Next →</a>
   </div>
 
 </div>
-
-<audio id="player" preload="metadata"><source src="../shared-audio/a4.mp3" type="audio/mpeg"></audio>
-<script>
-const audio = document.getElementById('player');
-const playBtn = document.getElementById('playBtn');
-const progTrack = document.getElementById('progTrack');
-const progFill = document.getElementById('progFill');
-const timeCurrent = document.getElementById('timeCurrent');
-const timeTotal = document.getElementById('timeTotal');
-const audioStatus = document.getElementById('audioStatus');
-function fmt(s) { if (!isFinite(s)) return '0:00'; const m = Math.floor(s/60); const sec = Math.floor(s%60).toString().padStart(2,'0'); return `${m}:${sec}`; }
-audio.addEventListener('loadedmetadata', () => { timeTotal.textContent = fmt(audio.duration); });
-playBtn.addEventListener('click', () => {
-  if (audio.paused) { audio.play(); playBtn.textContent = '❚❚'; audioStatus.textContent = 'Playing narration…'; }
-  else { audio.pause(); playBtn.textContent = '▶'; audioStatus.textContent = 'Paused — tap to resume'; }
-});
-audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.style.width = (audio.currentTime/audio.duration*100)+'%'; timeCurrent.textContent = fmt(audio.currentTime); } });
-audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
-progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
-</script>
 
 
 </body>
