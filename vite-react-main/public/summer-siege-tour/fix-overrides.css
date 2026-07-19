@@ -1,31 +1,12 @@
-/* Fix: prevent scroll/overflow so the tour fills the screen edge-to-edge */
-html, body, #root {
-  width: 100% !important;
-  overflow: hidden !important;
-}
-
-/* Fix: shrink text/controls on landscape short-height screens (e.g. iPhone rotated) so nothing spills off-screen */
-@media (max-height: 480px) and (orientation: landscape) {
-  .gate { padding: 16px 24px !important; }
-  .gate-crest { width: 44px !important; height: 44px !important; margin-bottom: 10px !important; }
-  .gate-eyebrow { margin-bottom: 8px !important; font-size: 10px !important; }
-  .gate-title { font-size: clamp(1.6rem, 7vw, 2.4rem) !important; margin-bottom: 10px !important; }
-  .gate-title-sub { font-size: clamp(1rem, 3.2vw, 1.3rem) !important; margin-top: 4px !important; }
-  .gate-desc { font-size: 13px !important; line-height: 1.4 !important; margin-bottom: 18px !important; }
-  .gate-button { padding: 10px 28px !important; }
-  .gate-hint { margin-top: 12px !important; }
-
-  .tour-panel { padding: 0 18px max(12px, env(safe-area-inset-bottom)) !important; }
-  .tour-title { font-size: clamp(1.1rem, 5vw, 1.5rem) !important; margin-bottom: 6px !important; }
-  .tour-subtitle { font-size: clamp(0.8rem, 3vw, 0.95rem) !important; line-height: 1.3 !important; margin-bottom: 10px !important; }
-  .tour-header { padding: max(8px, env(safe-area-inset-top)) 14px 0 !important; }
-  .ctrl-btn { width: 34px !important; height: 34px !important; font-size: 13px !important; }
-}
-/* Fix: never crop the slide images — always show the full picture (letterboxed if needed), in both orientations */
-.tour-image-layer {
-  background-size: contain !important;
-  background-color: var(--ink);
-}
-.tour-image-layer.active {
-  transform: scale(1.0) !important;
+/* Fix: on portrait phones, the slide images are landscape with baked-in text —
+   "cover" crops that text off the edges. Switch to "contain" so the full image
+   (and its text) is always visible, letterboxed instead of cropped. */
+@media (orientation: portrait) {
+  .tour-image-layer {
+    background-size: contain !important;
+    background-color: var(--ink);
+  }
+  .tour-image-layer.active {
+    transform: scale(1.0) !important;
+  }
 }
