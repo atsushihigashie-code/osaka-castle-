@@ -21,15 +21,3 @@ html, body, #root {
   .tour-header { padding: max(8px, env(safe-area-inset-top)) 14px 0 !important; }
   .ctrl-btn { width: 34px !important; height: 34px !important; font-size: 13px !important; }
 }
-/* Fix: on portrait phones, the slide images are landscape with baked-in text —
-   "cover" crops that text off the edges. Switch to "contain" so the full image
-   (and its text) is always visible, letterboxed instead of cropped. */
-@media (orientation: portrait) {
-  .tour-image-layer {
-    background-size: contain !important;
-    background-color: var(--ink);
-  }
-  .tour-image-layer.active {
-    transform: scale(1.0) !important;
-  }
-}
