@@ -130,6 +130,32 @@
     font-size: 13px;
     padding: 8px;
   }
+
+  .divider {
+    margin: 36px 0 28px;
+    border-top: 1px solid var(--rule);
+    padding-top: 28px;
+  }
+
+  .shared-box {
+    background: #f7f4ec;
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 18px;
+  }
+
+  .shared-code-display {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 26px;
+    letter-spacing: 0.1em;
+    font-weight: 800;
+    text-align: center;
+    margin: 8px 0;
+  }
+
+  .shared-btn {
+    background: var(--gold);
+  }
 </style>
 </head>
 <body>
@@ -154,6 +180,18 @@
     <p id="expiryText"></p>
     <div class="msg-template" id="msgTemplate"></div>
     <button class="copy-btn" id="copyBtn">お客様への案内文をコピー</button>
+  </div>
+  <div class="divider">
+    <h1 style="font-size:18px;">Viator共有コード（完全自動用）</h1>
+    <p class="sub">Viatorの「チケット情報」欄に直接埋め込むための、共有アクセスコードです。これを発行すると、Viatorの予約確認と同時に、お客様は自動でコードを受け取れるようになります（御社の操作は一切不要）。セキュリティのため、月1回程度、下のボタンで新しいコードに切り替えてください。</p>
+    <div class="shared-box">
+      <p style="font-size:12.5px; color: var(--stone);">現在の共有コード：</p>
+      <div class="shared-code-display" id="sharedCodeDisplay">まだ発行されていません</div>
+      <p style="font-size:12px; color: var(--stone);" id="sharedExpiryText"></p>
+    </div>
+    <button id="rotateBtn" class="shared-btn" style="margin-top:16px;">新しい共有コードを発行する（切り替え）</button>
+    <div class="msg-template" id="sharedTemplate" style="display:none; margin-top:16px;"></div>
+    <button class="copy-btn" id="copySharedBtn" style="display:none;">Viatorのチケット情報欄用の文章をコピー</button>
   </div>
 </div>
 
@@ -229,6 +267,67 @@
     } finally {
       issueBtn.disabled = false;
       issueBtn.textContent = 'コードを発行する';
+    }
+  });
+
+  // ── 共有コード（Viator自動配布用） ──────────────────
+  const rotateBtn = document.getElementById('rotateBtn');
+  const sharedCodeDisplay = document.getElementById('sharedCodeDisplay');
+  const sharedExpiryText = document.getElementById('sharedExpiryText');
+  const sharedTemplate = document.getElementById('sharedTemplate');
+  const copySharedBtn = document.getElementById('copySharedBtn');
+
+  function buildSharedTemplate(code, expiresAt) {
+    const expiryDate = new Date(expiresAt);
+    const expiryStr = expiryDate.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    const gateUrl = 'https://osaka-castle.vercel.app/gate.html';
+    return `Thank you for booking! Here is your access code for the Osaka Castle Self-Guided Audio Tour:\n\nAccess Code: ${code}\n\nPlease enter this code here: ${gateUrl}\n(If you booked Route B, add ?route=b to the end of the link.)\n\nThis code is valid until ${expiryStr} (Japan time). If you have any trouble, please email eastriver.atsushi@gmail.com.`;
+  }
+
+  rotateBtn.addEventListener('click', async () => {
+    const adminKey = document.getElementById('adminKey').value.trim();
+    if (!adminKey) {
+      alert('管理者キーを入力してください。');
+      return;
+    }
+    if (!confirm('新しい共有コードに切り替えますか？\n（古いコードは48時間だけ猶予期間として使えます）')) return;
+
+    rotateBtn.disabled = true;
+    rotateBtn.textContent = '発行中…';
+
+    try {
+      const res = await fetch('/api/admin-issue-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey, mode: 'shared' }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || '発行に失敗しました。管理者キーを確認してください。');
+        return;
+      }
+
+      sharedCodeDisplay.textContent = data.code;
+      const expiryStr = new Date(data.expiresAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+      sharedExpiryText.textContent = `有効期限: ${expiryStr}（日本時間）`;
+
+      const template = buildSharedTemplate(data.code, data.expiresAt);
+      sharedTemplate.textContent = template;
+      sharedTemplate.style.display = 'block';
+      copySharedBtn.style.display = 'block';
+      copySharedBtn.onclick = () => {
+        navigator.clipboard.writeText(template);
+        copySharedBtn.textContent = 'コピーしました！';
+        setTimeout(() => { copySharedBtn.textContent = 'Viatorのチケット情報欄用の文章をコピー'; }, 1500);
+      };
+
+    } catch (err) {
+      console.error(err);
+      alert('通信エラーが発生しました。もう一度お試しください。');
+    } finally {
+      rotateBtn.disabled = false;
+      rotateBtn.textContent = '新しい共有コードを発行する（切り替え）';
     }
   });
 </script>
