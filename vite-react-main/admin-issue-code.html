@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viator予約 — アクセスコード発行（管理者用）</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+  :root {
+    --ink: #1c1a17;
+    --paper: #f2ede3;
+    --stone: #8a8378;
+    --gold: #a8823a;
+    --deep-green: #2f3b2f;
+    --rule: #d8d0bf;
+    --vermilion: #b5452c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.7;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .card {
+    max-width: 480px;
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 32px 28px;
+  }
+
+  h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .sub {
+    color: var(--stone);
+    font-size: 13.5px;
+    margin-bottom: 24px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    margin-top: 18px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+  }
+
+  input:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+
+  button {
+    width: 100%;
+    margin-top: 26px;
+    padding: 14px;
+    background: var(--deep-green);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .result {
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 8px;
+    display: none;
+  }
+  .result.ok {
+    background: #eef4ec;
+    border: 1px solid #b8d4b0;
+    display: block;
+  }
+  .result.error {
+    background: #fbeceb;
+    border: 1px solid #e3a9a1;
+    color: var(--vermilion);
+    display: block;
+  }
+  .code-display {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 32px;
+    letter-spacing: 0.12em;
+    font-weight: 800;
+    text-align: center;
+    margin: 10px 0;
+    color: var(--deep-green);
+  }
+  .result p { font-size: 13px; color: var(--stone); }
+  .msg-template {
+    margin-top: 14px;
+    padding: 14px;
+    background: var(--paper);
+    border-radius: 6px;
+    font-size: 12.5px;
+    white-space: pre-wrap;
+    border: 1px dashed var(--rule);
+  }
+  .copy-btn {
+    margin-top: 10px;
+    background: #fff;
+    color: var(--deep-green);
+    border: 1px solid var(--deep-green);
+    font-size: 13px;
+    padding: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>アクセスコード発行（管理者用）</h1>
+  <p class="sub">Viatorなど、Stripe決済を経由しない予約に対して、手動でアクセスコードを発行します。Viatorの予約通知メールが届いたら、このページを開いて発行してください。</p>
+
+  <label for="adminKey">管理者キー</label>
+  <input type="password" id="adminKey" placeholder="管理者キーを入力" autocomplete="off">
+
+  <label for="bookingRef">予約番号（任意・Viatorの BR- 番号など）</label>
+  <input type="text" id="bookingRef" placeholder="例: BR-9147869" autocomplete="off">
+
+  <label for="route">ルート</label>
+  <input type="text" id="route" placeholder="A または B" maxlength="1" autocomplete="off">
+
+  <button id="issueBtn">コードを発行する</button>
+
+  <div class="result" id="result">
+    <div class="code-display" id="codeDisplay"></div>
+    <p id="expiryText"></p>
+    <div class="msg-template" id="msgTemplate"></div>
+    <button class="copy-btn" id="copyBtn">お客様への案内文をコピー</button>
+  </div>
+</div>
+
+<script>
+  const issueBtn = document.getElementById('issueBtn');
+  const result = document.getElementById('result');
+  const codeDisplay = document.getElementById('codeDisplay');
+  const expiryText = document.getElementById('expiryText');
+  const msgTemplate = document.getElementById('msgTemplate');
+  const copyBtn = document.getElementById('copyBtn');
+
+  issueBtn.addEventListener('click', async () => {
+    const adminKey = document.getElementById('adminKey').value.trim();
+    const bookingRef = document.getElementById('bookingRef').value.trim();
+    const routeRaw = document.getElementById('route').value.trim().toUpperCase();
+    const route = routeRaw === 'B' ? 'b' : 'a';
+
+    if (!adminKey) {
+      alert('管理者キーを入力してください。');
+      return;
+    }
+
+    issueBtn.disabled = true;
+    issueBtn.textContent = '発行中…';
+
+    try {
+      const res = await fetch('/api/admin-issue-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          adminKey,
+          source: 'viator',
+          bookingRef: bookingRef || null,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        result.className = 'result error';
+        result.style.display = 'block';
+        codeDisplay.textContent = '';
+        expiryText.textContent = data.error || '発行に失敗しました。管理者キーを確認してください。';
+        msgTemplate.style.display = 'none';
+        copyBtn.style.display = 'none';
+        return;
+      }
+
+      const expiryDate = new Date(data.expiresAt);
+      const expiryStr = expiryDate.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+      const gateUrl = `https://osaka-castle.vercel.app/gate.html?route=${route}`;
+
+      result.className = 'result ok';
+      result.style.display = 'block';
+      codeDisplay.textContent = data.code;
+      expiryText.textContent = `有効期限: ${expiryStr}（日本時間）`;
+      msgTemplate.style.display = 'block';
+      copyBtn.style.display = 'block';
+
+      const template = `Thank you for booking! Here is your access code for the Osaka Castle Self-Guided Audio Tour:\n\nAccess Code: ${data.code}\n\nPlease enter this code here: ${gateUrl}\n\nThis code is valid until ${expiryStr} (Japan time). If you have any trouble, please reply to this message or email eastriver.atsushi@gmail.com.`;
+      msgTemplate.textContent = template;
+
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(template);
+        copyBtn.textContent = 'コピーしました！';
+        setTimeout(() => { copyBtn.textContent = 'お客様への案内文をコピー'; }, 1500);
+      };
+
+    } catch (err) {
+      console.error(err);
+      result.className = 'result error';
+      result.style.display = 'block';
+      expiryText.textContent = '通信エラーが発生しました。もう一度お試しください。';
+    } finally {
+      issueBtn.disabled = false;
+      issueBtn.textContent = 'コードを発行する';
+    }
+  });
+</script>
+
+</body>
+</html>

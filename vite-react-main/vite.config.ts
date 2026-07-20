@@ -14,6 +14,7 @@ export default defineConfig({
         osakaTourViewer: resolve(__dirname, 'osaka-tour-viewer.html'),
         tokusho: resolve(__dirname, 'tokusho.html'),
         purchase: resolve(__dirname, 'purchase/index.html'),
+        adminIssueCode: resolve(__dirname, 'admin-issue-code.html'),
       },
     },
   },
