@@ -284,7 +284,7 @@
     const expiryStr = expiryDate.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
     const gateUrlA = 'https://osaka-castle.vercel.app/gate.html?route=a';
     const gateUrlB = 'https://osaka-castle.vercel.app/gate.html?route=b';
-    return `Thank you for booking! Here is your access code for the Osaka Castle Self-Guided Audio Tour:\n\nAccess Code: ${code}\n\nPlease use this link to begin your tour (Route A — we recommend this route):\n${gateUrlA}\n\nIf you would prefer Route B instead (starting near Tanimachi 4-chome Station), please use this link instead:\n${gateUrlB}\n\nThis code is valid until ${expiryStr} (Japan time). If you have any trouble, please email eastriver.atsushi@gmail.com.`;
+    return `Thank you for booking! Here is your access code for the Osaka Castle Self-Guided Audio Tour:\n\nAccess Code: ${code}\n\nPlease use this link to begin your tour (Route A — we recommend this route):\n${gateUrlA}\n\nIf you would prefer Route B instead (starting near Tanimachi 4-chome Station), please use this link instead:\n${gateUrlB}\n\nThis code is valid for one month and is intended for the booking traveler(s) only. Please do not share it — if it is used by an unusual number of different people or devices, it will be automatically deactivated.\n\nThis code is valid until ${expiryStr} (Japan time). If you have any trouble, please email eastriver.atsushi@gmail.com.`;
   }
 
   rotateBtn.addEventListener('click', async () => {
