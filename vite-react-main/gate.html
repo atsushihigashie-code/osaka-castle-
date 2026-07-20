@@ -128,24 +128,6 @@
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-  // ── Fill in with your Firebase project's web config ──────────────
-  // Find this in: Firebase Console → Project Settings → General →
-  // "Your apps" → Web app → SDK setup and configuration
-  // These values are safe to expose publicly (they are not secrets).
-  const firebaseConfig = {
-  apiKey: "AIzaSyCnzUg5_UkJmhfQQuoJ7mbNMli5lBsFWKw",
-  authDomain: "osaka-castle-tour.firebaseapp.com",
-  databaseURL: "https://osaka-castle-tour-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "osaka-castle-tour",
-};
-  // ───────────────────────────────────────────────────────────────
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
   const params = new URLSearchParams(window.location.search);
   const route = (params.get('route') || 'a').toLowerCase(); // 'a' or 'b'
   document.getElementById('routeLetter').textContent = route.toUpperCase();
@@ -171,17 +153,21 @@
     msg.className = 'msg';
 
     try {
-      const snap = await get(ref(db, 'accessCodes/' + code));
-      if (!snap.exists()) {
-        msg.textContent = 'That code was not recognized. Please check it and try again.';
-        msg.className = 'msg error';
-        btn.disabled = false;
-        return;
-      }
+      const res = await fetch('/api/verify-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      });
+      const data = await res.json();
 
-      const data = snap.val();
-      if (Date.now() > data.expiresAt) {
-        msg.textContent = 'This code has expired (valid for 24 hours after purchase).';
+      if (!data.ok) {
+        if (data.error === 'expired') {
+          msg.textContent = 'This code has expired.';
+        } else if (data.error === 'revoked') {
+          msg.textContent = 'This code is no longer valid. Please contact eastriver.atsushi@gmail.com for help.';
+        } else {
+          msg.textContent = 'That code was not recognized. Please check it and try again.';
+        }
         msg.className = 'msg error';
         btn.disabled = false;
         return;

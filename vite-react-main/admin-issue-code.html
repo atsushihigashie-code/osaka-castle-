@@ -190,6 +190,8 @@
       <p style="font-size:12px; color: var(--stone);" id="sharedExpiryText"></p>
     </div>
     <button id="rotateBtn" class="shared-btn" style="margin-top:16px;">新しい共有コードを発行する（切り替え）</button>
+    <button id="checkUsageBtn" style="margin-top:10px; background:#fff; color:var(--deep-green); border:1px solid var(--deep-green);">現在の共有コードの使用状況を確認</button>
+    <div class="shared-box" id="usageResult" style="display:none; margin-top:14px;"></div>
     <div class="msg-template" id="sharedTemplate" style="display:none; margin-top:16px;"></div>
     <button class="copy-btn" id="copySharedBtn" style="display:none;">Viatorのチケット情報欄用の文章をコピー</button>
   </div>
@@ -328,6 +330,57 @@
     } finally {
       rotateBtn.disabled = false;
       rotateBtn.textContent = '新しい共有コードを発行する（切り替え）';
+    }
+  });
+
+  // ── 使用状況の確認 ──────────────────────────────────
+  const checkUsageBtn = document.getElementById('checkUsageBtn');
+  const usageResult = document.getElementById('usageResult');
+
+  checkUsageBtn.addEventListener('click', async () => {
+    const adminKey = document.getElementById('adminKey').value.trim();
+    const currentCode = sharedCodeDisplay.textContent.trim();
+
+    if (!adminKey) {
+      alert('管理者キーを入力してください。');
+      return;
+    }
+    if (!currentCode || currentCode === 'まだ発行されていません') {
+      alert('先に共有コードを発行してください。');
+      return;
+    }
+
+    checkUsageBtn.disabled = true;
+    checkUsageBtn.textContent = '確認中…';
+
+    try {
+      const res = await fetch('/api/admin-code-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey, code: currentCode }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.found) {
+        usageResult.style.display = 'block';
+        usageResult.textContent = '情報が見つかりませんでした。';
+        return;
+      }
+
+      usageResult.style.display = 'block';
+      usageResult.innerHTML =
+        `コード: <strong>${currentCode}</strong><br>` +
+        `使用回数（合計）: ${data.usageCount}回<br>` +
+        `異なる端末からの利用: ${data.distinctDevices}台<br>` +
+        `状態: ${data.revoked ? '<strong style="color:#b5452c;">無効化されています（' + (data.revokedReason || '') + '）</strong>' : '有効'}`;
+
+    } catch (err) {
+      console.error(err);
+      usageResult.style.display = 'block';
+      usageResult.textContent = '通信エラーが発生しました。';
+    } finally {
+      checkUsageBtn.disabled = false;
+      checkUsageBtn.textContent = '現在の共有コードの使用状況を確認';
     }
   });
 </script>
