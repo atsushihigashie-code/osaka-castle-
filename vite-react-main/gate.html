@@ -115,6 +115,7 @@
 
 <div class="card">
   <div class="eyebrow">Route <span id="routeLetter">A</span></div>
+  <p class="route-station" id="routeStation" style="margin: -8px 0 18px; font-size: 13px; color: var(--stone); text-align: center;"></p>
   <h1>Enter Your Access Code</h1>
   <p class="route-note">You'll find this 6-character code on the confirmation page after your ¥500 purchase.</p>
 
@@ -131,6 +132,8 @@
   const params = new URLSearchParams(window.location.search);
   const route = (params.get('route') || 'a').toLowerCase(); // 'a' or 'b'
   document.getElementById('routeLetter').textContent = route.toUpperCase();
+  document.getElementById('routeStation').textContent =
+    route === 'b' ? 'Starting from Tanimachi 4-chome Station' : 'Starting from JR Osaka Castle Park Station';
 
   const input = document.getElementById('codeInput');
   const btn = document.getElementById('submitBtn');
