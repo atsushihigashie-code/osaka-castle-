@@ -279,12 +279,10 @@
   const sharedTemplate = document.getElementById('sharedTemplate');
   const copySharedBtn = document.getElementById('copySharedBtn');
 
-  function buildSharedTemplate(code, expiresAt) {
-    const expiryDate = new Date(expiresAt);
-    const expiryStr = expiryDate.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  function buildSharedTemplate(code) {
     const gateUrlA = 'https://osaka-castle.vercel.app/gate.html?route=a';
     const gateUrlB = 'https://osaka-castle.vercel.app/gate.html?route=b';
-    return `Thank you for booking! Here is your access code for the Osaka Castle Self-Guided Audio Tour:\n\nAccess Code: ${code}\n\nPlease use this link to begin your tour (Route A — we recommend this route):\n${gateUrlA}\n\nIf you would prefer Route B instead (starting near Tanimachi 4-chome Station), please use this link instead:\n${gateUrlB}\n\nThis code is valid for one month and is intended for the booking traveler(s) only. Please do not share it — if it is used by an unusual number of different people or devices, it will be automatically deactivated.\n\nThis code is valid until ${expiryStr} (Japan time). If you have any trouble, please email eastriver.atsushi@gmail.com.`;
+    return `Thank you for booking! Here is your access code for the Osaka Castle Self-Guided Audio Tour:\n\nAccess Code: ${code}\n\nPlease use this link to begin your tour (Route A — we recommend this route):\n${gateUrlA}\n\nIf you would prefer Route B instead (starting near Tanimachi 4-chome Station), please use this link instead:\n${gateUrlB}\n\nThis code is valid for 48 hours and is intended for the booking traveler(s) only. Please use it soon after booking, and do not share it — if it is used by an unusual number of different people or devices, it will be automatically deactivated.\n\nIf you have any trouble, please email eastriver.atsushi@gmail.com.`;
   }
 
   rotateBtn.addEventListener('click', async () => {
@@ -315,7 +313,7 @@
       const expiryStr = new Date(data.expiresAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
       sharedExpiryText.textContent = `有効期限: ${expiryStr}（日本時間）`;
 
-      const template = buildSharedTemplate(data.code, data.expiresAt);
+      const template = buildSharedTemplate(data.code);
       sharedTemplate.textContent = template;
       sharedTemplate.style.display = 'block';
       copySharedBtn.style.display = 'block';
