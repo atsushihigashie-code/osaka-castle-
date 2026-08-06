@@ -34,6 +34,26 @@ function generateCode() {
   return code;
 }
 
+// "Today" in Japan time, as YYYY-MM-DD — used so hotel dashboards match
+// what the front-desk staff mean by "today", not UTC's today.
+function getJstDateString() {
+  const jstOffset = 9 * 60 * 60 * 1000;
+  return new Date(Date.now() + jstOffset).toISOString().slice(0, 10);
+}
+
+// Records one referred booking under referrals/{hotelId}/{date}/{sessionId}.
+// Called at most once per session (guarded by the caller).
+async function logReferralIfAny(db, session, sessionId) {
+  const hotelId = session.client_reference_id;
+  if (!hotelId) return;
+
+  const date = getJstDateString();
+  await db.ref(`referrals/${hotelId}/${date}/${sessionId}`).set({
+    timestamp: Date.now(),
+    commission: 100,
+  });
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -75,6 +95,10 @@ export default async function handler(req, res) {
       createdAt: Date.now(),
     });
     await db.ref('accessCodesBySession/' + session_id).set(code);
+
+    // Only reached the first time this session is verified, so the
+    // referral is logged exactly once per purchase.
+    await logReferralIfAny(db, session, session_id);
 
     return res.status(200).json({ code, expiresAt });
   } catch (err) {
