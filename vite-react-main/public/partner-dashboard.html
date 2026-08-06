@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partner Dashboard — Osaka Castle One Coin Tour</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+  :root {
+    --ink: #1c1a17;
+    --paper: #f2ede3;
+    --stone: #8a8378;
+    --gold: #a8823a;
+    --deep-green: #2f3b2f;
+    --rule: #d8d0bf;
+    --vermilion: #b5452c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 0 0 40px;
+  }
+  .frame {
+    max-width: 480px;
+    width: 100%;
+    background: #ffffff;
+    min-height: 100vh;
+  }
+  .brand-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .brand {
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+  }
+  .badge {
+    background: var(--deep-green);
+    color: #fff;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+  }
+  .section { padding: 28px 24px 6px; }
+  .eyebrow {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  .hotel-name {
+    font-size: 13px;
+    color: var(--stone);
+  }
+  .stat-row {
+    display: flex;
+    gap: 12px;
+    margin: 22px 24px 0;
+  }
+  .stat-box {
+    flex: 1;
+    background: #fff9ec;
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 18px 14px;
+    text-align: center;
+  }
+  .stat-box .num {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--vermilion);
+  }
+  .stat-box .label {
+    font-size: 11px;
+    color: var(--stone);
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+  .stat-box .sub {
+    font-size: 12px;
+    color: var(--ink);
+    margin-top: 6px;
+  }
+  .history {
+    margin: 26px 24px 0;
+  }
+  .history h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: var(--deep-green);
+  }
+  .history-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .history-row .d { color: var(--stone); }
+  .history-row .c { font-weight: 700; }
+  .status {
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--stone);
+    font-size: 13px;
+  }
+  .error {
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--vermilion);
+    font-size: 13px;
+  }
+  footer {
+    padding: 24px 24px 40px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--stone);
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="brand-row">
+    <div class="brand">East River 31</div>
+    <div class="badge">Partner Dashboard</div>
+  </div>
+  <div class="section">
+    <div class="eyebrow">Referral Bookings</div>
+    <h1 id="hotel-title">Loading…</h1>
+    <div class="hotel-name" id="hotel-date"></div>
+  </div>
+
+  <div id="stats" style="display:none;">
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="num" id="today-count">0</div>
+        <div class="label">TODAY</div>
+        <div class="sub" id="today-commission">¥0</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="total-count">0</div>
+        <div class="label">TOTAL</div>
+        <div class="sub" id="total-commission">¥0</div>
+      </div>
+    </div>
+    <div class="history">
+      <h3>Recent Days</h3>
+      <div id="history-list"></div>
+    </div>
+  </div>
+
+  <div id="status" class="status">Loading today's numbers…</div>
+  <div id="error" class="error" style="display:none;"></div>
+
+  <footer>
+    East River 31 LLC — Osaka Castle One Coin Tour Partner Program.<br>
+    ¥100 per completed booking made through your link/QR code.
+  </footer>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const hotel = params.get('hotel');
+
+  const titleEl = document.getElementById('hotel-title');
+  const dateEl = document.getElementById('hotel-date');
+  const statusEl = document.getElementById('status');
+  const errorEl = document.getElementById('error');
+  const statsEl = document.getElementById('stats');
+
+  if (!hotel) {
+    statusEl.style.display = 'none';
+    errorEl.style.display = 'block';
+    errorEl.textContent = 'No hotel specified. Use this page as: partner-dashboard.html?hotel=your-id';
+    titleEl.textContent = 'Partner Dashboard';
+  } else {
+    titleEl.textContent = 'Your Referrals';
+    fetch('/api/hotel-referrals?hotel=' + encodeURIComponent(hotel))
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) {
+          statusEl.style.display = 'none';
+          errorEl.style.display = 'block';
+          errorEl.textContent = data.error;
+          return;
+        }
+        statusEl.style.display = 'none';
+        statsEl.style.display = 'block';
+        dateEl.textContent = hotel + ' — as of ' + data.date + ' (JST)';
+
+        document.getElementById('today-count').textContent = data.todayCount;
+        document.getElementById('today-commission').textContent = '¥' + data.todayCommission.toLocaleString();
+        document.getElementById('total-count').textContent = data.totalCount;
+        document.getElementById('total-commission').textContent = '¥' + data.totalCommission.toLocaleString();
+
+        const list = document.getElementById('history-list');
+        if (data.recent.length === 0) {
+          list.innerHTML = '<div class="history-row"><span class="d">No bookings yet</span></div>';
+        } else {
+          list.innerHTML = data.recent.map(r =>
+            '<div class="history-row"><span class="d">' + r.date + '</span><span class="c">' + r.count + ' 件</span></div>'
+          ).join('');
+        }
+      })
+      .catch(() => {
+        statusEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        errorEl.textContent = "Couldn't reach the server. Please refresh.";
+      });
+  }
+</script>
+</body>
+</html>
