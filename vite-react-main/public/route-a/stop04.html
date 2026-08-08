@@ -201,13 +201,23 @@
 
   .stop-gallery {
     margin: 20px 16px 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px;
   }
-  .stop-gallery img {
+  .stop-gallery img.wide {
     width: 100%;
     height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+  .stop-gallery .gallery-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .stop-gallery .gallery-row img {
+    width: 100%;
+    height: 150px;
     object-fit: cover;
     border-radius: 8px;
     display: block;
@@ -316,9 +326,11 @@
   </div>
 
   <div class="stop-gallery">
-    <img src="images/spots/03-three-warlords.jpg" alt="Portraits of Oda Nobunaga, Toyotomi Hideyoshi, and Tokugawa Ieyasu">
-    <img src="images/spots/03-armed-monk.jpg" alt="A Fighting Monk — historical photograph of an armed warrior monk in armor over clerical robes, with captioned description">
-    <img src="images/spots/03-siege-of-osaka.jpg" alt="Historical print of Osaka Castle burning during the 1615 Summer Siege">
+    <img class="wide" src="images/spots/03-three-warlords.jpg" alt="Portraits of Oda Nobunaga, Toyotomi Hideyoshi, and Tokugawa Ieyasu">
+    <div class="gallery-row">
+      <img src="images/spots/03-armed-monk.jpg" alt="A Fighting Monk — historical photograph of an armed warrior monk in armor over clerical robes, with captioned description">
+      <img src="images/spots/03-siege-of-osaka.jpg" alt="Historical print of Osaka Castle burning during the 1615 Summer Siege">
+    </div>
   </div>
 
   <div class="photo-spot">
