@@ -294,6 +294,20 @@
   </div>
 
 
+  <div class="audio-section">
+    <div class="audio-card">
+      <div class="audio-top">
+        <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
+        <div class="audio-meta">
+          <div class="label">Narration — Stop A14</div>
+          <div class="sub" id="audioStatus">Tap to play · ~56 sec</div>
+        </div>
+      </div>
+      <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:56</span></div>
+    </div>
+  </div>
+
   <div class="narrative">
     <p>Japan has a distinct spiritual tradition called Shinto — the "way of the kami." Unlike many religions, Shinto has no single founder or holy book. Instead, it honors kami: spirits found in nature (mountains, rivers, trees) and also in people who achieved truly great things in their lifetime.</p>
     <p>Enshrined here at Hokoku Shrine is one such person — Toyotomi Hideyoshi, the man who built Osaka Castle. Born the son of a farmer, he rose to become the most powerful man in Japan, unifying the country after a century of civil war.</p>
@@ -331,7 +345,7 @@
 
 
 
-<audio id="player" preload="metadata"><source src="../shared-audio/hokoku.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/routeA-hokoku-shrine.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
