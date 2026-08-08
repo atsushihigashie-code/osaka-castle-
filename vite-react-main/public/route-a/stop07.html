@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osaka Castle One Coin Tour — Video Viewing Point</title>
+<title>Osaka Castle One Coin Tour — Photo Spot</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
@@ -199,6 +199,20 @@
   .photo-spot-text { font-size: 13px; }
   .photo-spot-text strong { display: block; font-size: 13.5px; margin-bottom: 2px; font-family: 'Shippori Mincho', serif; }
 
+  .stop-gallery {
+    margin: 20px 24px 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .stop-gallery img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+
   .video-card {
     margin: 20px 24px 0;
     background: #14140f;
@@ -256,53 +270,47 @@
   <header>
     <div class="brand-row">
       <div class="brand">East River 31 · One Coin Tour</div>
-      <div class="stop-badge">A · 7 of 13</div>
+      <div class="stop-badge">A · 7 of 14</div>
     </div>
     <div class="route-label">Route A · JR Osaka Castle Park Station</div>
-    <h1>Video Viewing Point</h1>
-    <div class="subtitle">ビデオ視聴ポイント — before you enter</div>
+    <h1>Photo Spot</h1>
+    <div class="subtitle">撮影ポイント</div>
   </header>
 
   <div class="map-section">
     <div class="map-card">
       <div class="map-visual"><div class="map-pin"></div></div>
       <div class="map-footer">
-        <div class="map-meta"><strong>Right by the entrance</strong>to the castle keep</div>
-        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.687743,135.525847&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
+        <div class="map-meta"><strong>A short walk</strong>toward the castle keep</div>
+        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.687780,135.525442&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
       </div>
     </div>
   </div>
 
-  
   <div class="audio-section">
     <div class="audio-card">
       <div class="audio-top">
         <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
         <div class="audio-meta">
-          <div class="label">Narration — Video Guide</div>
-          <div class="sub" id="audioStatus">Tap to play · ~46 sec</div>
+          <div class="label">Narration — Stop A6</div>
+          <div class="sub" id="audioStatus">Tap to play · ~16 sec</div>
         </div>
       </div>
       <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:46</span></div>
-    </div>
-  </div>
-
-  <div class="video-card">
-    <div class="eyebrow">Watch Before You Enter · No Wi-Fi Inside</div>
-    <div class="video-links">
-      <a class="video-link" href="https://osaka-summer-siege-tour.vercel.app" target="_blank" rel="noopener">1615: The Summer Siege of Osaka — Guided Tour <span class="arr">▶</span></a>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:16</span></div>
     </div>
   </div>
 
   <div class="narrative">
-    <p>Before you go inside, take a few minutes here to watch a short guided tour on your phone. It covers the Summer Siege of Osaka in 1615 — the battle that decided the fate of this very castle, and of Japan itself.</p>
-    <p>This is a self-paced, ten-chapter story with narration — tap through at your own speed, starting with the Tokugawa forces before turning to the Toyotomi side.</p>
-    <p>There's no Wi-Fi inside the keep, so this is the moment to load it. Once you've finished, head on in — you'll recognize several of the names and faces once you're walking through the exhibits inside.</p>
+    <p>Take a moment here for a photo. From this angle, you can take in the full scale of the castle keep — its height, its tiered roofs, and the way the stone walls rise up beneath it. This is one of the best spots on the route to appreciate just how massive the castle really is.</p>
+  </div>
+
+  <div class="stop-gallery">
+    <img src="images/spots/06-castle-full-view.jpg" alt="Full view of Osaka Castle keep rising above its stone walls, viewed from below">
   </div>
 
   <div class="nav-row">
-    <a class="nav-btn" href="stop06.html">← Back</a>
+    <a class="nav-btn " href="stop06.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -317,15 +325,14 @@
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
+      <div class="dot"></div>
     </div>
     <a class="nav-btn next" href="stop08.html">Next →</a>
   </div>
 
 </div>
 
-
-
-<audio id="player" preload="metadata"><source src="../shared-audio/b2a.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/a6-photo-spot.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -344,5 +351,6 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
 </body>
 </html>

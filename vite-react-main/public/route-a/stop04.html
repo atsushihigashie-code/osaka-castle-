@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osaka Castle One Coin Tour — Where Hideyori and Yodo-dono Fell</title>
+<title>Osaka Castle One Coin Tour — Gokuraku-bashi Bridge</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
@@ -199,6 +199,36 @@
   .photo-spot-text { font-size: 13px; }
   .photo-spot-text strong { display: block; font-size: 13.5px; margin-bottom: 2px; font-family: 'Shippori Mincho', serif; }
 
+  .stop-gallery {
+    margin: 20px 24px 0;
+  }
+  .stop-gallery img.wide {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+  .stop-gallery .gallery-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .stop-gallery .gallery-row img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+  .gallery-caption {
+    font-size: 11px;
+    color: var(--stone);
+    text-align: center;
+    margin-top: 4px;
+  }
+
   .video-card {
     margin: 20px 24px 0;
     background: #14140f;
@@ -256,19 +286,19 @@
   <header>
     <div class="brand-row">
       <div class="brand">East River 31 · One Coin Tour</div>
-      <div class="stop-badge">A · 4 of 13</div>
+      <div class="stop-badge">A · 4 of 14</div>
     </div>
     <div class="route-label">Route A · JR Osaka Castle Park Station</div>
-    <h1>Where Hideyori and Yodo-dono Fell</h1>
-    <div class="subtitle">秀頼・淀殿 自刃の地</div>
+    <h1>Crossing Gokuraku-bashi</h1>
+    <div class="subtitle">極楽橋 — from Nobunaga to the Fall of Osaka</div>
   </header>
 
   <div class="map-section">
     <div class="map-card">
       <div class="map-visual"><div class="map-pin"></div></div>
       <div class="map-footer">
-        <div class="map-meta"><strong>A short climb</strong>further into the grounds</div>
-        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.688113,135.526861&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
+        <div class="map-meta"><strong>A short walk</strong>along the inner moat</div>
+        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.688984,135.526957&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
       </div>
     </div>
   </div>
@@ -279,27 +309,43 @@
         <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
         <div class="audio-meta">
           <div class="label">Narration — Stop A3</div>
-          <div class="sub" id="audioStatus">Tap to play · ~42 sec</div>
+          <div class="sub" id="audioStatus">Tap to play · ~67 sec</div>
         </div>
       </div>
       <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:42</span></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">1:07</span></div>
     </div>
   </div>
 
   <div class="narrative">
-    <p>If you have a moment, would you like to visit the spot where Yodo-dono and Hideyori ended their lives?</p>
-    <p>In this quiet corner, the final memory of the Summer Siege of Osaka — 1615 — is written into the ground. Toyotomi Hideyori, son and heir of Hideyoshi, and his mother Yodo-dono, were cornered here by Tokugawa forces. They took their own lives on this spot. The story of the Toyotomi family, and of the original, glittering Osaka Castle, comes to an end right here.</p>
-    <p>The castle keep you see today isn't the original — it's a modern reconstruction, now serving as a historical monument and museum, designed to recreate the look of Hideyoshi's very first castle. The Toyotomi-era castle lies buried beneath what you're standing on now.</p>
+    <p>Pause here on the bridge — its name, Gokuraku-bashi, literally means "the bridge to paradise." As you cross, let's rewind the clock about 500 years.</p>
+    <p>Before this was a castle, this ground belonged to a temple. Back in the early 1500s, Buddhist monks here carried weapons and armor to defend their temple from samurai — but over time, that defense grew into real military power. Temples across the region built up armies of their own, and became forces to be reckoned with.</p>
+    <p>That worried a rising warlord named Oda Nobunaga. As he expanded his power across what is now Kanazawa, Shiga, Kyoto, and Osaka, he crushed these armed Buddhist strongholds one by one. This site — once the great temple of Ishiyama Hongan-ji — was no exception. Nobunaga destroyed it too.</p>
+    <p>Years later, on these same ruins, a man named Toyotomi Hideyoshi — Nobunaga's former general, who had risen to become the most powerful man in Japan — built the first Osaka Castle.</p>
+    <p>While Hideyoshi lived, the Toyotomi clan flourished. But when he died of illness in 1598, his family's power began to slip away. And in 1615, in the Summer Siege of Osaka, the Toyotomi clan finally came to an end.</p>
+  </div>
+
+  <div class="stop-gallery">
+    <img class="wide" src="images/spots/03-three-warlords.jpg" alt="Portraits of Oda Nobunaga, Toyotomi Hideyoshi, and Tokugawa Ieyasu">
+    <div class="gallery-row">
+      <img src="images/spots/03-armed-monk.jpg" alt="Historical photograph of an armed warrior monk in armor over clerical robes">
+      <img src="images/spots/03-siege-of-osaka.jpg" alt="Historical print of Osaka Castle burning during the 1615 Summer Siege">
+    </div>
+  </div>
+
+  <div class="photo-spot">
+    <div class="photo-spot-icon">📷</div>
+    <div class="photo-spot-text"><strong>Photo Spot</strong>With the keep framed behind the water, this is one of the most photographed views in the entire park.</div>
   </div>
 
   <div class="nav-row">
-    <a class="nav-btn" href="stop03.html">← Back</a>
+    <a class="nav-btn " href="stop03.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot on"></div>
+      <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
@@ -315,7 +361,7 @@
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a3-yodo-dono.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/a3-nobunaga.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osaka Castle One Coin Tour — The First Moat</title>
+<title>Osaka Castle One Coin Tour — Osaka Castle Park Station</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
@@ -207,7 +207,7 @@
   }
   .stop-gallery img {
     width: 100%;
-    height: 130px;
+    height: 150px;
     object-fit: cover;
     border-radius: 8px;
     display: block;
@@ -270,50 +270,44 @@
   <header>
     <div class="brand-row">
       <div class="brand">East River 31 · One Coin Tour</div>
-      <div class="stop-badge">A · 1 of 13</div>
+      <div class="stop-badge">A · 1 of 14</div>
     </div>
-    <div class="route-label">Route A · JR Osaka Castle Park Station</div>
-    <h1>The First Moat</h1>
-    <div class="subtitle">大阪城 最初の堀</div>
+    <div class="route-label">Route A · Osaka Castle Park Station</div>
+    <h1>Osaka Castle Park Station</h1>
+    <div class="subtitle">JR大阪城公園駅</div>
   </header>
 
   <div class="map-section">
     <div class="map-card">
       <div class="map-visual"><div class="map-pin"></div></div>
       <div class="map-footer">
-        <div class="map-meta"><strong>~10 min walk</strong>from JR Osaka Castle Park Station</div>
-        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.6881639,135.5293722&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
+        <div class="map-meta"><strong>Start here</strong>JR Osakajokoen Station</div>
+        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.6873537,135.5271215&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
       </div>
     </div>
   </div>
 
-  <div class="audio-section">
-    <div class="audio-card">
-      <div class="audio-top">
-        <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
-        <div class="audio-meta">
-          <div class="label">Narration — Stop A1</div>
-          <div class="sub" id="audioStatus">Tap to play · ~47 sec</div>
-        </div>
-      </div>
-      <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:47</span></div>
-    </div>
-  </div>
 
   <div class="narrative">
-    <p>Through the trees, the water comes into view. This is the first moat guarding Osaka Castle. When Toyotomi Hideyoshi built this massive castle, the moat and stone walls weren't just boundaries — they were a statement. A statement of absolute power, at the moment Japan had just been unified under one ruler.</p>
-    <p>Stop here for a moment. Look at the castle keep reflected on the water's surface. For many visitors, this is the exact moment Osaka Castle starts to feel real.</p>
+    <p>Welcome, and thank you for joining the Osaka Castle One Coin Tour!</p>
+    <p>You're standing right outside JR Osaka Castle Park Station — the starting point of this self-guided walking tour. Over the next hour or so, you'll follow a path through Osaka Castle Park, discovering the dramatic 400-year story of one of Japan's most iconic castles: its rise under Toyotomi Hideyoshi, its fall in the Summer Siege of 1615, and its rebirth under the Tokugawa Shogunate.</p>
+    <p>Just follow the map, and let the story guide your steps. When you're ready, head toward the park entrance and we'll begin.</p>
   </div>
 
   <div class="photo-spot">
     <div class="photo-spot-icon">📷</div>
-    <div class="photo-spot-text"><strong>Photo Spot</strong>This is the best angle to line up the moat and the castle keep in a single shot — the reflection is at its best in the morning light.</div>
+    <div class="photo-spot-text"><strong>Photo Spot</strong>The station building itself, with its mosaic murals near the exit, is worth a quick photo before you head toward the park.</div>
+  </div>
+
+  <div class="stop-gallery">
+    <img src="images/spots/01-jr-station-a.jpg" alt="JR Osaka Castle Park Station exterior entrance">
+    <img src="images/spots/01-jr-station-b.jpg" alt="Inside JR Osaka Castle Park Station, exit hall with mosaic murals">
   </div>
 
   <div class="nav-row">
     <a class="nav-btn disabled" href="#">← Back</a>
     <div class="dots">
+      <div class="dot"></div>
       <div class="dot on"></div>
       <div class="dot"></div>
       <div class="dot"></div>
@@ -328,30 +322,11 @@
       <div class="dot"></div>
       <div class="dot"></div>
     </div>
-    <a class="nav-btn next" href="stop02.html">Next →</a>
+    <a class="nav-btn next" href="stop03.html">Next →</a>
   </div>
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a6.mp3" type="audio/mpeg"></audio>
-<script>
-const audio = document.getElementById('player');
-const playBtn = document.getElementById('playBtn');
-const progTrack = document.getElementById('progTrack');
-const progFill = document.getElementById('progFill');
-const timeCurrent = document.getElementById('timeCurrent');
-const timeTotal = document.getElementById('timeTotal');
-const audioStatus = document.getElementById('audioStatus');
-function fmt(s) { if (!isFinite(s)) return '0:00'; const m = Math.floor(s/60); const sec = Math.floor(s%60).toString().padStart(2,'0'); return `${m}:${sec}`; }
-audio.addEventListener('loadedmetadata', () => { timeTotal.textContent = fmt(audio.duration); });
-playBtn.addEventListener('click', () => {
-  if (audio.paused) { audio.play(); playBtn.textContent = '❚❚'; audioStatus.textContent = 'Playing narration…'; }
-  else { audio.pause(); playBtn.textContent = '▶'; audioStatus.textContent = 'Paused — tap to resume'; }
-});
-audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.style.width = (audio.currentTime/audio.duration*100)+'%'; timeCurrent.textContent = fmt(audio.currentTime); } });
-audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
-progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
-</script>
 
 </body>
 </html>

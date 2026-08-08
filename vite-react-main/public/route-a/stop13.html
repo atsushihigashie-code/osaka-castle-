@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osaka Castle One Coin Tour — Hokoku Shrine — Tour Finale</title>
+<title>Osaka Castle One Coin Tour — The Tako-ishi Quiz</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
@@ -187,26 +187,6 @@
   .narrative p:last-child { margin-bottom: 0; }
   .narrative strong { font-family: 'Shippori Mincho', serif; }
 
-  .stop-gallery {
-    margin: 20px 24px 0;
-  }
-  .stop-gallery img.wide {
-    width: 100%;
-    height: 170px;
-    object-fit: cover;
-    border-radius: 8px;
-    display: block;
-  }
-  .stop-gallery img.portrait {
-    width: 100%;
-    height: 260px;
-    object-fit: cover;
-    object-position: top;
-    border-radius: 8px;
-    display: block;
-    margin-top: 8px;
-  }
-
   .photo-spot {
     margin: 20px 24px 0;
     background: #fffdf8;
@@ -218,6 +198,20 @@
   .photo-spot-icon { font-size: 18px; line-height: 1.4; }
   .photo-spot-text { font-size: 13px; }
   .photo-spot-text strong { display: block; font-size: 13.5px; margin-bottom: 2px; font-family: 'Shippori Mincho', serif; }
+
+  .stop-gallery {
+    margin: 20px 24px 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .stop-gallery img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
 
   .video-card {
     margin: 20px 24px 0;
@@ -276,37 +270,64 @@
   <header>
     <div class="brand-row">
       <div class="brand">East River 31 · One Coin Tour</div>
-      <div class="stop-badge">A · 13 of 13</div>
+      <div class="stop-badge">A · 13 of 14</div>
     </div>
     <div class="route-label">Route A · JR Osaka Castle Park Station</div>
-    <h1>Hokoku Shrine — Tour Finale</h1>
-    <div class="subtitle">豊国神社</div>
+    <h1>The Tako-ishi Quiz</h1>
+    <div class="subtitle">蛸石クイズ — 桜門枕形</div>
   </header>
 
   <div class="map-section">
     <div class="map-card">
       <div class="map-visual"><div class="map-pin"></div></div>
       <div class="map-footer">
-        <div class="map-meta"><strong>Final stop</strong>of Route A</div>
-        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.684408,135.526036&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
+        <div class="map-meta"><strong>A short walk</strong>toward Sakuramon Gate</div>
+        <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.685432,135.525822&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
       </div>
     </div>
   </div>
 
+  <div class="audio-section">
+    <div class="audio-card">
+      <div class="audio-top">
+        <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
+        <div class="audio-meta">
+          <div class="label">Narration — Tako-ishi Quiz</div>
+          <div class="sub" id="audioStatus">Tap to play · ~74 sec</div>
+        </div>
+      </div>
+      <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">1:14</span></div>
+    </div>
+  </div>
 
   <div class="narrative">
-    <p>Japan has a distinct spiritual tradition called Shinto — the "way of the kami." Unlike many religions, Shinto has no single founder or holy book. Instead, it honors kami: spirits found in nature (mountains, rivers, trees) and also in people who achieved truly great things in their lifetime.</p>
-    <p>Enshrined here at Hokoku Shrine is one such person — Toyotomi Hideyoshi, the man who built Osaka Castle. Born the son of a farmer, he rose to become the most powerful man in Japan, unifying the country after a century of civil war.</p>
-    <p>As you've walked this tour, you've seen the very places where his family's story came to its end — the moats, the walls, the ground where his wife and son made their final stand. This shrine, dedicated to the man himself, is a fitting place to close the story.</p>
+    <p>Passing through Sakuramon Gate, you'll come face to face with a single, massive slab of stone. This is Tako-ishi — the "Octopus Stone" — the single largest stone in the entire castle. Let's test your knowledge with a quick quiz.</p>
+    <p>Its name comes from a faint, octopus-shaped stain on the lower left corner — a natural mark left by oxidized iron in the rock. See if you can spot it.</p>
   </div>
 
   <div class="stop-gallery">
-    <img class="wide" src="images/spots/13-hokoku-shrine.jpg" alt="Hokoku Shrine main hall with its distinctive green copper roof">
-    <img class="portrait" src="images/spots/13-hokoku-miko.jpg" alt="Shrine maiden (miko) in traditional white and red robes holding a ceremonial fan at Hokoku Shrine">
+    <img src="images/spots/12-tako-ishi.jpg" alt="Tako-ishi, the massive Octopus Stone at Osaka Castle's Sakuramon Gate, with visitors standing beside it for scale">
+  </div>
+
+  <div class="quiz-block">
+    <div class="quiz-q">Q1. How much does it weigh?</div>
+    <div class="quiz-a">A) ~10 tons&nbsp;&nbsp;B) ~50 tons&nbsp;&nbsp;C) ~130 tons</div>
+    <div class="quiz-ans">✓ C — roughly the weight of 90 passenger cars.</div>
+  </div>
+  <div class="quiz-block">
+    <div class="quiz-q">Q2. Where did it come from?</div>
+    <div class="quiz-a">A) A nearby Osaka mountain&nbsp;&nbsp;B) An island in the Seto Inland Sea&nbsp;&nbsp;C) Mainland China</div>
+    <div class="quiz-ans">✓ B — shipped from Inujima Island, off the coast of Okayama.</div>
+  </div>
+  <div class="quiz-block">
+    <div class="quiz-q">Q3. How was it transported?</div>
+    <div class="quiz-a">A) Modern cranes&nbsp;&nbsp;B) Wooden sledges & giant rafts&nbsp;&nbsp;C) Pulled by elephants</div>
+    <div class="quiz-ans">✓ B — wooden "shura" sledges, then rafted across the sea. The stones that sank became the Zannen-ishi you saw earlier.</div>
   </div>
 
   <div class="nav-row">
-    <a class="nav-btn" href="stop12.html">← Back</a>
+    <a class="nav-btn " href="stop12.html">← Back</a>
     <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
@@ -321,15 +342,14 @@
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot on"></div>
+      <div class="dot"></div>
     </div>
-    <a class="nav-btn next" href="welcome.html">Finish ✓</a>
+    <a class="nav-btn next" href="stop14.html">Next →</a>
   </div>
 
 </div>
 
-
-
-<audio id="player" preload="metadata"><source src="../shared-audio/hokoku.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/a1.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
@@ -348,5 +368,6 @@ audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.styl
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
 </script>
+
 </body>
 </html>
