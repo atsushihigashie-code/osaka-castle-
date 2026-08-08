@@ -324,6 +324,20 @@
     padding-bottom: 2px;
   }
 
+  /* ── Audio Player ─────────────────────── */
+  .audio-section { padding: 22px 24px 6px; }
+  .audio-card { background: #2f3b2f; color: #f2ede3; border-radius: 8px; padding: 18px; }
+  .audio-top { display: flex; align-items: center; gap: 14px; }
+  .play-btn { width: 46px; height: 46px; border-radius: 50%; background: #f2ede3; color: #2f3b2f; border: none; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; cursor: pointer; }
+  .play-btn:active { transform: scale(0.96); }
+  .audio-meta { flex: 1; min-width: 0; }
+  .audio-meta .label { font-family: 'Shippori Mincho', serif; font-size: 13px; letter-spacing: 0.03em; }
+  .audio-meta .sub { font-size: 11.5px; opacity: 0.7; margin-top: 2px; }
+  .prog-track { height: 3px; background: rgba(242,237,227,0.2); border-radius: 2px; margin-top: 16px; overflow: hidden; cursor: pointer; }
+  .prog-fill { height: 100%; width: 0%; background: #a8823a; transition: width 0.1s linear; }
+  .time-row { display: flex; justify-content: space-between; font-size: 10.5px; opacity: 0.65; margin-top: 6px; letter-spacing: 0.02em; }
+  audio { display: none; }
+
   /* ── CTA ──────────────────────────────── */
   .cta-section {
     padding: 34px 26px 50px;
@@ -371,6 +385,20 @@
       <div class="stat"><b>1583</b><span>Built</span></div>
       <div class="stat"><b>1615</b><span>Burned</span></div>
       <div class="stat"><b>1997</b><span>Restored</span></div>
+    </div>
+  </div>
+
+  <div class="audio-section">
+    <div class="audio-card">
+      <div class="audio-top">
+        <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
+        <div class="audio-meta">
+          <div class="label">Narration — Welcome</div>
+          <div class="sub" id="audioStatus">Tap to play · ~25 sec</div>
+        </div>
+      </div>
+      <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:25</span></div>
     </div>
   </div>
 
@@ -475,5 +503,25 @@
   </div>
 
 </div>
+
+<audio id="player" preload="metadata"><source src="../shared-audio/routeB-welcome.mp3" type="audio/mpeg"></audio>
+<script>
+const audio = document.getElementById('player');
+const playBtn = document.getElementById('playBtn');
+const progTrack = document.getElementById('progTrack');
+const progFill = document.getElementById('progFill');
+const timeCurrent = document.getElementById('timeCurrent');
+const timeTotal = document.getElementById('timeTotal');
+const audioStatus = document.getElementById('audioStatus');
+function fmt(s) { if (!isFinite(s)) return '0:00'; const m = Math.floor(s/60); const sec = Math.floor(s%60).toString().padStart(2,'0'); return `${m}:${sec}`; }
+audio.addEventListener('loadedmetadata', () => { timeTotal.textContent = fmt(audio.duration); });
+playBtn.addEventListener('click', () => {
+  if (audio.paused) { audio.play(); playBtn.textContent = '❚❚'; audioStatus.textContent = 'Playing narration…'; }
+  else { audio.pause(); playBtn.textContent = '▶'; audioStatus.textContent = 'Paused — tap to resume'; }
+});
+audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.style.width = (audio.currentTime/audio.duration*100)+'%'; timeCurrent.textContent = fmt(audio.currentTime); } });
+audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
+progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
+</script>
 </body>
 </html>
