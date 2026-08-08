@@ -199,6 +199,18 @@
   .photo-spot-text { font-size: 13px; }
   .photo-spot-text strong { display: block; font-size: 13.5px; margin-bottom: 2px; font-family: 'Shippori Mincho', serif; }
 
+  .quiz-block {
+    margin: 18px 24px 0;
+    background: #fffdf8;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .quiz-q { font-family: 'Shippori Mincho', serif; font-size: 13.5px; margin-bottom: 8px; }
+  .quiz-a { font-size: 13px; color: var(--stone); margin-bottom: 4px; }
+  .quiz-ans { font-size: 12.5px; color: var(--vermilion); margin-top: 6px; }
+  .quiz-block + .quiz-block { margin-top: 14px; }
+
   .video-card {
     margin: 20px 24px 0;
     background: #14140f;
@@ -288,8 +300,19 @@
   </div>
 
   <div class="narrative">
-    <p>Notice the distance between where you're standing and the stone wall. That's not an accident. In the 1570s, this was roughly the effective range of a matchlock musket. The defenders made sure that any attacker trying to reach the wall could be shot down first — a deliberate buffer zone, built directly into the landscape.</p>
-    <p>Now look at the wall itself. It isn't straight — it curves, gently. This is Japanese engineering responding to a Japanese problem: earthquakes. A straight wall collapses all at once when the ground shakes. A curved wall distributes that force and resists collapse. Beauty and disaster-proofing, built into the same line of stone.</p>
+    <p>Pause here for a photo — this is one of the most iconic views in the entire park. Behind you, the moat and stone walls frame the castle keep in a way that's hard to capture anywhere else.</p>
+    <p>Look closely at the wall and the moat before you cross. There's more engineering here than meets the eye — let's test what you've noticed.</p>
+  </div>
+
+  <div class="quiz-block">
+    <div class="quiz-q">Q1. Why is the stone wall curved instead of straight?</div>
+    <div class="quiz-a">A) To look more beautiful&nbsp;&nbsp;B) Because Japan is prone to earthquakes&nbsp;&nbsp;C) To confuse enemy archers</div>
+    <div class="quiz-ans">✓ B — Japan sits on major fault lines, and a straight wall would collapse all at once when the ground shakes. A curved wall distributes that force and resists collapse — beauty and disaster-proofing built into the same line of stone.</div>
+  </div>
+  <div class="quiz-block">
+    <div class="quiz-q">Q2. Why is the moat roughly 30 meters wide?</div>
+    <div class="quiz-a">A) It matched the range of matchlock guns&nbsp;&nbsp;B) It was the widest boats available at the time&nbsp;&nbsp;C) It was a lucky number in Japanese tradition</div>
+    <div class="quiz-ans">✓ A — When this wall was built in the 1630s, matchlock guns had just arrived in Japan, with an effective range of about 30 meters. The moat's width ensured attackers could be shot down before ever reaching the wall.</div>
   </div>
 
   <div class="nav-row">
@@ -314,7 +337,7 @@
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a4.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/a4-quiz.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');

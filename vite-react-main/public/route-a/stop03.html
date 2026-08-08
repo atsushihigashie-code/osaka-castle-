@@ -259,8 +259,8 @@
       <div class="stop-badge">A · 3 of 13</div>
     </div>
     <div class="route-label">Route A · JR Osaka Castle Park Station</div>
-    <h1>Gokuraku-bashi Bridge</h1>
-    <div class="subtitle">極楽橋 — "The Bridge to Paradise"</div>
+    <h1>Crossing Gokuraku-bashi</h1>
+    <div class="subtitle">極楽橋 — from Nobunaga to the Fall of Osaka</div>
   </header>
 
   <div class="map-section">
@@ -273,8 +273,26 @@
     </div>
   </div>
 
+  <div class="audio-section">
+    <div class="audio-card">
+      <div class="audio-top">
+        <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
+        <div class="audio-meta">
+          <div class="label">Narration — Stop A3</div>
+          <div class="sub" id="audioStatus">Tap to play · ~67 sec</div>
+        </div>
+      </div>
+      <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">1:07</span></div>
+    </div>
+  </div>
+
   <div class="narrative">
-    <p>Pause here on the bridge. Its name, Gokuraku-bashi, literally means "the bridge to paradise" — and with the castle keep rising behind the moat, it's easy to see why generations of visitors have stopped at this exact spot.</p>
+    <p>Pause here on the bridge — its name, Gokuraku-bashi, literally means "the bridge to paradise." As you cross, let's rewind the clock about 500 years.</p>
+    <p>Before this was a castle, this ground belonged to a temple. Back in the early 1500s, Buddhist monks here carried weapons and armor to defend their temple from samurai — but over time, that defense grew into real military power. Temples across the region built up armies of their own, and became forces to be reckoned with.</p>
+    <p>That worried a rising warlord named Oda Nobunaga. As he expanded his power across what is now Kanazawa, Shiga, Kyoto, and Osaka, he crushed these armed Buddhist strongholds one by one. This site — once the great temple of Ishiyama Hongan-ji — was no exception. Nobunaga destroyed it too.</p>
+    <p>Years later, on these same ruins, a man named Toyotomi Hideyoshi — Nobunaga's former general, who had risen to become the most powerful man in Japan — built the first Osaka Castle.</p>
+    <p>While Hideyoshi lived, the Toyotomi clan flourished. But when he died of illness in 1598, his family's power began to slip away. And in 1615, in the Summer Siege of Osaka, the Toyotomi clan finally came to an end.</p>
   </div>
 
   <div class="photo-spot">
@@ -303,6 +321,26 @@
   </div>
 
 </div>
+
+<audio id="player" preload="metadata"><source src="../shared-audio/a3-nobunaga.mp3" type="audio/mpeg"></audio>
+<script>
+const audio = document.getElementById('player');
+const playBtn = document.getElementById('playBtn');
+const progTrack = document.getElementById('progTrack');
+const progFill = document.getElementById('progFill');
+const timeCurrent = document.getElementById('timeCurrent');
+const timeTotal = document.getElementById('timeTotal');
+const audioStatus = document.getElementById('audioStatus');
+function fmt(s) { if (!isFinite(s)) return '0:00'; const m = Math.floor(s/60); const sec = Math.floor(s%60).toString().padStart(2,'0'); return `${m}:${sec}`; }
+audio.addEventListener('loadedmetadata', () => { timeTotal.textContent = fmt(audio.duration); });
+playBtn.addEventListener('click', () => {
+  if (audio.paused) { audio.play(); playBtn.textContent = '❚❚'; audioStatus.textContent = 'Playing narration…'; }
+  else { audio.pause(); playBtn.textContent = '▶'; audioStatus.textContent = 'Paused — tap to resume'; }
+});
+audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.style.width = (audio.currentTime/audio.duration*100)+'%'; timeCurrent.textContent = fmt(audio.currentTime); } });
+audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
+progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
+</script>
 
 </body>
 </html>
