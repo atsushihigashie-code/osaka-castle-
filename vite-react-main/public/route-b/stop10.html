@@ -112,9 +112,23 @@
     <div class="map-card">
       <div class="map-visual"><div class="map-pin"></div></div>
       <div class="map-footer">
-        <div class="map-meta"><strong>A short walk</strong>into the garden</div>
+        <div class="map-meta"><strong>A short walk</strong>toward the castle keep</div>
         <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=34.687790,135.525438&travelmode=walking&hl=en" target="_blank" rel="noopener">Directions</a>
       </div>
+    </div>
+  </div>
+
+  <div class="audio-section">
+    <div class="audio-card">
+      <div class="audio-top">
+        <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
+        <div class="audio-meta">
+          <div class="label">Narration — Stop B10</div>
+          <div class="sub" id="audioStatus">Tap to play · ~16 sec</div>
+        </div>
+      </div>
+      <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:16</span></div>
     </div>
   </div>
 
@@ -142,6 +156,26 @@
   </div>
 
 </div>
+
+<audio id="player" preload="metadata"><source src="../shared-audio/routeB-grand-angle.mp3" type="audio/mpeg"></audio>
+<script>
+const audio = document.getElementById('player');
+const playBtn = document.getElementById('playBtn');
+const progTrack = document.getElementById('progTrack');
+const progFill = document.getElementById('progFill');
+const timeCurrent = document.getElementById('timeCurrent');
+const timeTotal = document.getElementById('timeTotal');
+const audioStatus = document.getElementById('audioStatus');
+function fmt(s) { if (!isFinite(s)) return '0:00'; const m = Math.floor(s/60); const sec = Math.floor(s%60).toString().padStart(2,'0'); return `${m}:${sec}`; }
+audio.addEventListener('loadedmetadata', () => { timeTotal.textContent = fmt(audio.duration); });
+playBtn.addEventListener('click', () => {
+  if (audio.paused) { audio.play(); playBtn.textContent = '❚❚'; audioStatus.textContent = 'Playing narration…'; }
+  else { audio.pause(); playBtn.textContent = '▶'; audioStatus.textContent = 'Paused — tap to resume'; }
+});
+audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.style.width = (audio.currentTime/audio.duration*100)+'%'; timeCurrent.textContent = fmt(audio.currentTime); } });
+audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
+progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
+</script>
 
 </body>
 </html>
