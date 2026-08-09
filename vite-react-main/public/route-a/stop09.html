@@ -279,26 +279,31 @@
         <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
         <div class="audio-meta">
           <div class="label">Narration — Stop A9</div>
-          <div class="sub" id="audioStatus">Tap to play · ~30 sec</div>
+          <div class="sub" id="audioStatus">Tap to play · ~41 sec</div>
         </div>
       </div>
       <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:30</span></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:41</span></div>
     </div>
   </div>
 
   <div class="narrative">
-    <p>Video finished? Time to head inside. If you haven't already, grab your ticket here — or show the QR code from your online purchase.</p>
-    <p>Admission is a separate museum ticket (¥1,200, adult), available at the ticket counter on 1F.</p>
-    <p>There's no Wi-Fi once you're inside, so save this floor guide now. It covers all eight floors, from the entrance up to the observation deck.</p>
+    <p>Have a seat on the bench here, and take a few minutes to watch a short documentary video on your phone. It covers the commanders of the Summer Siege of Osaka in 1615 — the battle that decided the fate of this very castle, and of Japan itself.</p>
+    <p>There's no Wi-Fi inside the keep, so this is the moment to load it. Once you've finished, continue on to the entrance — grab your ticket, or show the QR code from your online purchase, and enjoy the museum. You'll recognize several of the names and faces once you're walking through the exhibits inside.</p>
+    <p>We recommend purchasing tickets online so you don't have to wait in long lines.</p>
+    <p>A floor-by-floor guide is provided here to help you navigate — please take a look before heading in.</p>
+  </div>
+
+  <div class="video-card">
+    <div class="eyebrow">Watch Now</div>
+    <div class="video-links">
+      <a class="video-link" href="https://osaka-summer-siege-tour.vercel.app" target="_blank" rel="noopener"><span>1615 — The Summer Siege of Osaka</span><span class="arr">▶</span></a>
+      <a class="video-link" href="https://ars-osakacastle.triplabo.jp/home?lang=en" target="_blank" rel="noopener"><span>Osaka Castle Museum — Buy Tickets Online</span><span class="arr">▶</span></a>
+    </div>
   </div>
 
   <div class="floor-guide-image">
     <img src="images/tenshukaku-floor-guide.jpg" alt="Osaka Castle floor-by-floor guide, 1F to 8F, illustrated as a stacked pagoda" style="width:100%; border-radius: 12px; margin: 16px 0; display: block;">
-  </div>
-
-  <div class="narrative">
-    <p>Once you're ready, head to the entrance — show your ticket or QR code, and enjoy the museum.</p>
   </div>
 
   <div class="nav-row">
@@ -324,7 +329,7 @@
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/routeA-entering-keep.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/routeB-summer-siege.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
