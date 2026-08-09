@@ -191,12 +191,26 @@
   <div class="divider"><span>Ready?</span></div>
   <div class="cta-section">
     <div class="cta-price">One coin. <b>¥500.</b> Valid for 24 hours.</div>
-    <a class="cta-btn" href="https://buy.stripe.com/eVqbJ06RV72bcAE5s1cAo00">Purchase &amp; Begin</a>
+    <a class="cta-btn" id="ctaBtn" href="https://buy.stripe.com/eVqbJ06RV72bcAE5s1cAo00">Purchase &amp; Begin</a>
     <div class="agree-note">By purchasing, you confirm you have read and understood the notices above — including the 24-hour access window.</div>
   </div>
   <footer>
     East River 31 LLC (合同会社イーストリバー31) — an independent, privately produced tour. Not affiliated with, endorsed by, or operated by Osaka Castle, Osaka Castle Park, or any government body.
   </footer>
 </div>
+<script>
+  // If this page was opened as purchase/index.html?hotel=<id> (e.g. from a
+  // partner hotel's QR code), carry that id through to Stripe Checkout as
+  // client_reference_id so /api/verify-purchase.js can credit the referral.
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const hotel = params.get('hotel');
+    if (!hotel) return;
+    const btn = document.getElementById('ctaBtn');
+    const url = new URL(btn.href);
+    url.searchParams.set('client_reference_id', hotel);
+    btn.href = url.toString();
+  })();
+</script>
 </body>
 </html>
