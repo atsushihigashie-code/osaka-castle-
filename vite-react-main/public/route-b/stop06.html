@@ -104,8 +104,8 @@
       <div class="stop-badge">B · 6 of 12</div>
     </div>
     <div class="route-label">Route B · Tanimachi 4-chome Station</div>
-    <h1>Photo Spot: The Castle from the Sakuramon Side</h1>
-    <div class="subtitle">撮影ポイント（桜門側）</div>
+    <h1>The Japanese Garden</h1>
+    <div class="subtitle">日本庭園 — 四要素と撮影ポイント</div>
   </header>
 
   <div class="map-section">
@@ -124,16 +124,26 @@
         <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
         <div class="audio-meta">
           <div class="label">Narration — Stop B6</div>
-          <div class="sub" id="audioStatus">Tap to play · ~16 sec</div>
+          <div class="sub" id="audioStatus">Tap to play · ~60 sec</div>
         </div>
       </div>
       <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:16</span></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">1:00</span></div>
     </div>
   </div>
 
   <div class="narrative">
-    <p>Take a moment here for a photo. From the Sakuramon side, you can frame the castle keep together with the stone walls and the approach path — a classic first look at the tower as you head toward the entrance.</p>
+    <p>Every traditional Japanese garden is built around four essential elements. Look around you — you'll find them all right here.</p>
+    <p><strong>Water.</strong> The pond in front of you represents the flow of life, and of time itself.</p>
+    <p><strong>Trees and stone.</strong> These aren't just decoration — they're a miniature version of nature itself, mountains and forests compressed into a small space.</p>
+    <p><strong>An island.</strong> Even where there's no literal island surrounded by water, gardeners often arrange stones to represent one — a symbolic "Mount Horai," the mythical island of paradise.</p>
+    <p><strong>And finally, ornamental features</strong> — a lantern, a bridge, sometimes a small waterfall. Look at that large stone lantern. It represents an eternal light glowing at the heart of this miniature universe.</p>
+    <p>Put together, these four elements turn a small garden into a complete world — a real landscape, and an imagined paradise, at the same time.</p>
+    <p>Also, this is a photo spot, so please take your pictures here.</p>
+  </div>
+
+  <div class="stop-gallery">
+    <img src="images/spots/06-japanese-garden.jpg" alt="Japanese garden pond with stone lantern, pine trees, a heron, and a pagoda-shaped stone monument">
   </div>
 
   <div class="nav-row">
@@ -157,7 +167,7 @@
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a6.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/routeB-japanese-garden.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
