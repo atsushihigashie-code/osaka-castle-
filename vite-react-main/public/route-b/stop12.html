@@ -83,8 +83,8 @@
   .quiz-a { font-size: 13px; color: var(--stone); margin-bottom: 4px; }
   .quiz-ans { font-size: 12.5px; color: var(--vermilion); margin-top: 6px; }
   .quiz-block + .quiz-block { margin-top: 14px; }
-  .stop-gallery { margin: 20px 24px 0; display: grid; grid-template-columns: 1fr; gap: 8px; }
-  .stop-gallery img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; display: block; }
+  .stop-gallery { margin: 20px 24px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stop-gallery img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; display: block; }
   .nav-row { padding: 30px 24px 40px; display: flex; justify-content: space-between; align-items: center; }
   .nav-btn { font-family: 'Shippori Mincho', serif; font-size: 12.5px; letter-spacing: 0.05em; color: var(--stone); text-decoration: none; border: 1px solid var(--rule); padding: 10px 18px; border-radius: 20px; }
   .nav-btn.next { background: var(--gold); color: #fff; border-color: var(--gold); }
@@ -124,18 +124,25 @@
         <button class="play-btn" id="playBtn" aria-label="Play narration">▶</button>
         <div class="audio-meta">
           <div class="label">Narration — Stop B12</div>
-          <div class="sub" id="audioStatus">Tap to play · ~39 sec</div>
+          <div class="sub" id="audioStatus">Tap to play · ~73 sec</div>
         </div>
       </div>
       <div class="prog-track" id="progTrack"><div class="prog-fill" id="progFill"></div></div>
-      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">0:39</span></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">1:13</span></div>
     </div>
   </div>
 
   <div class="narrative">
     <p>Japan has a distinct spiritual tradition called Shinto — the "way of the kami." Unlike many religions, Shinto has no single founder or holy book. Instead, it honors kami: spirits found in nature (mountains, rivers, trees) and also in people who achieved truly great things in their lifetime.</p>
     <p>Enshrined here at Hokoku Shrine is one such person — Toyotomi Hideyoshi, the man who built Osaka Castle. Born the son of a farmer, he rose to become the most powerful man in Japan, unifying the country after a century of civil war.</p>
-    <p>As you've walked this tour, you've seen the very places where his family's story came to its end — the moat, the gate, the ground where his wife and son made their final stand. This shrine, dedicated to the man himself, is a fitting place to close the story.</p>
+    <p>As you've walked this tour, you've seen the very places where his family's story came to its end — the moats, the walls, the ground where his wife and son made their final stand. This shrine, dedicated to the man himself, is a fitting place to close the story.</p>
+    <p>Many visitors come here specifically to pray for career success.</p>
+    <p>How did you enjoy the Osaka Castle "One Coin" self-guided tour? It certainly gave you plenty to think about, didn't it? We look forward to providing more enjoyable travel experiences in the future. Thank you for joining us today. This tour was brought to you by East River 31 LLC.</p>
+  </div>
+
+  <div class="stop-gallery">
+    <img src="images/spots/12-hokoku-shrine.jpg" alt="Hokoku Shrine main hall with its distinctive green copper roof">
+    <img src="images/spots/12-hokoku-miko.jpg" alt="Shrine maiden (miko) in traditional white and red robes holding a ceremonial fan at Hokoku Shrine">
   </div>
 
   <div class="nav-row">
@@ -159,7 +166,7 @@
 
 </div>
 
-<audio id="player" preload="metadata"><source src="../shared-audio/a7.mp3" type="audio/mpeg"></audio>
+<audio id="player" preload="metadata"><source src="../shared-audio/routeB-hokoku-shrine.mp3" type="audio/mpeg"></audio>
 <script>
 const audio = document.getElementById('player');
 const playBtn = document.getElementById('playBtn');
