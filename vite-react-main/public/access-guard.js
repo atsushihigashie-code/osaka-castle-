@@ -14,10 +14,38 @@
 // Include as the very first thing in <head>, before any visible content:
 //   <script src="../access-guard.js" data-route="a"></script>   (route-a pages)
 //   <script src="../access-guard.js" data-route="b"></script>   (route-b pages)
+//
+// --- Owner preview bypass ---
+// The site owner can preview any page without going through the code
+// flow every time, by visiting a page once with ?owner=<OWNER_PREVIEW_KEY>
+// in the URL. That sets a long-lived flag in localStorage (not
+// sessionStorage), so it survives across browser restarts on that one
+// device/browser. This key is only convenient, not a real secret — it
+// lives in this public JS file — so it should still not be shared or
+// posted publicly.
 
 (function () {
+  var OWNER_PREVIEW_KEY = 'WTNeHk58b378IP8JXpds';
+  var OWNER_FLAG = 'osakaCastleOwnerPreview';
+
   var thisScript = document.currentScript;
   var route = (thisScript && thisScript.getAttribute('data-route')) || 'a';
+
+  var params = new URLSearchParams(window.location.search);
+  var ownerParam = params.get('owner');
+
+  if (ownerParam && ownerParam === OWNER_PREVIEW_KEY) {
+    localStorage.setItem(OWNER_FLAG, '1');
+    // Clean the key out of the visible URL/history without reloading.
+    params.delete('owner');
+    var cleanUrl = window.location.pathname +
+      (params.toString() ? '?' + params.toString() : '');
+    window.history.replaceState({}, '', cleanUrl);
+  }
+
+  if (localStorage.getItem(OWNER_FLAG) === '1') {
+    return; // Owner preview mode — skip the code check entirely.
+  }
 
   var raw = sessionStorage.getItem('osakaCastleAccess');
   var valid = false;
