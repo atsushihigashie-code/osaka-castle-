@@ -50,7 +50,7 @@ async function logReferralIfAny(db, session, sessionId) {
   const date = getJstDateString();
   await db.ref(`referrals/${hotelId}/${date}/${sessionId}`).set({
     timestamp: Date.now(),
-    commission: 100,
+    commission: 200,
   });
 }
 
