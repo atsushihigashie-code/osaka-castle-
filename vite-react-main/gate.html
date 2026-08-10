@@ -184,7 +184,10 @@
       msg.textContent = 'Unlocked! Taking you to the tour…';
       msg.className = 'msg ok';
 
-     const destination = route === 'b' ? 'route-b/stop01.html' : 'route-a/welcome.html';
+      const nextPage = params.get('next');
+      const destination = nextPage
+        ? (route === 'b' ? 'route-b/' : 'route-a/') + nextPage
+        : (route === 'b' ? 'route-b/stop01.html' : 'route-a/welcome.html');
       setTimeout(() => { window.location.href = destination; }, 700);
 
     } catch (err) {
