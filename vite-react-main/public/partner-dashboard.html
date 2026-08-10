@@ -177,13 +177,14 @@
 
   <footer>
     East River 31 LLC — Osaka Castle One Coin Tour Partner Program.<br>
-    ¥100 per completed booking made through your link/QR code.
+    ¥200 per completed booking made through your link/QR code.
   </footer>
 </div>
 
 <script>
   const params = new URLSearchParams(window.location.search);
   const hotel = params.get('hotel');
+  const key = params.get('key');
 
   const titleEl = document.getElementById('hotel-title');
   const dateEl = document.getElementById('hotel-date');
@@ -191,14 +192,14 @@
   const errorEl = document.getElementById('error');
   const statsEl = document.getElementById('stats');
 
-  if (!hotel) {
+  if (!hotel || !key) {
     statusEl.style.display = 'none';
     errorEl.style.display = 'block';
-    errorEl.textContent = 'No hotel specified. Use this page as: partner-dashboard.html?hotel=your-id';
+    errorEl.textContent = 'This link is missing your hotel ID or access key. Please use the exact link provided to you.';
     titleEl.textContent = 'Partner Dashboard';
   } else {
     titleEl.textContent = 'Your Referrals';
-    fetch('/api/hotel-referrals?hotel=' + encodeURIComponent(hotel))
+    fetch('/api/hotel-referrals?hotel=' + encodeURIComponent(hotel) + '&key=' + encodeURIComponent(key))
       .then(r => r.json())
       .then(data => {
         if (data.error) {

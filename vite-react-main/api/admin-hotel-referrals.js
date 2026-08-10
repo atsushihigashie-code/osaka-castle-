@@ -23,8 +23,6 @@ if (!admin.apps.length) {
   });
 }
 
-const COMMISSION_PER_BOOKING = 100;
-
 function getJstDateString() {
   const jstOffset = 9 * 60 * 60 * 1000;
   return new Date(Date.now() + jstOffset).toISOString().slice(0, 10);
@@ -49,25 +47,31 @@ export default async function handler(req, res) {
     const today = getJstDateString();
     const hotels = [];
     let grandTotalCount = 0;
+    let grandTotalCommission = 0;
 
     for (const [hotelId, byDate] of Object.entries(allData)) {
       let totalCount = 0;
+      let totalCommission = 0;
       let todayCount = 0;
       let lastDate = null;
 
       for (const [date, bookings] of Object.entries(byDate)) {
-        const count = Object.keys(bookings).length;
+        const entries = Object.values(bookings);
+        const count = entries.length;
+        const commission = entries.reduce((sum, b) => sum + (b.commission || 0), 0);
         totalCount += count;
+        totalCommission += commission;
         if (date === today) todayCount = count;
         if (!lastDate || date > lastDate) lastDate = date;
       }
 
       grandTotalCount += totalCount;
+      grandTotalCommission += totalCommission;
       hotels.push({
         hotel: hotelId,
         todayCount,
         totalCount,
-        totalCommission: totalCount * COMMISSION_PER_BOOKING,
+        totalCommission,
         lastBookingDate: lastDate,
       });
     }
@@ -79,7 +83,7 @@ export default async function handler(req, res) {
       date: today,
       hotelCount: hotels.length,
       grandTotalCount,
-      grandTotalCommission: grandTotalCount * COMMISSION_PER_BOOKING,
+      grandTotalCommission,
       hotels,
     });
   } catch (err) {
