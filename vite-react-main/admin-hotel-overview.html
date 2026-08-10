@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>パートナーホテル一覧（管理者用）— Osaka Castle One Coin Tour</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+  :root {
+    --ink: #1c1a17;
+    --paper: #f2ede3;
+    --stone: #8a8378;
+    --gold: #a8823a;
+    --deep-green: #2f3b2f;
+    --rule: #d8d0bf;
+    --vermilion: #b5452c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.7;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .sub { color: var(--stone); font-size: 13px; margin-bottom: 20px; }
+
+  label { display: block; font-size: 12.5px; color: var(--stone); margin-bottom: 6px; }
+
+  input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 14px;
+  }
+
+  button {
+    width: 100%;
+    padding: 13px;
+    background: var(--deep-green);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button:active { transform: scale(0.98); }
+  button:disabled { opacity: 0.6; }
+
+  .totals-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .total-box {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .total-box .num {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--deep-green);
+  }
+  .total-box .label { font-size: 11.5px; color: var(--stone); margin-top: 4px; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--rule); }
+  th { font-size: 11.5px; color: var(--stone); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  .hotel-id { font-family: 'Shippori Mincho', serif; font-weight: 700; }
+  .commission { color: var(--vermilion); font-weight: 700; }
+  .empty-note { color: var(--stone); font-size: 13px; padding: 20px 0; text-align: center; }
+  .error { color: var(--vermilion); font-size: 13px; margin-top: 10px; display: none; }
+  .updated { color: var(--stone); font-size: 11.5px; margin-top: 16px; text-align: right; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="card">
+    <h1>パートナーホテル一覧</h1>
+    <p class="sub">全パートナーホテルの成約件数・報酬額をまとめて確認します。</p>
+
+    <label for="adminKey">管理者キー</label>
+    <input type="password" id="adminKey" placeholder="管理者キーを入力" autocomplete="off">
+    <button id="loadBtn">一覧を表示する</button>
+    <p class="error" id="errorMsg"></p>
+  </div>
+
+  <div class="card" id="resultCard" style="display:none;">
+    <div class="totals-row">
+      <div class="total-box">
+        <div class="num" id="hotelCount">–</div>
+        <div class="label">登録ホテル数</div>
+      </div>
+      <div class="total-box">
+        <div class="num" id="grandTotalCount">–</div>
+        <div class="label">累計成約件数</div>
+      </div>
+      <div class="total-box">
+        <div class="num" id="grandTotalCommission">–</div>
+        <div class="label">累計報酬額（円）</div>
+      </div>
+    </div>
+
+    <table id="hotelTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>ホテル番号</th>
+          <th class="num">本日</th>
+          <th class="num">累計件数</th>
+          <th class="num">累計報酬</th>
+          <th>最終成約日</th>
+        </tr>
+      </thead>
+      <tbody id="hotelTableBody"></tbody>
+    </table>
+    <p class="empty-note" id="emptyNote" style="display:none;">まだ成約データがありません。</p>
+
+    <p class="updated" id="updatedText"></p>
+  </div>
+</div>
+
+<script>
+  const loadBtn = document.getElementById('loadBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const resultCard = document.getElementById('resultCard');
+  const hotelTable = document.getElementById('hotelTable');
+  const hotelTableBody = document.getElementById('hotelTableBody');
+  const emptyNote = document.getElementById('emptyNote');
+
+  async function load() {
+    const adminKey = document.getElementById('adminKey').value.trim();
+    errorMsg.style.display = 'none';
+
+    if (!adminKey) {
+      errorMsg.textContent = '管理者キーを入力してください。';
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    loadBtn.disabled = true;
+    loadBtn.textContent = '読み込み中…';
+
+    try {
+      const res = await fetch('/api/admin-hotel-referrals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || '読み込みに失敗しました。');
+      }
+
+      document.getElementById('hotelCount').textContent = data.hotelCount;
+      document.getElementById('grandTotalCount').textContent = data.grandTotalCount;
+      document.getElementById('grandTotalCommission').textContent = '¥' + data.grandTotalCommission.toLocaleString();
+
+      hotelTableBody.innerHTML = '';
+      if (data.hotels.length === 0) {
+        hotelTable.style.display = 'none';
+        emptyNote.style.display = 'block';
+      } else {
+        hotelTable.style.display = 'table';
+        emptyNote.style.display = 'none';
+        for (const h of data.hotels) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="hotel-id">${h.hotel}</td>
+            <td class="num">${h.todayCount}</td>
+            <td class="num">${h.totalCount}</td>
+            <td class="num commission">¥${h.totalCommission.toLocaleString()}</td>
+            <td>${h.lastBookingDate || '—'}</td>
+          `;
+          hotelTableBody.appendChild(tr);
+        }
+      }
+
+      document.getElementById('updatedText').textContent = data.date + ' JST 時点';
+      resultCard.style.display = 'block';
+    } catch (err) {
+      errorMsg.textContent = err.message;
+      errorMsg.style.display = 'block';
+    } finally {
+      loadBtn.disabled = false;
+      loadBtn.textContent = '一覧を表示する';
+    }
+  }
+
+  loadBtn.addEventListener('click', load);
+  document.getElementById('adminKey').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') load();
+  });
+</script>
+
+</body>
+</html>

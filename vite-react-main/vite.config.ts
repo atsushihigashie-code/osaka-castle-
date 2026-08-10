@@ -15,6 +15,7 @@ export default defineConfig({
         tokusho: resolve(__dirname, 'tokusho.html'),
         purchase: resolve(__dirname, 'purchase/index.html'),
         adminIssueCode: resolve(__dirname, 'admin-issue-code.html'),
+        adminHotelOverview: resolve(__dirname, 'admin-hotel-overview.html'),
       },
     },
   },
