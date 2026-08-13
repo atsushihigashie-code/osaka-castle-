@@ -25,10 +25,11 @@ if (!admin.apps.length) {
 
 // How many *distinct* device/browser fingerprints may successfully use
 // the same code before it's treated as likely shared/resold and
-// automatically revoked. Generous enough for a family or small group
-// booking (matches the "up to 10 travelers per booking" limit set on
-// Viator), but well below what casual resharing/reselling would produce.
-const MAX_DISTINCT_DEVICES = 10;
+// automatically revoked. ¥500 One Coin Tour codes are sold per person,
+// so this stays low — enough slack for a couple/small family sharing
+// one phone, but well below what group coat-tailing off one purchase
+// would produce.
+const MAX_DISTINCT_DEVICES = 3;
 const MAX_LOG_ENTRIES = 50; // cap stored log size
 
 function fingerprint(req) {
