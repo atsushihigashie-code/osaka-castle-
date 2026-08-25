@@ -11,9 +11,7 @@
 // Required environment variables (already set in Vercel):
 //   FIREBASE_SERVICE_ACCOUNT
 //   FIREBASE_DATABASE_URL
-
 import admin from 'firebase-admin';
-
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(
@@ -23,13 +21,6 @@ if (!admin.apps.length) {
   });
 }
 
-// How many *distinct* device/browser fingerprints may successfully use
-// the same code before it's treated as likely shared/resold and
-// automatically revoked. ¥500 One Coin Tour codes are sold per person,
-// so this stays low — enough slack for a couple/small family sharing
-// one phone, but well below what group coat-tailing off one purchase
-// would produce.
-const MAX_DISTINCT_DEVICES = 3;
 const MAX_LOG_ENTRIES = 50; // cap stored log size
 
 function fingerprint(req) {
@@ -63,10 +54,18 @@ export default async function handler(req, res) {
 
     const data = snap.val();
 
+    // Codes marked as a "shared" pool (e.g. Viator or GetYourGuide
+    // fixed-code tickets) are used by many independent bookings, so the
+    // per-code device cap that catches an individual reseller would
+    // wrongly lock out legitimate customers. Give shared-pool codes a
+    // much higher ceiling; ordinary single-purchase codes keep the
+    // original strict cap of 3.
+    const isSharedCode = typeof data.source === 'string' && data.source.endsWith('-shared');
+    const MAX_DISTINCT_DEVICES = isSharedCode ? 200 : 3;
+
     if (data.revoked) {
       return res.status(200).json({ ok: false, error: 'revoked' });
     }
-
     if (Date.now() > data.expiresAt) {
       return res.status(200).json({ ok: false, error: 'expired' });
     }
@@ -75,7 +74,6 @@ export default async function handler(req, res) {
     const fp = fingerprint(req);
     const log = Array.isArray(data.usageLog) ? data.usageLog.slice(-MAX_LOG_ENTRIES + 1) : [];
     log.push({ t: Date.now(), fp });
-
     const distinctCount = new Set(log.map((entry) => entry.fp)).size;
 
     const updates = { usageLog: log, usageCount: (data.usageCount || 0) + 1 };
