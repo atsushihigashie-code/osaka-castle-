@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>パートナーホテル一覧（管理者用）— Osaka Castle One Coin Tour</title>
+<title>管理ダッシュボード — Osaka Castle One Coin Tour</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 
@@ -103,14 +103,37 @@
   .empty-note { color: var(--stone); font-size: 13px; padding: 20px 0; text-align: center; }
   .error { color: var(--vermilion); font-size: 13px; margin-top: 10px; display: none; }
   .updated { color: var(--stone); font-size: 11.5px; margin-top: 16px; text-align: right; }
+
+  .section-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 17px;
+    margin-top: 30px;
+    margin-bottom: 4px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+  }
+  .section-title:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+  .section-sub { color: var(--stone); font-size: 12.5px; margin-bottom: 14px; }
+
+  .code-cell { font-family: 'Shippori Mincho', serif; font-weight: 700; letter-spacing: 0.04em; }
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge.ok { background: #e5ede2; color: var(--deep-green); }
+  .badge.warn { background: #f3e6d8; color: #8a5a1e; }
+  .badge.bad { background: #f2ddd8; color: var(--vermilion); }
 </style>
 </head>
 <body>
 
 <div class="wrap">
   <div class="card">
-    <h1>パートナーホテル一覧</h1>
-    <p class="sub">全パートナーホテルの成約件数・報酬額をまとめて確認します。</p>
+    <h1>管理ダッシュボード</h1>
+    <p class="sub">パートナーホテルの成約件数と、GetYourGuide／Viator等の共有アクセスコードの使用状況をまとめて確認します。</p>
 
     <label for="adminKey">管理者キー</label>
     <input type="password" id="adminKey" placeholder="管理者キーを入力" autocomplete="off">
@@ -119,6 +142,7 @@
   </div>
 
   <div class="card" id="resultCard" style="display:none;">
+    <p class="section-title">パートナーホテル成約状況</p>
     <div class="totals-row">
       <div class="total-box">
         <div class="num" id="hotelCount">–</div>
@@ -147,6 +171,24 @@
       <tbody id="hotelTableBody"></tbody>
     </table>
     <p class="empty-note" id="emptyNote" style="display:none;">まだ成約データがありません。</p>
+
+    <p class="section-title">共有アクセスコード使用状況</p>
+    <p class="section-sub">GetYourGuide・Viator等、チケットに固定コードを記載しているプラットフォームの使用回数です。</p>
+
+    <table id="codeTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>プラットフォーム</th>
+          <th>コード</th>
+          <th class="num">使用回数</th>
+          <th class="num">利用端末数</th>
+          <th>有効期限</th>
+          <th>状態</th>
+        </tr>
+      </thead>
+      <tbody id="codeTableBody"></tbody>
+    </table>
+    <p class="empty-note" id="codeEmptyNote" style="display:none;">共有コードのデータがありません。</p>
 
     <p class="updated" id="updatedText"></p>
   </div>
@@ -211,12 +253,67 @@
 
       document.getElementById('updatedText').textContent = data.date + ' JST 時点';
       resultCard.style.display = 'block';
+
+      await loadSharedCodes(adminKey);
     } catch (err) {
       errorMsg.textContent = err.message;
       errorMsg.style.display = 'block';
     } finally {
       loadBtn.disabled = false;
       loadBtn.textContent = '一覧を表示する';
+    }
+  }
+
+  const SOURCE_LABELS = {
+    'viator-shared': 'Viator',
+    'getyourguide-shared': 'GetYourGuide',
+  };
+
+  function formatDate(ms) {
+    if (!ms) return '—';
+    const d = new Date(ms);
+    return d.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function statusBadge(c) {
+    if (c.revoked) return `<span class="badge bad">停止中${c.revokedReason ? '（' + c.revokedReason + '）' : ''}</span>`;
+    if (c.expiresAt && Date.now() > c.expiresAt) return '<span class="badge warn">期限切れ</span>';
+    return '<span class="badge ok">有効</span>';
+  }
+
+  async function loadSharedCodes(adminKey) {
+    const codeTable = document.getElementById('codeTable');
+    const codeTableBody = document.getElementById('codeTableBody');
+    const codeEmptyNote = document.getElementById('codeEmptyNote');
+
+    const res = await fetch('/api/admin-shared-codes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ adminKey }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || '共有コードの読み込みに失敗しました。');
+
+    codeTableBody.innerHTML = '';
+    if (!data.codes || data.codes.length === 0) {
+      codeTable.style.display = 'none';
+      codeEmptyNote.style.display = 'block';
+      return;
+    }
+
+    codeTable.style.display = 'table';
+    codeEmptyNote.style.display = 'none';
+    for (const c of data.codes) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${SOURCE_LABELS[c.source] || c.source}</td>
+        <td class="code-cell">${c.code}</td>
+        <td class="num">${c.usageCount}</td>
+        <td class="num">${c.distinctDevices}</td>
+        <td>${formatDate(c.expiresAt)}</td>
+        <td>${statusBadge(c)}</td>
+      `;
+      codeTableBody.appendChild(tr);
     }
   }
 
