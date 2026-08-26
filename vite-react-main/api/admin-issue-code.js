@@ -55,13 +55,19 @@ export default async function handler(req, res) {
     const db = admin.database();
 
     if (mode === 'shared') {
-      // Rotate the standing Viator shared code. The OLD code is kept valid
-      // for a short grace period (48h) so already-booked customers who
-      // haven't visited yet aren't locked out immediately.
+      // Rotate the standing shared code for a given OTA platform (Viator,
+      // GetYourGuide, etc). Each platform gets its own independent rotation
+      // slot in sharedAccess/{platform}/current, so rotating one platform's
+      // code never touches another platform's live code. The OLD code for
+      // that same platform is kept valid for a short grace period (48h) so
+      // already-booked customers who haven't visited yet aren't locked out
+      // immediately.
+      const platform = (req.body || {}).platform || 'viator'; // 'viator' | 'getyourguide' | etc
+      const sharedSource = platform + '-shared';
       const newCode = generateCode();
       const expiresAt = Date.now() + SHARED_VALID_MS;
 
-      const currentSnap = await db.ref('sharedViatorAccess/current').get();
+      const currentSnap = await db.ref('sharedAccess/' + platform + '/current').get();
       if (currentSnap.exists()) {
         const old = currentSnap.val();
         if (old.code) {
@@ -74,17 +80,17 @@ export default async function handler(req, res) {
       await db.ref('accessCodes/' + newCode).set({
         expiresAt,
         createdAt: Date.now(),
-        source: 'viator-shared',
+        source: sharedSource,
         issuedManually: true,
       });
 
-      await db.ref('sharedViatorAccess/current').set({
+      await db.ref('sharedAccess/' + platform + '/current').set({
         code: newCode,
         expiresAt,
         rotatedAt: Date.now(),
       });
 
-      return res.status(200).json({ code: newCode, expiresAt, mode: 'shared' });
+      return res.status(200).json({ code: newCode, expiresAt, mode: 'shared', source: sharedSource });
     }
 
     // Default: single one-off code (existing behaviour)
