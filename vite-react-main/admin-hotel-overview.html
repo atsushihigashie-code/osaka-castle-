@@ -190,6 +190,23 @@
     </table>
     <p class="empty-note" id="codeEmptyNote" style="display:none;">共有コードのデータがありません。</p>
 
+    <div class="section-title">Stripe個別購入コード使用状況</div>
+    <p class="section-sub">Stripeで直接決済されたお客様に発行された、個別のアクセスコードの使用回数です。</p>
+    <p class="section-sub" id="stripeTotalText" style="display:none;"></p>
+
+    <table id="stripeCodeTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>コード</th>
+          <th class="num">使用回数</th>
+          <th>発行日</th>
+          <th>状態</th>
+        </tr>
+      </thead>
+      <tbody id="stripeCodeTableBody"></tbody>
+    </table>
+    <p class="empty-note" id="stripeCodeEmptyNote" style="display:none;">まだ個別購入コードのデータがありません。</p>
+
     <p class="updated" id="updatedText"></p>
   </div>
 </div>
@@ -255,6 +272,7 @@
       resultCard.style.display = 'block';
 
       await loadSharedCodes(adminKey);
+      await loadStripeCodes(adminKey);
     } catch (err) {
       errorMsg.textContent = err.message;
       errorMsg.style.display = 'block';
@@ -314,6 +332,52 @@
         <td>${statusBadge(c)}</td>
       `;
       codeTableBody.appendChild(tr);
+    }
+  }
+
+  async function loadStripeCodes(adminKey) {
+    const stripeCodeTable = document.getElementById('stripeCodeTable');
+    const stripeCodeTableBody = document.getElementById('stripeCodeTableBody');
+    const stripeCodeEmptyNote = document.getElementById('stripeCodeEmptyNote');
+    const stripeTotalText = document.getElementById('stripeTotalText');
+
+    try {
+      const res = await fetch('/api/admin-stripe-codes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Stripeコードの読み込みに失敗しました。');
+
+      stripeCodeTableBody.innerHTML = '';
+      if (!data.codes || data.codes.length === 0) {
+        stripeCodeTable.style.display = 'none';
+        stripeCodeEmptyNote.style.display = 'block';
+        stripeTotalText.style.display = 'none';
+        return;
+      }
+
+      stripeTotalText.textContent = `発行コード数: ${data.codeCount}件 / 合計使用回数: ${data.totalUsage}回`;
+      stripeTotalText.style.display = 'block';
+
+      stripeCodeTable.style.display = 'table';
+      stripeCodeEmptyNote.style.display = 'none';
+      for (const c of data.codes) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="code-cell">${c.code}</td>
+          <td class="num">${c.usageCount}</td>
+          <td>${formatDate(c.createdAt)}</td>
+          <td>${c.revoked ? '<span class="badge bad">停止中</span>' : '<span class="badge ok">有効</span>'}</td>
+        `;
+        stripeCodeTableBody.appendChild(tr);
+      }
+    } catch (err) {
+      stripeCodeTable.style.display = 'none';
+      stripeCodeEmptyNote.style.display = 'block';
+      stripeCodeEmptyNote.textContent = err.message;
+      stripeTotalText.style.display = 'none';
     }
   }
 
