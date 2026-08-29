@@ -14,6 +14,7 @@
     --deep-green: #2f3b2f;
     --rule: #d8d0bf;
     --vermilion: #b5452c;
+    --dark: #14140f;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -32,6 +33,15 @@
     width: 100%;
     background: #ffffff;
     min-height: 100vh;
+  }
+  .liability-notice {
+    background: var(--dark);
+    color: rgba(242,237,227,0.75);
+    font-size: 10.5px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 10px 20px;
+    letter-spacing: 0.01em;
   }
   .hero-photo {
     width: 100%;
@@ -164,6 +174,9 @@
 </head>
 <body>
 <div class="frame">
+  <div class="liability-notice">
+    By using this app, you acknowledge and agree that any accidents, injuries, or other incidents occurring during your use of this self-guided walking tour are your own responsibility. Neither East River&nbsp;31&nbsp;LLC nor the hotel where this app is provided assumes any liability for such incidents.
+  </div>
   <img class="hero-photo" src="osaka-castle.jpg" alt="Osaka Castle">
   <div class="brand-row">
     <div class="brand">East River 31</div>
