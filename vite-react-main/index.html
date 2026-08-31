@@ -289,14 +289,26 @@
     margin-top: 22px;
     padding-top: 20px;
     border-top: 1px solid var(--rule);
-    font-size: 13.5px;
+  }
+  .cta-existing-label {
+    font-size: 13px;
     color: var(--stone);
+    margin-bottom: 12px;
   }
-  .cta-existing a {
-    color: var(--vermilion);
+  .cta-existing-btn {
+    display: block;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    color: #fff;
+    background: var(--deep-green);
+    text-decoration: none;
+    padding: 17px;
+    border-radius: 30px;
     font-weight: 700;
-    text-decoration: underline;
+    box-shadow: 0 8px 20px rgba(47,59,47,0.25);
   }
+  .cta-existing-btn::after { content: " →"; }
 
   footer {
     padding: 20px 26px 40px;
@@ -395,7 +407,10 @@
     <a class="cta-btn" href="purchase/index.html">Get Started</a>
     <!-- Direct Stripe link for reference: https://buy.stripe.com/eVqbJ06RV72bcAE5s1cAo00 -->
     <div class="cta-note">You'll review a few important notes before you pay.</div>
-    <div class="cta-existing">Already purchased and have an access code? <a href="/gate.html">Enter it here →</a></div>
+    <div class="cta-existing">
+      <div class="cta-existing-label">Already purchased and have an access code?</div>
+      <a class="cta-existing-btn" href="/gate.html">Enter your code</a>
+    </div>
   </div>
 
   <footer>
