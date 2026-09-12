@@ -195,6 +195,20 @@
     <div class="msg-template" id="sharedTemplate" style="display:none; margin-top:16px;"></div>
     <button class="copy-btn" id="copySharedBtn" style="display:none;">Viatorのチケット情報欄用の文章をコピー</button>
   </div>
+  <div class="divider">
+    <h1 style="font-size:18px;">GetYourGuide共有コード（完全自動用）</h1>
+    <p class="sub">GetYourGuideの「チケット情報」欄に直接埋め込むための、共有アクセスコードです。これを発行すると、GetYourGuideの予約確認と同時に、お客様は自動でコードを受け取れるようになります（御社の操作は一切不要）。セキュリティのため、月1回程度、下のボタンで新しいコードに切り替えてください。</p>
+    <div class="shared-box">
+      <p style="font-size:12.5px; color: var(--stone);">現在の共有コード：</p>
+      <div class="shared-code-display" id="sharedCodeDisplayGYG">まだ発行されていません</div>
+      <p style="font-size:12px; color: var(--stone);" id="sharedExpiryTextGYG"></p>
+    </div>
+    <button id="rotateBtnGYG" class="shared-btn" style="margin-top:16px;">新しい共有コードを発行する（切り替え）</button>
+    <button id="checkUsageBtnGYG" style="margin-top:10px; background:#fff; color:var(--deep-green); border:1px solid var(--deep-green);">現在の共有コードの使用状況を確認</button>
+    <div class="shared-box" id="usageResultGYG" style="display:none; margin-top:14px;"></div>
+    <div class="msg-template" id="sharedTemplateGYG" style="display:none; margin-top:16px;"></div>
+    <button class="copy-btn" id="copySharedBtnGYG" style="display:none;">GetYourGuideのチケット情報欄用の文章をコピー</button>
+  </div>
 </div>
 
 <script>
@@ -380,6 +394,117 @@
     } finally {
       checkUsageBtn.disabled = false;
       checkUsageBtn.textContent = '現在の共有コードの使用状況を確認';
+    }
+  });
+
+  // ── 共有コード（GetYourGuide自動配布用） ──────────────────
+  const rotateBtnGYG = document.getElementById('rotateBtnGYG');
+  const sharedCodeDisplayGYG = document.getElementById('sharedCodeDisplayGYG');
+  const sharedExpiryTextGYG = document.getElementById('sharedExpiryTextGYG');
+  const sharedTemplateGYG = document.getElementById('sharedTemplateGYG');
+  const copySharedBtnGYG = document.getElementById('copySharedBtnGYG');
+
+  function buildSharedTemplateGYG(code) {
+    const gateUrlA = 'https://osaka-castle.vercel.app/gate.html?route=a';
+    const gateUrlB = 'https://osaka-castle.vercel.app/gate.html?route=b';
+    return `Thank you for booking! Here is your access code for the Osaka Castle Self-Guided Audio Tour:\n\nAccess Code: ${code}\n\nPlease use this link to begin your tour (Route A, starting from JR Osaka Castle Park Station — we recommend this route):\n${gateUrlA}\n\nIf you would prefer Route B instead (starting from Tanimachi 4-chome Station), please use this link instead:\n${gateUrlB}\n\nThis code is valid for 7 days and is intended for the booking traveler(s) only. Please use it soon after booking, and do not share it — if it is used by an unusual number of different people or devices, it will be automatically deactivated.\n\nIf you have any trouble, please email eastriver.atsushi@gmail.com.`;
+  }
+
+  rotateBtnGYG.addEventListener('click', async () => {
+    const adminKey = document.getElementById('adminKey').value.trim();
+    if (!adminKey) {
+      alert('管理者キーを入力してください。');
+      return;
+    }
+    if (!confirm('新しい共有コードに切り替えますか？\n（古いコードは48時間だけ猶予期間として使えます）')) return;
+
+    rotateBtnGYG.disabled = true;
+    rotateBtnGYG.textContent = '発行中…';
+
+    try {
+      const res = await fetch('/api/admin-issue-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey, mode: 'shared', platform: 'getyourguide' }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || '発行に失敗しました。管理者キーを確認してください。');
+        return;
+      }
+
+      sharedCodeDisplayGYG.textContent = data.code;
+      const expiryStr = new Date(data.expiresAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+      sharedExpiryTextGYG.textContent = `有効期限: ${expiryStr}（日本時間）`;
+
+      const template = buildSharedTemplateGYG(data.code);
+      sharedTemplateGYG.textContent = template;
+      sharedTemplateGYG.style.display = 'block';
+      copySharedBtnGYG.style.display = 'block';
+      copySharedBtnGYG.onclick = () => {
+        navigator.clipboard.writeText(template);
+        copySharedBtnGYG.textContent = 'コピーしました！';
+        setTimeout(() => { copySharedBtnGYG.textContent = 'GetYourGuideのチケット情報欄用の文章をコピー'; }, 1500);
+      };
+
+    } catch (err) {
+      console.error(err);
+      alert('通信エラーが発生しました。もう一度お試しください。');
+    } finally {
+      rotateBtnGYG.disabled = false;
+      rotateBtnGYG.textContent = '新しい共有コードを発行する（切り替え）';
+    }
+  });
+
+  // ── 使用状況の確認（GetYourGuide） ──────────────────────
+  const checkUsageBtnGYG = document.getElementById('checkUsageBtnGYG');
+  const usageResultGYG = document.getElementById('usageResultGYG');
+
+  checkUsageBtnGYG.addEventListener('click', async () => {
+    const adminKey = document.getElementById('adminKey').value.trim();
+    const currentCode = sharedCodeDisplayGYG.textContent.trim();
+
+    if (!adminKey) {
+      alert('管理者キーを入力してください。');
+      return;
+    }
+    if (!currentCode || currentCode === 'まだ発行されていません') {
+      alert('先に共有コードを発行してください。');
+      return;
+    }
+
+    checkUsageBtnGYG.disabled = true;
+    checkUsageBtnGYG.textContent = '確認中…';
+
+    try {
+      const res = await fetch('/api/admin-code-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminKey, code: currentCode }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.found) {
+        usageResultGYG.style.display = 'block';
+        usageResultGYG.textContent = '情報が見つかりませんでした。';
+        return;
+      }
+
+      usageResultGYG.style.display = 'block';
+      usageResultGYG.innerHTML =
+        `コード: <strong>${currentCode}</strong><br>` +
+        `使用回数（合計）: ${data.usageCount}回<br>` +
+        `異なる端末からの利用: ${data.distinctDevices}台<br>` +
+        `状態: ${data.revoked ? '<strong style="color:#b5452c;">無効化されています（' + (data.revokedReason || '') + '）</strong>' : '有効'}`;
+
+    } catch (err) {
+      console.error(err);
+      usageResultGYG.style.display = 'block';
+      usageResultGYG.textContent = '通信エラーが発生しました。';
+    } finally {
+      checkUsageBtnGYG.disabled = false;
+      checkUsageBtnGYG.textContent = '現在の共有コードの使用状況を確認';
     }
   });
 </script>
