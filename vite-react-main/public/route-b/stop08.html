@@ -84,6 +84,24 @@
   .quiz-a { font-size: 13px; color: var(--stone); margin-bottom: 4px; }
   .quiz-ans { font-size: 12.5px; color: var(--vermilion); margin-top: 6px; }
   .quiz-block + .quiz-block { margin-top: 14px; }
+  .stop-video { margin: 16px 24px 0; }
+  .stop-video video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    object-fit: cover;
+    background: #000;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .stop-video-note {
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-align: center;
+    color: var(--stone);
+    padding-top: 8px;
+  }
+
   .stop-gallery { margin: 20px 24px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .stop-gallery img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; display: block; }
   .nav-row { padding: 30px 24px 40px; display: flex; justify-content: space-between; align-items: center; }
@@ -108,6 +126,11 @@
     <h1>Memorial to Yodo-dono and Hideyori</h1>
     <div class="subtitle">淀殿・秀頼 自刃の地</div>
   </header>
+
+  <div class="stop-video">
+    <video id="stopVideo" src="images/spots/08-last-hours.mp4" poster="images/spots/08-last-hours-poster.jpg" controls playsinline preload="metadata" aria-label="The last hours of Hideyori and Yodo-dono at Osaka Castle, 1615"></video>
+    <div class="stop-video-note">▶ Tap to play · sound on</div>
+  </div>
 
   <div class="map-section">
     <div class="map-card">
@@ -181,6 +204,13 @@ playBtn.addEventListener('click', () => {
 audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.style.width = (audio.currentTime/audio.duration*100)+'%'; timeCurrent.textContent = fmt(audio.currentTime); } });
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
+const stopVideo = document.getElementById('stopVideo');
+if (stopVideo) {
+  stopVideo.addEventListener('play', () => {
+    if (!audio.paused) { audio.pause(); playBtn.textContent = '▶'; audioStatus.textContent = 'Paused — tap to resume'; }
+  });
+  audio.addEventListener('play', () => { if (!stopVideo.paused) stopVideo.pause(); });
+}
 </script>
 
 </body>
