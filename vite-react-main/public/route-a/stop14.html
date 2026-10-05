@@ -188,6 +188,24 @@
   .narrative p:last-child { margin-bottom: 0; }
   .narrative strong { font-family: 'Shippori Mincho', serif; }
 
+  .stop-video { margin: 16px 24px 0; }
+  .stop-video video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    object-fit: cover;
+    background: #000;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .stop-video-note {
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-align: center;
+    color: var(--stone);
+    padding-top: 8px;
+  }
+
   .stop-gallery {
     margin: 20px 24px 0;
   }
@@ -284,6 +302,11 @@
     <div class="subtitle">豊国神社</div>
   </header>
 
+  <div class="stop-video">
+    <video id="stopVideo" src="images/spots/14-hokoku-shinto.mp4" poster="images/spots/14-hokoku-shinto-poster.jpg" controls playsinline preload="metadata" aria-label="Shinto at Hokoku Shrine: sun, mountain, river, wind, and stone"></video>
+    <div class="stop-video-note">▶ Tap to play · sound on</div>
+  </div>
+
   <div class="map-section">
     <div class="map-card">
       <div class="map-visual"><div class="map-pin"></div></div>
@@ -365,6 +388,13 @@ playBtn.addEventListener('click', () => {
 audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.style.width = (audio.currentTime/audio.duration*100)+'%'; timeCurrent.textContent = fmt(audio.currentTime); } });
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
+const stopVideo = document.getElementById('stopVideo');
+if (stopVideo) {
+  stopVideo.addEventListener('play', () => {
+    if (!audio.paused) { audio.pause(); playBtn.textContent = '▶'; audioStatus.textContent = 'Paused — tap to resume'; }
+  });
+  audio.addEventListener('play', () => { if (!stopVideo.paused) stopVideo.pause(); });
+}
 </script>
 </body>
 </html>
