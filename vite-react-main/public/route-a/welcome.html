@@ -38,6 +38,24 @@
     background: var(--paper);
   }
 
+  /* ── WELCOME VIDEO ────────────────────── */
+  .welcome-video { background: #000; }
+  .welcome-video video {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    display: block;
+    object-fit: cover;
+    background: #000;
+  }
+  .welcome-video-note {
+    background: #1b1b16;
+    color: #e8e2d0;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-align: center;
+    padding: 8px 12px;
+  }
+
   /* ── HERO ─────────────────────────────── */
   .hero {
     position: relative;
@@ -370,6 +388,11 @@
 <body>
 <div class="frame">
 
+  <div class="welcome-video">
+    <video id="welcomeVideo" src="images/welcome-intro.mp4" poster="images/welcome-intro-poster.jpg" controls playsinline preload="metadata" aria-label="Welcome to One Coin Osaka Castle Tour — 1615 Summer Siege"></video>
+    <div class="welcome-video-note">▶ Tap to play · sound on</div>
+  </div>
+
   <div class="hero">
     <div class="hero-top">
       <div class="brand">East River 31</div>
@@ -528,6 +551,13 @@ playBtn.addEventListener('click', () => {
 audio.addEventListener('timeupdate', () => { if (audio.duration) { progFill.style.width = (audio.currentTime/audio.duration*100)+'%'; timeCurrent.textContent = fmt(audio.currentTime); } });
 audio.addEventListener('ended', () => { playBtn.textContent = '▶'; audioStatus.textContent = '✓ Complete — tap to replay'; });
 progTrack.addEventListener('click', (e) => { const rect = progTrack.getBoundingClientRect(); const pct = (e.clientX-rect.left)/rect.width; if (audio.duration) audio.currentTime = pct*audio.duration; });
+const welcomeVideo = document.getElementById('welcomeVideo');
+if (welcomeVideo) {
+  welcomeVideo.addEventListener('play', () => {
+    if (!audio.paused) { audio.pause(); playBtn.textContent = '▶'; audioStatus.textContent = 'Paused — tap to resume'; }
+  });
+  audio.addEventListener('play', () => { if (!welcomeVideo.paused) welcomeVideo.pause(); });
+}
 </script>
 </body>
 </html>
